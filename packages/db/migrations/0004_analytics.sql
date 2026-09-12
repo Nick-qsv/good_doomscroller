@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS analytics_events (
     device TEXT NOT NULL CHECK (device IN ('mobile', 'tablet', 'desktop', 'unknown')),
     browser TEXT NOT NULL CHECK (browser IN ('Chrome', 'Safari', 'Firefox', 'Edge', 'Other'))
 );
+-- Preserve receipt order within a batch for entry-page/referrer attribution.
+ALTER TABLE analytics_events ADD COLUMN IF NOT EXISTS event_order BIGINT GENERATED ALWAYS AS IDENTITY;
 CREATE INDEX IF NOT EXISTS analytics_events_received_idx ON analytics_events (received_at);
 CREATE INDEX IF NOT EXISTS analytics_events_session_idx ON analytics_events (session_id, received_at);
 CREATE INDEX IF NOT EXISTS analytics_events_content_idx ON analytics_events (passage_id, received_at)

@@ -10,6 +10,7 @@ import {
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { AnalyticsLink, AnalyticsProofDetails } from "@/components/analytics";
 import { AiPassageContext } from "@/components/ai-passage-context";
 import { sourceSectionLabel } from "@/lib/source-section";
 import type { PassageVerification } from "@/lib/types";
@@ -41,23 +42,23 @@ export function VerificationShell({ children }: { children: ReactNode }) {
         </Link>
       </header>
       <main id="quote-verification" className="verification-page">{children}</main>
-      <footer className="verification-footer">Good words. A source you can inspect.</footer>
+      <footer className="verification-footer">Good words. A source you can inspect. {" "}<Link href="/privacy">Privacy &amp; analytics</Link></footer>
     </div>
   );
 }
 
-function SourceLink({ href, children }: { href: string; children: ReactNode }) {
+function SourceLink({ href, children, passageId }: { href: string; children: ReactNode; passageId: string }) {
   try {
     if (!["https:", "http:"].includes(new URL(href).protocol)) return null;
   } catch {
     return null;
   }
   return (
-    <a className="verification-text-link" href={href} target="_blank" rel="noreferrer">
+    <AnalyticsLink event="source_open" passageId={passageId} className="verification-text-link" href={href} target="_blank" rel="noreferrer">
       {children}
       <ExternalLink size={13} aria-hidden="true" />
       <span className="sr-only"> (opens in a new tab)</span>
-    </a>
+    </AnalyticsLink>
   );
 }
 
@@ -103,7 +104,7 @@ export function QuoteVerification({ verification }: { verification: PassageVerif
         ) : (
           <blockquote className="verification-context verification-quote-only">{passage.text}</blockquote>
         )}
-        <AiPassageContext context={passage.aiContext} />
+        <AiPassageContext context={passage.aiContext} passageId={verification.passageId} />
       </section>
 
       <section className="verification-section" aria-labelledby="edition-heading">
@@ -119,15 +120,15 @@ export function QuoteVerification({ verification }: { verification: PassageVerif
               <div><dt>Source retrieval date</dt><dd><RecordedTime value={receipt.source.retrievedAt} /><small>Reported by the book processing pipeline.</small></dd></div>
             </dl>
             <div className="verification-links">
-              <SourceLink href={receipt.source.url ?? passage.sourceUrl}>Visit the source edition</SourceLink>
-              {downloads ? <a className="verification-download" href={downloads.source} download><Download size={15} aria-hidden="true" /> Download preserved book</a> : null}
+              <SourceLink passageId={verification.passageId} href={receipt.source.url ?? passage.sourceUrl}>Visit the source edition</SourceLink>
+              {downloads ? <AnalyticsLink event="source_download" passageId={verification.passageId} className="verification-download" href={downloads.source} download><Download size={15} aria-hidden="true" /> Download preserved book</AnalyticsLink> : null}
             </div>
             <p className="verification-explanation">The match is checked against this preserved file after consistent text cleanup. It establishes where the words appear in that edition; it does not independently authenticate the edition.</p>
           </>
         ) : (
           <>
             <p className="verification-explanation">A verified preserved source is not available for this passage. You can still inspect the declared source book.</p>
-            <SourceLink href={passage.sourceUrl}>Read the source book</SourceLink>
+            <SourceLink passageId={verification.passageId} href={passage.sourceUrl}>Read the source book</SourceLink>
           </>
         )}
       </section>
@@ -167,7 +168,7 @@ export function QuoteVerification({ verification }: { verification: PassageVerif
       </section>
 
       {verified ? (
-        <details className="verification-proof">
+        <AnalyticsProofDetails passageId={verification.passageId} className="verification-proof">
           <summary>Proof details and downloads</summary>
           <div className="verification-proof-body">
             <p>These fingerprints identify the files and text used for this check. The downloadable proof lets you inspect the record and reproduce the comparison.</p>
@@ -182,10 +183,10 @@ export function QuoteVerification({ verification }: { verification: PassageVerif
               <div><dt>Processing version</dt><dd>{receipt.selection.pipelineVersion || "Not recorded"}</dd></div>
               <div><dt>Normalization version</dt><dd>{receipt.verification.normalizationVersion}</dd></div>
             </dl>
-            {downloads ? <a className="verification-download" href={downloads.proof} download><Download size={15} aria-hidden="true" /> Download verification proof</a> : null}
+            {downloads ? <AnalyticsLink event="proof_download" passageId={verification.passageId} className="verification-download" href={downloads.proof} download><Download size={15} aria-hidden="true" /> Download verification proof</AnalyticsLink> : null}
             <p className="verification-proof-limit">This receipt is maintained by the site. It has no independent timestamp, blockchain anchor, or human signature.</p>
           </div>
-        </details>
+        </AnalyticsProofDetails>
       ) : null}
     </VerificationShell>
   );

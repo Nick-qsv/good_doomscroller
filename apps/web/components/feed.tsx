@@ -14,6 +14,8 @@ import {
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { useAnalyticsExposure } from "@/components/analytics";
+import { trackAnalytics } from "@/lib/analytics-client";
 import { AiPassageContext } from "@/components/ai-passage-context";
 import { sourceSectionLabel } from "@/lib/source-section";
 import type {
@@ -43,13 +45,16 @@ export function PassageCard({
   passage,
   pending,
   onReact,
+  position = 1,
 }: {
   passage: FeedPassage;
   pending: boolean;
+  position?: number;
   onReact: (passage: FeedPassage, value: -1 | 1) => void;
 }) {
+  const analyticsRef = useAnalyticsExposure<HTMLElement>("passage_view", passage.id, position);
   return (
-    <article className="passage-card" aria-labelledby={`passage-${passage.feedToken}`}>
+    <article ref={analyticsRef} className="passage-card" aria-labelledby={`passage-${passage.feedToken}`}>
       <div className="avatar" aria-hidden="true">
         {initials(passage.author)}
       </div>
@@ -66,6 +71,7 @@ export function PassageCard({
           <a
             className="source-link"
             href={passage.sourceUrl}
+            onClick={() => trackAnalytics("source_open", { passageId: passage.id })}
             target="_blank"
             rel="noreferrer"
             aria-label={`Read the source of ${passage.bookTitle} (opens in a new tab)`}
@@ -82,7 +88,7 @@ export function PassageCard({
           <p>{passage.text}</p>
         </blockquote>
 
-        <AiPassageContext context={passage.aiContext} />
+        <AiPassageContext context={passage.aiContext} passageId={passage.id} />
 
         <div className="passage-context">
           {passage.chapterTitle ? (
@@ -126,6 +132,7 @@ export function PassageCard({
             className="verify-quote-link"
             href={`/passages/${encodeURIComponent(passage.id)}/verification`}
             prefetch={false}
+            onClick={() => trackAnalytics("verification_open", { passageId: passage.id })}
             aria-label={`Verify quote from ${passage.bookTitle}`}
           >
             <FileSearch aria-hidden="true" size={15} strokeWidth={1.7} />
@@ -200,7 +207,10 @@ export function Feed() {
       setItems((current) => [...current, ...feed.items]);
       setCursor(feed.nextCursor);
       setMode(feed.mode);
+      trackAnalytics("feed_load", { value: feed.items.length });
+      if (feed.nextCursor === null) trackAnalytics("feed_end");
     } catch {
+      trackAnalytics("feed_error");
       setError("The library door stuck. Give it another push.");
     } finally {
       loadingRef.current = false;
@@ -268,6 +278,7 @@ export function Feed() {
         if (!response.ok) throw new Error("reaction request failed");
 
         const saved = (await response.json()) as ReactionResponse;
+        trackAnalytics("reaction", { passageId: passage.id, value: saved.viewerReaction });
         setItems((current) =>
           current.map((item) =>
             item.id === saved.passageId
@@ -281,6 +292,7 @@ export function Feed() {
           ),
         );
       } catch {
+        trackAnalytics("reaction_error", { passageId: passage.id });
         setItems((current) =>
           current.map((item) =>
             item.id === passage.id
@@ -358,10 +370,11 @@ export function Feed() {
         ) : null}
 
         <section id="passage-feed" aria-label="Passage feed" aria-busy={loading}>
-          {items.map((passage) => (
+          {items.map((passage, index) => (
             <PassageCard
               key={passage.feedToken}
               passage={passage}
+              position={index + 1}
               pending={pendingIds.has(passage.id)}
               onReact={reactToPassage}
             />
@@ -407,6 +420,7 @@ export function Feed() {
         </div>
         <p className="source-note">
           <a href="https://www.gutenberg.org/">Project Gutenberg</a>
+          {" · "}<Link href="/privacy">Privacy &amp; analytics</Link>
         </p>
       </aside>
 
@@ -419,7 +433,10 @@ export function Feed() {
         type="button"
         aria-label="Back to top"
         tabIndex={showTop ? 0 : -1}
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        onClick={() => {
+          trackAnalytics("back_to_top");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
       >
         <ArrowUp size={19} aria-hidden="true" />
       </button>

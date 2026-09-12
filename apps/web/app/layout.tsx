@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { AnalyticsProvider } from "@/components/analytics";
 
 import "./globals.css";
 
@@ -48,7 +49,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
-      <body>{children}</body>
+      <body><AnalyticsProvider enabled={process.env.ANALYTICS_ENABLED !== "false"}>{children}</AnalyticsProvider></body>
     </html>
   );
 }

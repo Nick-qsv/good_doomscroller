@@ -1280,3 +1280,10 @@ a {
     transition-duration: 0.01ms !important;
   }
 }
+/* The privacy page shares the site's reading and verification typography. */
+.privacy-page { max-width: 780px; padding: 48px 24px 80px; }
+.privacy-page h2 { font-size: 1.2rem; margin-bottom: 16px; }
+.privacy-page section p { line-height: 1.8; margin-top: 16px; }
+.analytics-preference { padding: 18px; border: 1px solid var(--line, #ded9ce); border-radius: 8px; }
+.analytics-preference p { margin-top: 0 !important; }
+.analytics-preference button { margin-top: 12px; cursor: pointer; }

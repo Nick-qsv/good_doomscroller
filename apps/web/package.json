@@ -9,6 +9,7 @@
     "migrate": "node scripts/migrate.mjs ../../packages/db/migrations/0001_initial.sql",
     "corpus:import": "node scripts/import-corpus.mjs",
     "corpus:retire": "node scripts/archive-editions.mjs",
+    "analytics:prune": "node scripts/analytics-prune.mjs",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest"

@@ -22,5 +22,8 @@ Open [localhost:3000](http://localhost:3000).
 See [Contributing](CONTRIBUTING.md), [Adding a book](docs/adding-books.md), and
 [How verification works](docs/verification.md) to get involved.
 
+Readers can review what the site measures and opt out at `/privacy`.
+See [Website analytics](docs/analytics.md) for event definitions and retention.
+
 Code is licensed under [MIT](LICENSE). Literary works and corpus metadata have
 separate [data licensing rules](DATA_LICENSE.md).
