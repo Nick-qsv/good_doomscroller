@@ -2,7 +2,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { QuoteVerification } from "@/components/quote-verification";
-import type { PassageVerification, VerificationReceipt } from "@/lib/types";
+import type { PassageAnchoring, PassageVerification, VerificationReceipt } from "@/lib/types";
 
 const quote = "The world is full of obvious things which nobody by any chance ever observes.";
 const receipt: VerificationReceipt = {
@@ -44,7 +44,37 @@ const verified: PassageVerification = {
 
 afterEach(cleanup);
 
+const anchored: PassageAnchoring = {
+  status: "finalized", totalReceipts: 2, finalizedReceipts: 2, pendingReceipts: 0,
+  verification: "local-integrity-checked-chain-evidence-recorded", history: [], limits: "Test evidence",
+  batches: [{
+    batchId: "batch-one", previousBatchId: null, previousRootSha256: null,
+    rootSha256: "a".repeat(64), receiptCount: 2, firstReceiptSequence: "1", lastReceiptSequence: "2",
+    envelopeHex: "0x00", genesisHash: "0x" + "a".repeat(64), signerAddress: "public-signer",
+    blockHash: "0x" + "b".repeat(64), blockNumber: "20577500", blockTimestamp: "2026-09-12T22:00:00Z",
+    extrinsicHash: "0x" + "c".repeat(64), extrinsicIndex: 2, eventIndex: 4,
+    finalizedHeadHash: "0x" + "d".repeat(64), explorerUrl: "https://assethub-polkadot.subscan.io/extrinsic/20577500-2",
+  }],
+};
+
 describe("quote verification", () => {
+  it("shows finalized chain evidence separately from source matching and older reported dates", () => {
+    render(<QuoteVerification verification={{ ...verified, anchoring: anchored }} />);
+    expect(screen.getByRole("heading", { name: "Exact source match" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "History anchored on Polkadot" })).toBeVisible();
+    expect(screen.getByText(/All 2 supplied history receipts match/)).toBeVisible();
+    expect(screen.getByRole("link", { name: /View Polkadot block 20577500/ })).toHaveAttribute("href", anchored.batches[0].explorerUrl);
+    expect(screen.getByText(/does not independently confirm those earlier dates/)).toBeVisible();
+    expect(screen.queryByText(/No finalized blockchain anchor is available yet/)).not.toBeInTheDocument();
+  });
+
+  it("does not imply every supplied receipt is anchored when some remain pending", () => {
+    render(<QuoteVerification verification={{ ...verified, anchoring: { ...anchored, status: "partial", finalizedReceipts: 1, pendingReceipts: 1 } }} />);
+    expect(screen.getByRole("heading", { name: "History partly anchored" })).toBeVisible();
+    expect(screen.getByText(/1 of 2 supplied history receipts have finalized anchors. 1 receipt is waiting/)).toBeVisible();
+    expect(screen.queryByRole("heading", { name: "History anchored on Polkadot" })).not.toBeInTheDocument();
+  });
+
   it("keeps AI interpretation outside the verified source context", () => {
     const { container } = render(<QuoteVerification verification={{ ...verified,
       passage: { ...verified.passage, aiContext: {
@@ -76,7 +106,8 @@ describe("quote verification", () => {
     expect(screen.getByRole("heading", { name: "Published to the feed" })).toBeVisible();
     expect(screen.getByRole("heading", { name: "Human review not recorded" })).toBeVisible();
     expect(screen.getByText(/a selection time and selector identity are not/)).toBeVisible();
-    expect(screen.getByText(/no independent timestamp, blockchain anchor, or human signature/)).toBeInTheDocument();
+    expect(screen.getByText(/No finalized blockchain anchor is available yet/)).toBeInTheDocument();
+    expect(screen.getByText(/does not independently confirm those earlier dates/)).toBeVisible();
     expect(screen.queryByText(/Uploaded by/)).not.toBeInTheDocument();
   });
 

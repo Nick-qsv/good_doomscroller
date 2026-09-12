@@ -63,7 +63,7 @@ function SourceLink({ href, children, passageId }: { href: string; children: Rea
 }
 
 export function QuoteVerification({ verification }: { verification: PassageVerification }) {
-  const { passage, receipt, context, downloads } = verification;
+  const { passage, receipt, context, downloads, anchoring } = verification;
   const verified = verification.status === "verified" && receipt && context;
 
   return (
@@ -157,6 +157,25 @@ export function QuoteVerification({ verification }: { verification: PassageVerif
                 <small><RecordedTime value={receipt.recordedAt} /></small>
               </li>
             </ol>
+            <p className="verification-explanation">The dates above are recorded by the site. A later blockchain anchor does not independently confirm those earlier dates.</p>
+            <div className="verification-review">
+              <h3>{anchoring?.status === "finalized" ? "History anchored on Polkadot" : anchoring?.status === "partial" ? "History partly anchored" : "History awaiting a blockchain anchor"}</h3>
+              {anchoring?.status === "finalized" ? (
+                <p>All {anchoring.totalReceipts} supplied history {anchoring.totalReceipts === 1 ? "receipt matches a finalized batch commitment" : "receipts match finalized batch commitments"} on Polkadot Hub. Download the proof to check each receipt’s inclusion.</p>
+              ) : anchoring ? (
+                <p>{anchoring.finalizedReceipts} of {anchoring.totalReceipts} supplied history receipts have finalized anchors. {anchoring.pendingReceipts} {anchoring.pendingReceipts === 1 ? "receipt is" : "receipts are"} waiting for a finalized batch.</p>
+              ) : <p>No finalized blockchain anchor is available for this receipt.</p>}
+              {anchoring?.batches.map((batch) => (
+                <p key={batch.batchId}>
+                  <a className="verification-text-link" href={batch.explorerUrl} target="_blank" rel="noreferrer">
+                    View Polkadot block {batch.blockNumber}<ExternalLink size={13} aria-hidden="true" />
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                  <small>Block timestamp: <RecordedTime value={batch.blockTimestamp} /></small>
+                </p>
+              ))}
+              <p>The anchor lets you check that the supplied records match a public commitment. It does not prove every event was recorded or authenticate the book’s attribution.</p>
+            </div>
             <div className="verification-review">
               <h3>Human review not recorded</h3>
               <p>This receipt records the site’s text checks. It does not include an identified uploader or a signed reviewer approval.</p>
@@ -184,7 +203,7 @@ export function QuoteVerification({ verification }: { verification: PassageVerif
               <div><dt>Normalization version</dt><dd>{receipt.verification.normalizationVersion}</dd></div>
             </dl>
             {downloads ? <AnalyticsLink event="proof_download" passageId={verification.passageId} className="verification-download" href={downloads.proof} download><Download size={15} aria-hidden="true" /> Download verification proof</AnalyticsLink> : null}
-            <p className="verification-proof-limit">This receipt is maintained by the site. It has no independent timestamp, blockchain anchor, or human signature.</p>
+            <p className="verification-proof-limit">{anchoring?.finalizedReceipts ? "The download includes a separate inclusion proof for each anchored receipt and identifies any pending receipts. Check the transaction, signer and finality independently on Polkadot Hub. The blockchain anchor establishes existence by its block, not the truth of earlier recorded dates." : "This receipt is maintained by the site. No finalized blockchain anchor is available yet."} No human review signature is recorded.</p>
           </div>
         </AnalyticsProofDetails>
       ) : null}

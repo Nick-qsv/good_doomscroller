@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 
 import { getDatabase, isDatabaseConfigured } from "@/lib/database";
+import { getPassageAnchoring } from "@/lib/anchoring";
 import { demoPassages } from "@/lib/demo-data";
 import type { AiContext, PassageVerification, VerificationReceipt } from "@/lib/types";
 
@@ -104,7 +105,12 @@ export async function getPassageVerification(passageId: string): Promise<Passage
     ) r ON true
     WHERE p.id = ${passageId}::uuid AND p.status = 'published'
   `;
-  return rows[0] ? verificationFromRow(rows[0]) : null;
+  if (!rows[0]) return null;
+  const result = verificationFromRow(rows[0]);
+  if (result.status === "verified" && result.receiptSha256) {
+    result.anchoring = await getPassageAnchoring(passageId, result.receiptSha256);
+  }
+  return result;
 }
 
 export async function getVerificationDownload(passageId: string, kind: "proof" | "source") {
@@ -164,6 +170,7 @@ export async function getVerificationDownload(passageId: string, kind: "proof" |
     },
     sourceDownload: result.downloads?.source,
     history: history.map((entry) => ({ receiptJson: entry.receipt_json, receiptSha256: entry.receipt_sha256 })),
-    limits: "The receipt records automated verification and publication. It is not a human signature, proof of source authenticity, or a blockchain commitment.",
+    anchoring: result.anchoring,
+    limits: "The receipt records automated verification and publication. It is not a human signature or proof of source authenticity. The separate anchoring section supplies a finalized inclusion proof or explicit pending status for each receipt; independently verify its chain evidence. Anchoring does not authenticate the receipt's earlier claimed dates or prove that every event was recorded.",
   }, null, 2), "utf8");
 }

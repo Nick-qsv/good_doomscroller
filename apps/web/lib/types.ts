@@ -71,4 +71,49 @@ export type PassageVerification = {
   receiptJson?: string;
   context?: { before: string; quote: string; after: string };
   downloads?: { proof: string; source: string };
+  anchoring?: PassageAnchoring;
+};
+
+export type ReceiptInclusionProof = {
+  leafIndex: number;
+  leafCount: number;
+  siblings: Array<{ side: "left" | "right"; sha256: string }>;
+};
+
+export type FinalizedAnchorBatch = {
+  batchId: string;
+  previousBatchId: string | null;
+  previousRootSha256: string | null;
+  rootSha256: string;
+  receiptCount: number;
+  firstReceiptSequence: string;
+  lastReceiptSequence: string;
+  envelopeHex: string;
+  genesisHash: string;
+  signerAddress: string;
+  blockHash: string;
+  blockNumber: string;
+  blockTimestamp: string;
+  extrinsicHash: string;
+  extrinsicIndex: number;
+  eventIndex: number;
+  finalizedHeadHash: string;
+  explorerUrl: string;
+};
+
+export type PassageAnchoring = {
+  status: "finalized" | "partial" | "pending";
+  totalReceipts: number;
+  finalizedReceipts: number;
+  pendingReceipts: number;
+  verification: "local-integrity-checked-chain-evidence-recorded";
+  history: Array<{
+    sequence: string;
+    receiptSha256: string;
+    status: "finalized" | "pending";
+    batchId?: string;
+    inclusionProof?: ReceiptInclusionProof;
+  }>;
+  batches: FinalizedAnchorBatch[];
+  limits: string;
 };

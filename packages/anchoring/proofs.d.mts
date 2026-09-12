@@ -1,0 +1,11 @@
+export const POLKADOT_GENESIS_HASH: string;
+export const POLKADOT_SIGNER_ADDRESS: string;
+export function sha256(value: string | Uint8Array): string;
+export type AnchorReceipt = { sequence: string; receiptSha256: string };
+export type MerkleSibling = { side: "left" | "right"; sha256: string };
+export type ReceiptInclusionProof = { leafIndex: number; leafCount: number; siblings: MerkleSibling[] };
+export function orderedReceipts(receipts: AnchorReceipt[]): AnchorReceipt[];
+export function createMerkleTree(receipts: AnchorReceipt[]): { rootSha256: string; receipts: AnchorReceipt[]; proofs: ReceiptInclusionProof[] };
+export function verifyReceiptProof(receiptSha256: string, proof: ReceiptInclusionProof, rootSha256: string): boolean;
+export function buildEnvelope(input: { batchId: string; receiptCount: number; rootSha256: string; previousRootSha256: string | null }): string;
+export function buildManifest(input: { batchId: string; previousBatchId: string | null; previousRootSha256: string | null; receipts: AnchorReceipt[] }): string;

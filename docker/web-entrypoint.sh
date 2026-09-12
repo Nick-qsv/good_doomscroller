@@ -32,4 +32,4 @@ if [ "$has_database_config" = "true" ] && [ "${SKIP_CORPUS_RETIREMENTS:-false}" 
   fi
 fi
 
-exec node /app/server.js
+exec node /app/apps/web/server.js
