@@ -6,10 +6,16 @@ import { PublicRateLimiter, publicRequestGroup, rateLimitClientKey } from "@/lib
 // requests. The pilot runs one application instance. Scale-out needs shared
 // rate-limit storage; do not rely on sharing this module with route handlers.
 const limiter = new PublicRateLimiter();
+// Analytics must never spend the feed, reaction, or download request budgets.
+const analyticsLimiter = new PublicRateLimiter({
+  clientLimits: { all: 30, write: 30, read: 30 },
+  globalLimits: { all: 300, write: 300, read: 300 },
+});
 
 export function proxy(request: NextRequest) {
   const clientKey = rateLimitClientKey(request.headers, process.env.TRUST_CADDY_CLIENT_IP === "true");
-  const result = limiter.check(clientKey, publicRequestGroup(request.nextUrl.pathname, request.method));
+  const requestLimiter = /^\/api\/analytics\/?$/.test(request.nextUrl.pathname) ? analyticsLimiter : limiter;
+  const result = requestLimiter.check(clientKey, publicRequestGroup(request.nextUrl.pathname, request.method));
   if (result.allowed) return NextResponse.next();
 
   const headers = { "Cache-Control": "no-store", "Retry-After": String(result.retryAfterSeconds) };
