@@ -1,0 +1,74 @@
+# Rust build output
+/target/
+**/*.rs.bk
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Web dependencies and build output
+node_modules/
+.next/
+.nuxt/
+.svelte-kit/
+dist/
+build/
+coverage/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Local databases and logs
+*.db
+*.db-shm
+*.db-wal
+*.log
+
+# Editors and operating systems
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Infrastructure tooling
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+*.tfvars.json
+crash.log
+
+# Temporary files
+.cache/
+tmp/
+temp/
+
+# Downloaded and generated corpus artifacts
+corpus/raw/
+corpus/work/
+corpus/generated/
+corpus/normalized/
+corpus/reviewed/
+
+# Local deployment infrastructure and operator records
+/infra/
+/AGENTS.md
+/.cursor/
+/apps/web/AGENTS.md
+/apps/web/CLAUDE.md
+/docs/aws-setup.md
+/docs/aws-toolkit.md
+/docs/pilot-status.md
+/docs/security-updates.md
+/docs/public-api-limits.md

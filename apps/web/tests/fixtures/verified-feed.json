@@ -1,0 +1,194 @@
+{
+  "schemaVersion": "1.0",
+  "pipelineVersion": "0.1.0",
+  "book": {
+    "id": "c057f772-634e-5925-9d98-be82163588fd",
+    "editionId": "14ad290d-6be0-510f-93b5-3092904ff8b9",
+    "slug": "verification-test",
+    "title": "Verification Test",
+    "authors": [
+      "Test Author"
+    ],
+    "language": "en",
+    "source": {
+      "name": "Test Fixture",
+      "fileName": "verification-test.txt",
+      "kind": "text",
+      "mediaType": "text/plain",
+      "url": "https://example.org/verification-test",
+      "downloadUrl": null,
+      "version": null,
+      "retrievedAt": "2026-09-10T12:00:00Z",
+      "sha256": "d6cf327c378777d07a2d6dc99b7a39ed7f2e5f7af1b1dac65b4cf1425fef20e9",
+      "normalizedSha256": "161e58d78ebb213adac076b876e559761031d4b689265934d42c802130645559",
+      "rights": {
+        "status": "public-domain",
+        "jurisdiction": "US",
+        "basis": "Public domain in the United States; verify rights in every deployment jurisdiction."
+      }
+    }
+  },
+  "passages": [
+    {
+      "id": "bd7133ec-993d-5f5a-b239-fcd4735ee36c",
+      "bookId": "c057f772-634e-5925-9d98-be82163588fd",
+      "editionId": "14ad290d-6be0-510f-93b5-3092904ff8b9",
+      "text": "Every book retains the exact words that connect its readers with the past.\n\nA clear old sentence remains exactly where the author placed it.",
+      "title": "Verification Test",
+      "authors": [
+        "Test Author"
+      ],
+      "wordCount": 24,
+      "status": "candidate",
+      "qualityScore": 0.798,
+      "chapter": {
+        "id": "968d6484-9644-5929-a08f-ceed1c3f248a",
+        "ordinal": 1,
+        "title": "Chapter I",
+        "locator": "text:block-1"
+      },
+      "provenance": {
+        "sourceSha256": "d6cf327c378777d07a2d6dc99b7a39ed7f2e5f7af1b1dac65b4cf1425fef20e9",
+        "chapterSha256": "161e58d78ebb213adac076b876e559761031d4b689265934d42c802130645559",
+        "startSentenceId": "sentence_35f80263860f8c503b6b",
+        "endSentenceId": "sentence_f6732e7c582fcc187fa4",
+        "startSentenceOrdinal": 2,
+        "endSentenceOrdinal": 3,
+        "startOffset": 48,
+        "endOffset": 188,
+        "quoteSha256": "f3863f3f4422284fc40327fe561724e048382375e9084c603af3244830ec2a70"
+      },
+      "curation": {
+        "selector": "heuristic",
+        "model": null,
+        "score": 79.8,
+        "rank": 1,
+        "reason": "complete ending, distinctive language, thematic resonance",
+        "themes": [
+          "knowledge",
+          "time"
+        ],
+        "contentFlags": []
+      }
+    },
+    {
+      "id": "8539bd7b-1a2d-56e7-9880-5ed98fc97765",
+      "bookId": "c057f772-634e-5925-9d98-be82163588fd",
+      "editionId": "14ad290d-6be0-510f-93b5-3092904ff8b9",
+      "text": "The act of reading brings the distant past into the present.",
+      "title": "Verification Test",
+      "authors": [
+        "Test Author"
+      ],
+      "wordCount": 11,
+      "status": "candidate",
+      "qualityScore": 0.61577,
+      "chapter": {
+        "id": "968d6484-9644-5929-a08f-ceed1c3f248a",
+        "ordinal": 1,
+        "title": "Chapter I",
+        "locator": "text:block-1"
+      },
+      "provenance": {
+        "sourceSha256": "d6cf327c378777d07a2d6dc99b7a39ed7f2e5f7af1b1dac65b4cf1425fef20e9",
+        "chapterSha256": "161e58d78ebb213adac076b876e559761031d4b689265934d42c802130645559",
+        "startSentenceId": "sentence_1b76394fba22a9b72bb5",
+        "endSentenceId": "sentence_1b76394fba22a9b72bb5",
+        "startSentenceOrdinal": 4,
+        "endSentenceOrdinal": 4,
+        "startOffset": 189,
+        "endOffset": 249,
+        "quoteSha256": "b248df3f216b9ae27ebb1453a9f9d00871e2d9ef79a28b77c226432ee7f9479a"
+      },
+      "curation": {
+        "selector": "heuristic",
+        "model": null,
+        "score": 61.577,
+        "rank": 2,
+        "reason": "complete ending, distinctive language, thematic resonance",
+        "themes": [
+          "time"
+        ],
+        "contentFlags": []
+      }
+    }
+  ],
+  "verificationBundle": {
+    "version": "1",
+    "normalizationVersion": "1",
+    "offsetUnit": "unicode-code-points",
+    "originalSourceBase64": "Q2hhcHRlciBJCgpBIGJyaWdodCBzdGFyIPCfjJ8gc2hpbmVzIGFjcm9zcyB0aGUgcXVpZXQgaGFyYm9yLiBFdmVyeSBib29rIHJldGFpbnMgdGhlIGV4YWN0IHdvcmRzIHRoYXQgY29ubmVjdCBpdHMgcmVhZGVycyB3aXRoIHRoZSBwYXN0LgoKQSBjbGVhciBvbGQgc2VudGVuY2UgcmVtYWlucyBleGFjdGx5IHdoZXJlIHRoZSBhdXRob3IgcGxhY2VkIGl0LiBUaGUgYWN0IG9mIHJlYWRpbmcgYnJpbmdzIHRoZSBkaXN0YW50IHBhc3QgaW50byB0aGUgcHJlc2VudC4=",
+    "chapters": [
+      {
+        "id": "968d6484-9644-5929-a08f-ceed1c3f248a",
+        "ordinal": 1,
+        "title": "Chapter I",
+        "locator": "text:block-1",
+        "text": "A bright star 🌟 shines across the quiet harbor. Every book retains the exact words that connect its readers with the past.\n\nA clear old sentence remains exactly where the author placed it. The act of reading brings the distant past into the present.",
+        "contentSha256": "161e58d78ebb213adac076b876e559761031d4b689265934d42c802130645559",
+        "paragraphs": [
+          {
+            "id": "paragraph_1443376f331d03423cba",
+            "ordinal": 1,
+            "text": "A bright star 🌟 shines across the quiet harbor. Every book retains the exact words that connect its readers with the past.",
+            "startOffset": 0,
+            "endOffset": 122,
+            "contentSha256": "cdb4e053ac493e2840a6690c6efe934a34f1bb20a1680f348bc1b90bddfe5e2c",
+            "sentences": [
+              {
+                "id": "sentence_8b8561b32b574b6fda01",
+                "ordinal": 1,
+                "paragraphId": "paragraph_1443376f331d03423cba",
+                "paragraphOrdinal": 1,
+                "text": "A bright star 🌟 shines across the quiet harbor.",
+                "startOffset": 0,
+                "endOffset": 47,
+                "contentSha256": "07c63c972397b55b6d8253b2000baecba14cc86002d0daa222e99f500cfdb0be"
+              },
+              {
+                "id": "sentence_35f80263860f8c503b6b",
+                "ordinal": 2,
+                "paragraphId": "paragraph_1443376f331d03423cba",
+                "paragraphOrdinal": 1,
+                "text": "Every book retains the exact words that connect its readers with the past.",
+                "startOffset": 48,
+                "endOffset": 122,
+                "contentSha256": "2e2a73c3f9eaa23c82540919059e876fd8b8d61f6c1a1fd403c8dd8d2e7d5c27"
+              }
+            ]
+          },
+          {
+            "id": "paragraph_482e3c5cd53e1e9cc193",
+            "ordinal": 2,
+            "text": "A clear old sentence remains exactly where the author placed it. The act of reading brings the distant past into the present.",
+            "startOffset": 124,
+            "endOffset": 249,
+            "contentSha256": "975c7e7d6000609c8c0b3a02c44b6ceb830fc6071d6e888b7f73251ac30ca62d",
+            "sentences": [
+              {
+                "id": "sentence_f6732e7c582fcc187fa4",
+                "ordinal": 3,
+                "paragraphId": "paragraph_482e3c5cd53e1e9cc193",
+                "paragraphOrdinal": 2,
+                "text": "A clear old sentence remains exactly where the author placed it.",
+                "startOffset": 124,
+                "endOffset": 188,
+                "contentSha256": "c40d3a81082dea3181e3634ba309d4fe3ca40fee6b0ca93325b82d36b3c9083a"
+              },
+              {
+                "id": "sentence_1b76394fba22a9b72bb5",
+                "ordinal": 4,
+                "paragraphId": "paragraph_482e3c5cd53e1e9cc193",
+                "paragraphOrdinal": 2,
+                "text": "The act of reading brings the distant past into the present.",
+                "startOffset": 189,
+                "endOffset": 249,
+                "contentSha256": "b248df3f216b9ae27ebb1453a9f9d00871e2d9ef79a28b77c226432ee7f9479a"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

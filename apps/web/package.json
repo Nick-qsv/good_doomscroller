@@ -1,0 +1,38 @@
+{
+  "name": "@good-doomscroller/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "migrate": "node scripts/migrate.mjs ../../packages/db/migrations/0001_initial.sql",
+    "corpus:import": "node scripts/import-corpus.mjs",
+    "corpus:retire": "node scripts/archive-editions.mjs",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "next": "16.3.4",
+    "postgres": "3.4.7",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "16.2.0",
+    "@types/node": "22.15.3",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.4",
+    "jsdom": "26.1.0",
+    "typescript": "5.8.3",
+    "vitest": "3.2.7"
+  },
+  "engines": {
+    "node": ">=20.9"
+  }
+}
