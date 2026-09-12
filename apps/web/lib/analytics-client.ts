@@ -23,7 +23,7 @@ const MAX_QUEUE = 100;
 const BATCH_SIZE = 20;
 const PASSAGE_ID = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|demo-[a-z0-9-]{1,70})$/i;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const activitySubscribers = new Set<{ tick: (activeMs: number) => void; flush: () => void }>();
+const activitySubscribers = new Set<{ tick: (activeMs: number) => void; flush: () => void; reset: () => void }>();
 let activeClient: AnalyticsClient | undefined;
 let memoryOptOut = false;
 
@@ -65,8 +65,8 @@ export function trackAnalytics(name: AnalyticsEventName, properties: AnalyticsPr
   activeClient?.track(name, properties);
 }
 
-export function subscribeAnalyticsActivity(tick: (activeMs: number) => void, flush: () => void): () => void {
-  const subscription = { tick, flush };
+export function subscribeAnalyticsActivity(tick: (activeMs: number) => void, flush: () => void, reset: () => void): () => void {
+  const subscription = { tick, flush, reset };
   activitySubscribers.add(subscription);
   return () => {
     flush();
@@ -121,6 +121,7 @@ export class AnalyticsClient {
       if (!globalThis.crypto?.randomUUID) return undefined;
       this.session = { id: crypto.randomUUID(), lastActivity: now };
       this.sessionNeedsPageView = true;
+      for (const subscription of activitySubscribers) subscription.reset();
     }
     this.session.lastActivity = now;
     try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(this.session)); } catch { /* Optional storage. */ }
@@ -132,6 +133,8 @@ export class AnalyticsClient {
     try {
       const sessionId = this.currentSession(Date.now());
       if (!sessionId) return;
+      // A suspended tab may flush old exposure time before its first resumed sample.
+      if (this.sessionNeedsPageView && name === "passage_read") return;
       if (this.sessionNeedsPageView && name !== "page_view") {
         this.enqueue({ id: crypto.randomUUID(), sessionId, name: "page_view", path: this.path });
       }
@@ -181,7 +184,11 @@ export class AnalyticsClient {
     this.lastTick = now;
     const active = this.allowed() && this.path && document.visibilityState === "visible" && now - this.lastInput <= IDLE_TIMEOUT;
     const activeMs = active ? elapsed : 0;
-    if (activeMs) this.engagement += activeMs;
+    if (activeMs) {
+      // Rotate before sampling so mounted cards count a fresh view in this session.
+      this.currentSession(now);
+      this.engagement += activeMs;
+    }
     for (const subscription of activitySubscribers) subscription.tick(activeMs);
     if (!active) this.flushActivity();
   };
@@ -223,6 +230,7 @@ export class AnalyticsClient {
     this.queue = [];
     this.engagement = 0;
     this.session = undefined;
+    for (const subscription of activitySubscribers) subscription.reset();
     try { sessionStorage.removeItem(SESSION_KEY); } catch { /* Optional storage. */ }
   }
 

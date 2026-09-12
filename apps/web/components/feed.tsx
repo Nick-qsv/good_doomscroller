@@ -8,6 +8,7 @@ import {
   Feather,
   RotateCcw,
   Sparkles,
+  ShieldCheck,
   ThumbsDown,
   ThumbsUp,
 } from "lucide-react";
@@ -343,6 +344,10 @@ export function Feed() {
             <Sparkles size={19} aria-hidden="true" />
             For you
           </a>
+          <Link href="/privacy">
+            <ShieldCheck size={19} aria-hidden="true" />
+            Privacy
+          </Link>
         </nav>
       </aside>
 
@@ -352,7 +357,7 @@ export function Feed() {
             <Feather size={19} aria-hidden="true" />
             <span>good doomscroller</span>
           </a>
-          <span className="header-badge">public domain</span>
+          <span className="header-badge">public domain<br /><Link href="/privacy" aria-label="Privacy and analytics">Privacy</Link></span>
         </header>
 
         <section className="feed-intro" aria-labelledby="feed-heading">

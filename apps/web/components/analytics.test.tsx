@@ -186,6 +186,34 @@ describe("reader exposure and preferences", () => {
     expect(recordedEvents().filter((event) => event.name === "passage_read").map((event) => event.value)).toEqual([1000, 2000]);
   });
 
+  it.each(["idle session expiry", "privacy off then on"])("counts a fresh view before reading after %s while the passage stays mounted", async (transition) => {
+    const client = start();
+    render(<Passage />);
+    showElement(screen.getByRole("article"));
+    await vi.advanceTimersByTimeAsync(1000);
+    await client.flush();
+    const originalSession = recordedEvents()[0].sessionId;
+    expect(recordedEvents().filter((event) => event.name === "passage_view")).toHaveLength(1);
+
+    if (transition === "idle session expiry") {
+      // The first minute remains active, then over thirty minutes pass without input.
+      await vi.advanceTimersByTimeAsync(32 * 60_000);
+    } else {
+      setAnalyticsOptOut(true);
+      setAnalyticsOptOut(false);
+    }
+    window.dispatchEvent(new Event("scroll"));
+    await vi.advanceTimersByTimeAsync(3000);
+    await client.flush();
+
+    const resumed = recordedEvents().filter((event) => event.sessionId !== originalSession);
+    expect(resumed.filter((event) => ["page_view", "passage_view", "passage_read"].includes(event.name)).map((event) => event.name))
+      .toEqual(["page_view", "passage_view", "passage_read"]);
+    expect(resumed.find((event) => event.name === "passage_view")).toMatchObject({ passageId: "demo-passage-one", value: 7 });
+    expect(resumed.find((event) => event.name === "passage_read")).toMatchObject({ passageId: "demo-passage-one", value: 2000 });
+    expect(new Set(resumed.map((event) => event.sessionId)).size).toBe(1);
+  });
+
   it("counts AI context visibility as an impression without an expansion action", async () => {
     const client = start();
     render(<AnalyticsImpression passageId="demo-passage-one" role="note">AI context</AnalyticsImpression>);

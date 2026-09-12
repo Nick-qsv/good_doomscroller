@@ -80,7 +80,12 @@ export function useAnalyticsExposure<T extends HTMLElement>(
         reading += measuredMs;
         if (reading >= 10_000) flush();
       }
-    }, flush);
+    }, flush, () => {
+      seen = false;
+      continuous = 0;
+      reading = 0;
+      lastExposureSample = null;
+    });
     return () => { unsubscribe(); observer.disconnect(); };
   }, [name, passageId, position]);
   return ref;
