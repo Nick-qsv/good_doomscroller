@@ -1,6 +1,16 @@
 # Daily Polkadot anchoring worker
 
-The worker infrastructure is defined in `infra/terraform/polkadot-worker.tf`. Deployment and successful mainnet finalization must be verified before marking this runbook active. Terraform initially leaves the schedule disabled.
+**Status, September 13, 2026: active.** The worker infrastructure is defined in `infra/terraform/polkadot-worker.tf`. The first mainnet anchor was finalized and independently verified, and AWS `GetSchedule` confirmed `ENABLED` for the **03:00 UTC** daily schedule. The deployed task is revision **2**, image tag `mainnet-20260913-2`. Terraform defaults new deployments to a disabled schedule until their first-run checks pass.
+
+## Verified launch evidence
+
+- Batch `a6c85d1e-a90a-4fcd-9122-437edeb39b65` contains **236 receipts** and finalized in block **20,580,568** at **2026-09-13 00:09:12 UTC**.
+- Transaction `0xd373951d89cb0677bdde4e93d2c1118521d987f45749717c21c0975e9e13ca0b`, extrinsic index **2**, paid exactly **0.0011386503 DOT**. [Inspect the finalized transaction](https://assethub-polkadot.subscan.io/extrinsic/20580568-2).
+- The downloaded proof passed the independent online verifier through Dwellir with exit `0`; the separate Python source-proof verifier also passed. [The live verification page shows anchored history](https://goodoomscroller.com/passages/fe293a46-6ab7-50c1-99d2-566775985907/verification).
+- A second actual worker run exited `0` as `idle`, produced no extra transaction and left the nonce at `1`. Remaining balance was independently read as **19.6606781016 DOT** at **2026-09-13 00:13:02 UTC**, down from **19.6618167519 DOT** before the first fee.
+- **32 anchoring tests** pass, including real PostgreSQL tests, and the dedicated CI job runs the suite. No email/push notification recipient is configured. The residual image scan finding is documented below.
+
+## Runtime isolation
 
 The task runs at **03:00 UTC daily**. EventBridge Scheduler starts one Linux Fargate task with 0.25 vCPU and 1 GiB memory. It uses the existing public subnet and a temporary public IP for HTTPS access to Polkadot RPC and AWS. Its security group has no ingress; outbound access is limited to HTTPS and PostgreSQL in the existing database security group. It creates no NAT gateway, load balancer, always-running container, or replacement EC2 host.
 
