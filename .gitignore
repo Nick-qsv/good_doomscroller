@@ -41,6 +41,13 @@ coverage/
 .DS_Store
 Thumbs.db
 
+# Apple app builds and local Xcode state
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcarchive/
+*.ipa
+
 # Infrastructure tooling
 .terraform/
 *.tfstate
