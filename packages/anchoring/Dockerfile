@@ -1,11 +1,18 @@
 FROM public.ecr.aws/aws-cli/aws-cli:2.36.44 AS awscli
 
-FROM node:22-bookworm-slim AS dependencies
+FROM node:22-trixie-slim AS base
+# Refresh inherited OS packages too: installing Python alone leaves older
+# already-installed libraries untouched. Use the base for both build stages.
+RUN apt-get update \
+    && apt-get upgrade --no-install-recommends -y \
+    && rm -rf /var/lib/apt/lists/*
+
+FROM base AS dependencies
 WORKDIR /app
 COPY packages/anchoring/package.json packages/anchoring/package-lock.json ./
 RUN npm ci --omit=dev
 
-FROM node:22-bookworm-slim AS runner
+FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production \
     AWS_EC2_METADATA_DISABLED=true \
