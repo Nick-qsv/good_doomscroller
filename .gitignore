@@ -80,3 +80,6 @@ corpus/reviewed/
 /docs/pilot-status.md
 /docs/security-updates.md
 /docs/public-api-limits.md
+
+# Local private working files
+/private/

@@ -35,6 +35,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/scripts/migrate.mjs ./scripts/migrate.mjs
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/scripts/database-config.mjs ./scripts/database-config.mjs
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web/scripts/analytics-prune.mjs ./scripts/analytics-prune.mjs
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/scripts/import-corpus.mjs ./scripts/import-corpus.mjs
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/scripts/import-corpus-lib.mjs ./scripts/import-corpus-lib.mjs
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/scripts/verify-corpus-source.mjs ./scripts/verify-corpus-source.mjs
