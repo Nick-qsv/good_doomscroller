@@ -48,17 +48,14 @@ export async function archiveEditionIds(sql, editionIds) {
         throw new Error(`Invalid edition UUID: ${editionId}`);
       }
 
-      const existingEdition = await transaction`
-        SELECT id
-        FROM editions
-        WHERE id = ${editionId}::uuid
-        FOR UPDATE
+      await transaction`SELECT pg_advisory_xact_lock(hashtext(${editionId}))`;
+      // No foreign key: the tombstone must also protect a fresh installation
+      // where the excluded edition has never been imported.
+      await transaction`
+        INSERT INTO edition_retirements (edition_id, reason)
+        VALUES (${editionId}::uuid, 'Publication retired by operator marker')
+        ON CONFLICT (edition_id) DO NOTHING
       `;
-      if (existingEdition.length !== 1) {
-        throw new Error(
-          `Retirement marker ${editionId}.retired does not match an existing edition`,
-        );
-      }
 
       const archived = await transaction`
         UPDATE passages

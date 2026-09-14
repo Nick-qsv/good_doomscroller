@@ -49,19 +49,24 @@ describe("edition retirement markers", () => {
       editionsMarked: 1,
       passagesArchived: 1,
     });
-    expect(calls).toHaveLength(3);
+    expect(calls).toHaveLength(4);
     expect(calls.every((call) => call.values.includes(EDITION_ID))).toBe(true);
-    expect(calls[1].text).toContain("status = 'archived'");
-    expect(calls[2].text).toContain("'retired', true");
+    expect(calls[1].text).toContain("INSERT INTO edition_retirements");
+    expect(calls[2].text).toContain("status = 'archived'");
+    expect(calls[3].text).toContain("'retired', true");
   });
 
-  it("fails closed when a valid-looking marker matches no edition", async () => {
-    const transaction = (strings) =>
-      Promise.resolve(strings.join("?").includes("SELECT id") ? [] : []);
+  it("records a permanent tombstone when the edition does not exist yet", async () => {
+    const calls = [];
+    const transaction = (strings) => {
+      calls.push(strings.join("?"));
+      return Promise.resolve([]);
+    };
     const sql = { begin: async (callback) => callback(transaction) };
 
-    await expect(archiveEditionIds(sql, [EDITION_ID])).rejects.toThrow(
-      /does not match an existing edition/,
-    );
+    await expect(archiveEditionIds(sql, [EDITION_ID])).resolves.toEqual({
+      markers: 1, editionsMarked: 0, passagesArchived: 0,
+    });
+    expect(calls).toContainEqual(expect.stringContaining("INSERT INTO edition_retirements"));
   });
 });

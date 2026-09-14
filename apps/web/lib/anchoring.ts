@@ -1,6 +1,6 @@
 import {
   buildEnvelope, buildManifest, createMerkleTree, POLKADOT_GENESIS_HASH,
-  POLKADOT_SIGNER_ADDRESS, sha256, verifyReceiptProof,
+  POLKADOT_SIGNER_ADDRESS, parseEnvelope, receiptRationale, sha256, verifyReceiptProof,
 } from "../../../packages/anchoring/proofs.mjs";
 import { getDatabase } from "@/lib/database";
 import type { FinalizedAnchorBatch, PassageAnchoring, ReceiptInclusionProof } from "@/lib/types";
@@ -19,15 +19,16 @@ export type AnchorHistoryRow = {
   batch: SavedBatch | null;
 };
 
-function checkBatch(saved: SavedBatch): { batch: FinalizedAnchorBatch; receipts: Array<{ sequence: string; receiptSha256: string }> } {
+function checkBatch(saved: SavedBatch) {
   const manifest = JSON.parse(saved.manifestJson);
   const tree = createMerkleTree(manifest.receipts);
+  const envelope = parseEnvelope(saved.envelopeHex);
   if (manifest.schemaVersion !== "1.0" || manifest.batchId !== saved.batchId ||
       manifest.previousBatchId !== saved.previousBatchId || manifest.previousRootSha256 !== saved.previousRootSha256 ||
       buildManifest(manifest) !== saved.manifestJson ||
       tree.rootSha256 !== saved.rootSha256 || tree.receipts.length !== saved.receiptCount ||
       tree.receipts[0].sequence !== saved.firstReceiptSequence || tree.receipts.at(-1)?.sequence !== saved.lastReceiptSequence ||
-      buildEnvelope(saved) !== saved.envelopeHex || saved.genesisHash !== POLKADOT_GENESIS_HASH ||
+      buildEnvelope({ ...saved, rationaleEntries: envelope.rationaleEntries }) !== saved.envelopeHex || saved.genesisHash !== POLKADOT_GENESIS_HASH ||
       saved.signerAddress !== POLKADOT_SIGNER_ADDRESS ||
       !CHAIN_HASH.test(saved.blockHash) || !CHAIN_HASH.test(saved.extrinsicHash) || !CHAIN_HASH.test(saved.finalizedHeadHash) ||
       !/^(0|[1-9][0-9]*)$/.test(saved.blockNumber) ||
@@ -41,10 +42,12 @@ function checkBatch(saved: SavedBatch): { batch: FinalizedAnchorBatch; receipts:
   return {
     batch: {
       ...metadata,
+      format: envelope.version === 2 ? "rationales" as const : "hash-only" as const,
       blockTimestamp: new Date(saved.blockTimestamp).toISOString(),
       explorerUrl: `https://assethub-polkadot.subscan.io/extrinsic/${saved.blockNumber}-${saved.extrinsicIndex}`,
     },
     receipts: tree.receipts,
+    rationaleEntries: envelope.rationaleEntries,
   };
 }
 
@@ -65,12 +68,12 @@ export function anchoringFromRows(rows: AnchorHistoryRow[], passageId: string, l
     previousReceipt = row.receipt_sha256;
     previousSequence = BigInt(row.sequence);
     if (!row.batch) {
-      history.push({ sequence: row.sequence, receiptSha256: row.receipt_sha256, status: "pending" });
+      history.push({ sequence: row.sequence, receiptSha256: row.receipt_sha256, status: "pending", rationale: { status: "pending" } });
       continue;
     }
     const batchId = row.batch.batchId;
     if (!checked.has(batchId)) checked.set(batchId, checkBatch(row.batch));
-    const { batch, receipts } = checked.get(batchId)!;
+    const { batch, receipts, rationaleEntries } = checked.get(batchId)!;
     if (!row.proof || row.membership_sha256 !== row.receipt_sha256 || row.leaf_index !== row.proof.leafIndex ||
         row.proof.leafCount !== batch.receiptCount ||
         receipts[row.proof.leafIndex]?.sequence !== row.sequence ||
@@ -78,7 +81,13 @@ export function anchoringFromRows(rows: AnchorHistoryRow[], passageId: string, l
         !verifyReceiptProof(row.receipt_sha256, row.proof, batch.rootSha256)) {
       throw new Error("Receipt inclusion proof failed its integrity check");
     }
-    history.push({ sequence: row.sequence, receiptSha256: row.receipt_sha256, status: "finalized", batchId, inclusionProof: row.proof });
+    const rationale = rationaleEntries?.[row.proof.leafIndex];
+    if (rationale && JSON.stringify(rationale) !== JSON.stringify(receiptRationale({ receiptJson: row.receipt_json, receiptSha256: row.receipt_sha256 }))) {
+      throw new Error("On-chain rationale does not match its receipt");
+    }
+    history.push({ sequence: row.sequence, receiptSha256: row.receipt_sha256, status: "finalized", batchId, inclusionProof: row.proof,
+      rationale: rationale ? { status: "on-chain", ...rationale.selection } : { status: "hash-only" },
+    });
   }
   if (history.length === 0 || previousReceipt !== latestReceiptSha256) {
     throw new Error("Publication changed while the proof was being prepared; retry");
@@ -89,6 +98,7 @@ export function anchoringFromRows(rows: AnchorHistoryRow[], passageId: string, l
     totalReceipts: history.length,
     finalizedReceipts,
     pendingReceipts: history.length - finalizedReceipts,
+    onChainRationaleReceipts: history.filter((receipt) => receipt.rationale?.status === "on-chain").length,
     verification: "local-integrity-checked-chain-evidence-recorded",
     history,
     batches: Array.from(checked.values(), (value) => value.batch),

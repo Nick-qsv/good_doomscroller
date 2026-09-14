@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import base64
+from datetime import UTC, datetime
 from typing import Any
 
 from .ids import sha256_bytes, stable_uuid
@@ -88,7 +89,7 @@ def export_feed(
     *,
     source: LoadedSource | None = None,
 ) -> dict[str, Any]:
-    """Build deterministic web-ready JSON, reconstructing every quote from source IDs."""
+    """Reconstruct stable quotations and record selector notes with this export's time."""
 
     if not document.authors:
         raise VerificationError(
@@ -98,6 +99,9 @@ def export_feed(
     chapter_map = {chapter.id: chapter for chapter in document.chapters}
     seen: set[str] = set()
     passages: list[dict[str, Any]] = []
+    # This is the local time the supplied selector notes are written, not proof of
+    # the decision's time. Saving it in the feed keeps later imports idempotent.
+    selection_recorded_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     for rank, selection in enumerate(selections, 1):
         if selection.candidate_id in seen:
             raise VerificationError(f"Candidate selected more than once: {selection.candidate_id}")
@@ -146,6 +150,7 @@ def export_feed(
                     "reason": selection.reason,
                     "themes": list(selection.themes),
                     "contentFlags": list(selection.content_flags),
+                    "selectionRecordedAt": selection_recorded_at,
                 },
             }
         )

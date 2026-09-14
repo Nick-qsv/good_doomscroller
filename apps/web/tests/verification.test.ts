@@ -3,6 +3,7 @@ import verifiedFeed from "./fixtures/verified-feed.json";
 import { describe, expect, it } from "vitest";
 
 import { getPassageVerification, verificationFromRow } from "@/lib/verification";
+import { demoPassages } from "@/lib/demo-data";
 import type { VerificationReceipt } from "@/lib/types";
 
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
@@ -73,10 +74,35 @@ describe("public quote verification", () => {
   });
 
   it("does not claim demo passages have preserved sources or receipts", async () => {
-    const result = await getPassageVerification("demo-pride-prejudice-01");
+    const result = await getPassageVerification(demoPassages[0].id);
     expect(result?.status).toBe("unavailable");
     expect(result?.receipt).toBeUndefined();
-    expect(result?.passage.bookTitle).toBe("Pride and Prejudice");
+    expect(result?.passage.bookTitle).toBe(demoPassages[0].bookTitle);
     expect(await getPassageVerification("not-a-passage")).toBeNull();
+  });
+
+  it("checks the compared excerpt against the preserved source even if a changed receipt is rehashed", () => {
+    const row = storedRow();
+    const receipt = JSON.parse(row.receipt_json) as VerificationReceipt;
+    const chapter = row.normalized_chapters[0];
+    receipt.selection.decisionReview = {
+      reviewedAt: "2026-09-13T01:00:00Z", reviewKind: "retrospective-comparison",
+      summary: "A later editorial comparison.",
+      alternative: { chapterId: chapter.id, startOffset: 0, endOffset: 20,
+        text: Array.from(chapter.text).slice(0, 20).join("") },
+      whySelected: "The published passage makes a complete point.",
+      whyAlternativeNotSelected: "This shorter fragment needs more context.",
+      limitation: "This is not a record of the original selection.",
+    };
+    const check = () => {
+      row.receipt_json = JSON.stringify(receipt);
+      row.receipt_sha256 = hash(row.receipt_json);
+      return verificationFromRow(row).status;
+    };
+    expect(check()).toBe("verified");
+    receipt.selection.decisionReview.alternative.text += " Invented.";
+    expect(check()).toBe("unavailable");
+    receipt.selection.decisionReview.alternative.endOffset = -1;
+    expect(check()).toBe("unavailable");
   });
 });

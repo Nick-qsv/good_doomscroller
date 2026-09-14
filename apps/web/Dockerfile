@@ -38,6 +38,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/web/scripts/database-config.
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/scripts/analytics-prune.mjs ./scripts/analytics-prune.mjs
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/scripts/import-corpus.mjs ./scripts/import-corpus.mjs
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/scripts/import-corpus-lib.mjs ./scripts/import-corpus-lib.mjs
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web/scripts/publication-policy.mjs ./scripts/publication-policy.mjs
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web/scripts/publication-policy.json ./scripts/publication-policy.json
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/scripts/verify-corpus-source.mjs ./scripts/verify-corpus-source.mjs
 COPY --chown=nextjs:nodejs pipeline/src ./pipeline/src
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/scripts/archive-editions.mjs ./scripts/archive-editions.mjs
@@ -46,8 +48,9 @@ COPY --from=dependencies --chown=nextjs:nodejs /app/node_modules/postgres ./node
 COPY --chown=nextjs:nodejs packages/db/migrations ./migrations
 COPY --chown=nextjs:nodejs corpus/published ./corpus/published
 COPY --chown=nextjs:nodejs corpus/retired ./corpus/retired
-COPY --chown=nextjs:nodejs docker/web-entrypoint.sh ./web-entrypoint.sh
+COPY --chown=nextjs:nodejs --chmod=755 docker/web-entrypoint.sh ./web-entrypoint.sh
 
 USER nextjs
+RUN test -x /app/web-entrypoint.sh
 EXPOSE 3000
 ENTRYPOINT ["/app/web-entrypoint.sh"]

@@ -1,8 +1,8 @@
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { AnalyticsImpression, AnalyticsPreference, AnalyticsProofDetails, useAnalyticsExposure } from "@/components/analytics";
-import { AnalyticsClient, ANALYTICS_OPT_OUT_KEY, externalReferrerHostname, setAnalyticsOptOut, type AnalyticsEvent } from "@/lib/analytics-client";
+import { AnalyticsImpression, AnalyticsProofDetails, useAnalyticsExposure } from "@/components/analytics";
+import { AnalyticsClient, ANALYTICS_CONSENT_KEY, ANALYTICS_OPT_OUT_KEY, externalReferrerHostname, getAnalyticsConsent, setAnalyticsConsent, subscribeAnalyticsPreference, type AnalyticsEvent } from "@/lib/analytics-client";
 
 let stop: (() => void) | undefined;
 let fetchMock: ReturnType<typeof vi.fn>;
@@ -19,12 +19,18 @@ function start(path = "/", enabled = true) {
   return client;
 }
 
+function changeConsentInAnotherTab(value: string | null) {
+  if (value === null) localStorage.removeItem(ANALYTICS_CONSENT_KEY);
+  else localStorage.setItem(ANALYTICS_CONSENT_KEY, value);
+  window.dispatchEvent(new StorageEvent("storage", { key: ANALYTICS_CONSENT_KEY, newValue: value, storageArea: localStorage }));
+}
+
 beforeEach(() => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date("2026-09-12T12:00:00Z"));
   localStorage.clear();
   sessionStorage.clear();
-  setAnalyticsOptOut(false);
+  setAnalyticsConsent("accepted");
   fetchMock = vi.fn().mockResolvedValue({ ok: true });
   vi.stubGlobal("fetch", fetchMock);
   vi.stubGlobal("IntersectionObserver", class {
@@ -47,6 +53,89 @@ afterEach(() => {
 });
 
 describe("anonymous analytics transport", () => {
+  it.each([null, "false", "true"])("requires explicit consent and preserves legacy optout %s", async (legacy) => {
+    localStorage.removeItem(ANALYTICS_CONSENT_KEY);
+    if (legacy !== null) localStorage.setItem(ANALYTICS_OPT_OUT_KEY, legacy);
+    sessionStorage.setItem("good-doomscroller.analytics.session", JSON.stringify({
+      id: crypto.randomUUID(), lastActivity: Date.now(),
+    }));
+    expect(getAnalyticsConsent()).toBe(legacy === "true" ? "declined" : null);
+    const client = start();
+    expect(sessionStorage.length).toBe(0);
+    client.track("feed_load", { value: 6 });
+    await vi.advanceTimersByTimeAsync(20_000);
+    await client.flush();
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(sessionStorage.length).toBe(0);
+  });
+
+  it("starts with the current page view on acceptance without replaying pre-consent activity", async () => {
+    localStorage.removeItem(ANALYTICS_CONSENT_KEY);
+    const client = start();
+    client.track("reaction", { passageId: "demo-passage-one", value: 1 });
+    await vi.advanceTimersByTimeAsync(30_500);
+    client.setPage("/passages/demo-passage-one/verification");
+    setAnalyticsConsent("accepted");
+    await client.flush();
+    expect(recordedEvents()).toEqual([expect.objectContaining({ name: "page_view", path: "/passages/demo-passage-one/verification" })]);
+    await vi.advanceTimersByTimeAsync(500);
+    await client.flush();
+    expect(recordedEvents().filter((event) => event.name === "engagement").map((event) => event.value)).toEqual([500]);
+  });
+
+  it("syncs acceptance, rejection, and removal from another tab", async () => {
+    localStorage.removeItem(ANALYTICS_CONSENT_KEY);
+    const client = start();
+    changeConsentInAnotherTab("accepted");
+    await client.flush();
+    expect(recordedEvents().map((event) => event.name)).toEqual(["page_view"]);
+    const firstSession = recordedEvents()[0].sessionId;
+    client.track("feed_load", { value: 6 });
+    changeConsentInAnotherTab("declined");
+    expect(sessionStorage.length).toBe(0);
+    await client.flush();
+    expect(recordedEvents()).toHaveLength(1);
+    changeConsentInAnotherTab("accepted");
+    await client.flush();
+    expect(recordedEvents()[1]).toMatchObject({ name: "page_view", path: "/" });
+    expect(recordedEvents()[1].sessionId).not.toBe(firstSession);
+    changeConsentInAnotherTab(null);
+    expect(getAnalyticsConsent()).toBeNull();
+    expect(sessionStorage.length).toBe(0);
+    client.track("feed_load", { value: 6 });
+    await client.flush();
+    expect(recordedEvents()).toHaveLength(2);
+  });
+
+  it("keeps an explicit in-memory choice when browser storage cannot be written", async () => {
+    localStorage.removeItem(ANALYTICS_CONSENT_KEY);
+    const client = start();
+    const setItem = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new DOMException("Storage blocked"); });
+    setAnalyticsConsent("accepted");
+    expect(getAnalyticsConsent()).toBe("accepted");
+    await client.flush();
+    expect(recordedEvents().map((event) => event.name)).toEqual(["page_view"]);
+    setAnalyticsConsent("declined");
+    expect(getAnalyticsConsent()).toBe("declined");
+    expect(sessionStorage.length).toBe(0);
+    client.track("feed_load", { value: 6 });
+    await client.flush();
+    expect(recordedEvents()).toHaveLength(1);
+    setItem.mockRestore();
+  });
+
+  it("updates preference subscribers only for consent storage changes", () => {
+    const changed = vi.fn();
+    const unsubscribe = subscribeAnalyticsPreference(changed);
+    window.dispatchEvent(new StorageEvent("storage", { key: "reading-font", newValue: "serif" }));
+    expect(changed).not.toHaveBeenCalled();
+    changeConsentInAnotherTab("declined");
+    expect(changed).toHaveBeenCalledOnce();
+    setAnalyticsConsent("accepted");
+    expect(changed).toHaveBeenCalledTimes(2);
+    unsubscribe();
+  });
+
   it("sends only supported pages, strips query strings, and omits actor cookies", async () => {
     const client = start("/?private=do-not-store#quote");
     client.track("feed_load", { value: 6 });
@@ -69,7 +158,7 @@ describe("anonymous analytics transport", () => {
   it.each(["dnt", "gpc", "local", "disabled"])("does not identify or send events with %s optout", async (privacy) => {
     if (privacy === "dnt") Object.defineProperty(navigator, "doNotTrack", { configurable: true, value: "1" });
     if (privacy === "gpc") Object.defineProperty(navigator, "globalPrivacyControl", { configurable: true, value: true });
-    if (privacy === "local") setAnalyticsOptOut(true);
+    if (privacy === "local") setAnalyticsConsent("declined");
     const client = start("/", privacy !== "disabled");
     client.track("feed_load", { value: 6 });
     await client.flush();
@@ -80,10 +169,29 @@ describe("anonymous analytics transport", () => {
   it("discards queued events immediately when a reader opts out", async () => {
     const client = start();
     client.track("feed_load", { value: 6 });
-    setAnalyticsOptOut(true);
+    setAnalyticsConsent("declined");
     await client.flush();
     expect(fetchMock).not.toHaveBeenCalled();
     expect(sessionStorage.length).toBe(0);
+  });
+
+  it("aborts an active request and never resumes its old batch after consent is renewed", async () => {
+    const client = start();
+    for (let i = 0; i < 30; i++) client.track("feed_load", { value: 6 });
+    let finishRequest: (() => void) | undefined;
+    fetchMock.mockImplementationOnce(() => new Promise((resolve) => { finishRequest = () => resolve({ ok: true }); }));
+    const pending = client.flush();
+    const request = fetchMock.mock.calls[0][1];
+    setAnalyticsConsent("declined");
+    expect(request.signal.aborted).toBe(true);
+    expect(sessionStorage.length).toBe(0);
+    setAnalyticsConsent("accepted");
+    finishRequest?.();
+    await pending;
+    expect(fetchMock).toHaveBeenCalledOnce();
+    await client.flush();
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body).events).toEqual([expect.objectContaining({ name: "page_view" })]);
   });
 
   it("rotates the session after thirty minutes without events", async () => {
@@ -169,6 +277,23 @@ describe("reader exposure and preferences", () => {
     intersectionCallback([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver);
   }
 
+  it("begins measuring a mounted passage only after consent", async () => {
+    localStorage.removeItem(ANALYTICS_CONSENT_KEY);
+    const client = start();
+    render(<Passage />);
+    showElement(screen.getByRole("article"));
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(sessionStorage.length).toBe(0);
+    setAnalyticsConsent("accepted");
+    await client.flush();
+    expect(recordedEvents().map((event) => event.name)).toEqual(["page_view"]);
+    await vi.advanceTimersByTimeAsync(2000);
+    await client.flush();
+    expect(recordedEvents().filter((event) => event.name === "passage_view")).toHaveLength(1);
+    expect(recordedEvents().filter((event) => event.name === "passage_read").map((event) => event.value)).toEqual([1000]);
+  });
+
   it("counts a tall passage only when exposed, then sends incremental reading time", async () => {
     const client = start();
     render(<Passage />);
@@ -199,8 +324,8 @@ describe("reader exposure and preferences", () => {
       // The first minute remains active, then over thirty minutes pass without input.
       await vi.advanceTimersByTimeAsync(32 * 60_000);
     } else {
-      setAnalyticsOptOut(true);
-      setAnalyticsOptOut(false);
+      setAnalyticsConsent("declined");
+      setAnalyticsConsent("accepted");
     }
     window.dispatchEvent(new Event("scroll"));
     await vi.advanceTimersByTimeAsync(3000);
@@ -224,16 +349,13 @@ describe("reader exposure and preferences", () => {
     expect(recordedEvents().filter((event) => event.name === "passage_read")).toHaveLength(0);
   });
 
-  it("records proof opening and supports a visible analytics optout", async () => {
+  it("records proof opening", async () => {
     const client = start("/passages/demo-passage-one/verification");
-    const { container } = render(<><AnalyticsProofDetails passageId="demo-passage-one"><summary>Proof details</summary>Proof</AnalyticsProofDetails><AnalyticsPreference /></>);
+    const { container } = render(<AnalyticsProofDetails passageId="demo-passage-one"><summary>Proof details</summary>Proof</AnalyticsProofDetails>);
     const details = container.querySelector("details")!;
     details.open = true;
     fireEvent(details, new Event("toggle"));
     await client.flush();
     expect(recordedEvents()).toContainEqual(expect.objectContaining({ name: "proof_expand", passageId: "demo-passage-one" }));
-    act(() => fireEvent.click(screen.getByRole("button", { name: "Disable usage analytics" })));
-    expect(localStorage.getItem(ANALYTICS_OPT_OUT_KEY)).toBe("true");
-    expect(screen.getByRole("status")).toHaveTextContent("disabled in this browser");
   });
 });

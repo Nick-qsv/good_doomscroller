@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { QuoteVerification } from "@/components/quote-verification";
@@ -58,80 +58,97 @@ const anchored: PassageAnchoring = {
 };
 
 describe("quote verification", () => {
-  it("shows finalized chain evidence separately from source matching and older reported dates", () => {
-    render(<QuoteVerification verification={{ ...verified, anchoring: anchored }} />);
-    expect(screen.getByRole("heading", { name: "Exact source match" })).toBeVisible();
-    expect(screen.getByRole("heading", { name: "History anchored on Polkadot" })).toBeVisible();
-    expect(screen.getByText(/All 2 supplied history receipts match/)).toBeVisible();
-    expect(screen.getByRole("link", { name: /View Polkadot block 20577500/ })).toHaveAttribute("href", anchored.batches[0].explorerUrl);
-    expect(screen.getByText(/does not independently confirm those earlier dates/)).toBeVisible();
-    expect(screen.queryByText(/No finalized blockchain anchor is available yet/)).not.toBeInTheDocument();
+  it("shows a brief recorded reason and removes repetitive metadata", () => {
+    render(<QuoteVerification verification={verified} />);
+    expect(screen.getByRole("heading", { name: "Why chosen" })).toBeVisible();
+    expect(screen.getByText(receipt.selection.reason)).toBeVisible();
+    expect(screen.queryByText("Selection score")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Human review not recorded/)).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "How it works" })).toHaveAttribute("href", "/how-it-works");
   });
 
-  it("does not imply every supplied receipt is anchored when some remain pending", () => {
-    render(<QuoteVerification verification={{ ...verified, anchoring: { ...anchored, status: "partial", finalizedReceipts: 1, pendingReceipts: 1 } }} />);
-    expect(screen.getByRole("heading", { name: "History partly anchored" })).toBeVisible();
-    expect(screen.getByText(/1 of 2 supplied history receipts have finalized anchors. 1 receipt is waiting/)).toBeVisible();
-    expect(screen.queryByRole("heading", { name: "History anchored on Polkadot" })).not.toBeInTheDocument();
+  it("shows prospective comparisons only and keeps the alternative optional", () => {
+    const selection: VerificationReceipt["selection"] = {
+      ...receipt.selection,
+      selectionRecordedAt: "2026-09-13T02:00:00Z",
+      decisionReview: {
+        reviewedAt: "2026-09-13T02:00:00Z", reviewKind: "selection-comparison",
+        summary: "The chosen passage states a complete idea.",
+        alternative: { chapterId: "chapter-one", startOffset: 200, endOffset: 218, text: "He looked at them." },
+        whySelected: "Its observation stands on its own.",
+        whyAlternativeNotSelected: "The alternative needs more context.",
+        limitation: "Selection is an editorial judgment.",
+      },
+    };
+    const { rerender } = render(<QuoteVerification verification={{ ...verified, receipt: { ...receipt, selection } }} />);
+    const decision = screen.getByRole("region", { name: "Why chosen" });
+    expect(within(decision).getByText(selection.decisionReview!.whySelected)).toBeVisible();
+    expect(within(decision).getByText("Sep 13, 2026")).toHaveAttribute("dateTime", selection.selectionRecordedAt);
+    expect(within(decision).getByText(selection.decisionReview!.alternative.text)).not.toBeVisible();
+    expect(within(decision).getByText(selection.decisionReview!.alternative.text).closest("details")).not.toHaveAttribute("open");
+    rerender(<QuoteVerification verification={{ ...verified, receipt: { ...receipt, selection: {
+      ...selection, decisionReview: { ...selection.decisionReview!, reviewKind: "retrospective-comparison" },
+    } } }} />);
+    expect(screen.queryByText("Compare another excerpt")).not.toBeInTheDocument();
+    expect(screen.queryByText(selection.decisionReview!.whySelected)).not.toBeInTheDocument();
+    expect(screen.getByText(receipt.selection.reason)).toBeVisible();
   });
 
-  it("keeps AI interpretation outside the verified source context", () => {
+  it("distinguishes partial and pending blockchain records from source matching", () => {
+    const { rerender } = render(<QuoteVerification verification={{ ...verified, anchoring: anchored }} />);
+    expect(screen.getByText("Matches the saved book after text cleanup.")).toBeVisible();
+    expect(screen.getByText("Polkadot: 2 of 2 records finalized.")).toBeVisible();
+    expect(screen.getByText(/not that its source is authentic/)).toBeVisible();
+    expect(screen.getByRole("link", { name: "Block 20577500", hidden: true })).toHaveAttribute("href", anchored.batches[0].explorerUrl);
+    rerender(<QuoteVerification verification={{ ...verified, anchoring: { ...anchored, status: "partial", finalizedReceipts: 1, pendingReceipts: 1 } }} />);
+    expect(screen.getByText("Polkadot: 1 of 2 records finalized; 1 pending.")).toBeVisible();
+    rerender(<QuoteVerification verification={verified} />);
+    expect(screen.getByText("Polkadot: pending.")).toBeVisible();
+  });
+
+  it("shows only the exact quote by default, with source context available on demand", () => {
     const { container } = render(<QuoteVerification verification={{ ...verified,
-      passage: { ...verified.passage, aiContext: {
-        text: "The speaker draws attention to everyday observation.",
-        generatedBy: "AI", generatedAt: "2026-09-12T20:00:00Z",
+      passage: { ...verified.passage, chapterTitle: "CHAPTER ONE", aiContext: {
+        text: "A duplicate interpretation.", generatedBy: "AI", generatedAt: "2026-09-12T20:00:00Z",
       } },
     }} />);
-    const note = screen.getByRole("note", { name: "AI context" });
-    expect(note).toHaveTextContent("AI-generated interpretation; may be inaccurate.");
-    expect(note.closest("blockquote")).toBeNull();
-    expect(container.querySelector("mark")?.textContent).toBe(quote);
-    expect(screen.getByRole("heading", { name: "Human review not recorded" })).toBeVisible();
+    expect(container.querySelector(".verification-quote")?.textContent).toBe(quote);
+    expect(container.querySelector(".verification-context")?.textContent).toBe(verified.context!.before + quote + verified.context!.after);
+    expect(container.querySelector(".verification-context")).not.toBeVisible();
+    expect(screen.queryByText("A duplicate interpretation.")).not.toBeInTheDocument();
+    expect(screen.queryByText("CHAPTER ONE")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Download book" })).toHaveAttribute("href", verified.downloads!.source);
+    expect(screen.getByRole("link", { name: "Download proof" })).toHaveAttribute("href", verified.downloads!.proof);
+    expect(screen.getByRole("link", { name: /Source edition/ })).toHaveAttribute("href", receipt.source.url);
   });
 
-  it("shows the exact quotation in its source context with traceable downloads", () => {
-    const { container } = render(<QuoteVerification verification={verified} />);
-    expect(screen.getByRole("heading", { name: "Exact source match" })).toBeVisible();
-    const context = container.querySelector("blockquote");
-    expect(context?.textContent).toBe(verified.context!.before + quote + verified.context!.after);
-    expect(context?.querySelector("mark")?.textContent).toBe(quote);
-    expect(screen.getByRole("link", { name: "Download preserved book" })).toHaveAttribute("href", verified.downloads!.source);
-    expect(screen.getByRole("link", { name: /Visit the source edition/ })).toHaveAttribute("href", receipt.source.url);
-    expect(container.querySelector("details")?.textContent).toContain(receipt.source.sha256);
-    expect(container.querySelector("details a")?.getAttribute("href")).toBe(verified.downloads!.proof);
+  it("shows the full on-chain rationale and distinguishes an older hash-only record", () => {
+    const history: PassageAnchoring["history"] = [{ sequence: "1", receiptSha256: verified.receiptSha256!, status: "finalized", batchId: "batch-one",
+      rationale: { status: "on-chain", reason: "The full recorded public explanation; its complete text is preserved." } }];
+    const { rerender } = render(<QuoteVerification verification={{ ...verified, anchoring: { ...anchored, history } }} />);
+    expect(screen.getByText("Read rationale stored on Polkadot")).toBeVisible();
+    expect(screen.getByText(history[0].rationale!.reason!)).not.toBeVisible();
+    rerender(<QuoteVerification verification={{ ...verified, anchoring: { ...anchored,
+      history: [{ ...history[0], rationale: { status: "hash-only" } }] } }} />);
+    expect(screen.queryByText("Read rationale stored on Polkadot")).not.toBeInTheDocument();
+    expect(screen.getByText(/This older blockchain record contains a hash/)).toBeVisible();
   });
 
-  it("distinguishes recorded site actions from unrecorded review and blockchain evidence", () => {
-    render(<QuoteVerification verification={verified} />);
-    expect(screen.getByRole("heading", { name: "Published to the feed" })).toBeVisible();
-    expect(screen.getByRole("heading", { name: "Human review not recorded" })).toBeVisible();
-    expect(screen.getByText(/a selection time and selector identity are not/)).toBeVisible();
-    expect(screen.getByText(/No finalized blockchain anchor is available yet/)).toBeInTheDocument();
-    expect(screen.getByText(/does not independently confirm those earlier dates/)).toBeVisible();
-    expect(screen.queryByText(/Uploaded by/)).not.toBeInTheDocument();
-  });
-
-  it("does not label a demo or failed verification as verified or offer proof downloads", () => {
+  it("does not offer proof or claim a match when verification is unavailable", () => {
     const { container } = render(<QuoteVerification verification={{
-      ...verified,
-      status: "unavailable",
-      message: "This sample has no preserved source record.",
+      ...verified, status: "unavailable", message: "This sample has no preserved source record.",
     }} />);
     expect(screen.getByRole("heading", { name: "Not yet verified" })).toBeVisible();
     expect(screen.getByText(quote)).toBeVisible();
-    expect(screen.queryByRole("heading", { name: "Exact source match" })).not.toBeInTheDocument();
+    expect(screen.queryByText("Matches the saved book after text cleanup.")).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /Download/ })).not.toBeInTheDocument();
-    expect(container.querySelector("mark")).toBeNull();
-    expect(container.querySelector("time")).toBeNull();
     expect(container.querySelector("details")).toBeNull();
   });
 
-  it("does not render executable or malformed external source links", () => {
+  it("rejects executable external source links", () => {
     render(<QuoteVerification verification={{
-      ...verified,
-      status: "unavailable",
-      passage: { ...verified.passage, sourceUrl: "javascript:alert('unsafe')" },
+      ...verified, status: "unavailable", passage: { ...verified.passage, sourceUrl: "javascript:alert('unsafe')" },
     }} />);
-    expect(screen.queryByRole("link", { name: /Read the source book/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Source edition/ })).not.toBeInTheDocument();
   });
 });

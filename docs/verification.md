@@ -1,5 +1,21 @@
 # Source-to-quote verification
 
+## Start here: the plain-English version
+
+We save the book, choose a passage, and record a short reason. When we compare alternatives during selection, that comparison is saved too. New exports record when the notes were written; older passages receive no invented selection date.
+
+A receipt holds those details. The readable-text transaction format includes public selection rationales alongside a shared fingerprint of the receipts; the legacy format contains only the fingerprint. An independent chain check establishes what was recorded by that block; it does not prove the quote is true or the choice was good.
+
+As of the September 13, 2026 book release, the website can verify both formats,
+but the deployed anchoring worker still writes the legacy format. The readable
+text release is prepared with an approved one-time fee ceiling of 1.28 DOT,
+above the normal 0.005 DOT limit. Deployment and finalization are pending. No readable-text transaction has been
+broadcast as part of this release.
+
+Open **Verify quote** to read the reason and download the book and proof. The [reader guide](/how-it-works) has the short version; the independent checks are below.
+
+## Technical scope
+
 The pilot proves a specific, reproducible relationship: the displayed quote is an exact slice of text produced by normalizing a preserved source file. It also keeps a history of the import/publication facts recorded by this application.
 
 It does **not** independently authenticate the publisher, uploader, selector, clock, or reviewer. A file and a matching hash can both be fabricated. Someone assessing authenticity should compare the preserved file with an independently obtained publisher edition. Human review is `not-recorded`. Polkadot anchoring is reported separately for every supplied history receipt as either finalized or pending.
@@ -11,7 +27,7 @@ It does **not** independently authenticate the publisher, uploader, selector, cl
 3. Before importing anything into PostgreSQL, the importer launches the local Python verifier. It hashes the archived bytes, repeats normalization, compares all normalized chapter and sentence records, and reconstructs every selected passage from its sentence IDs and offsets. Replacing a quote and merely recomputing its hash is rejected.
 4. PostgreSQL stores one original-byte and normalized-source snapshot per edition. Each changed import or publication stores the exact JSON receipt, its SHA-256 fingerprint, and the previous receipt fingerprint for that passage. The transaction includes the passage and receipt together.
 5. The public verification page rechecks the current passage against the latest publication receipt and the preserved normalized chapter, then validates every supplied history receipt and any finalized inclusion proofs. Proof/source downloads additionally hash the original bytes.
-6. An isolated worker batches unanchored receipt fingerprints, persists the exact batch and transaction before broadcast, and records a Polkadot Hub anchor only after successful finalized inclusion. The web app reads this public evidence and never receives the wallet key. Publication and source verification remain separate from the daily blockchain batch.
+6. An isolated worker batches unanchored receipt fingerprints, persists the exact batch and transaction before broadcast, and records a Polkadot Hub anchor only after successful finalized inclusion. The prepared readable-text worker also includes their recorded public selection rationales. The web app reads this public evidence and never receives the wallet key. Publication and source verification remain separate from the daily blockchain batch.
 
 Offsets are **zero-based Unicode code points within the normalized chapter**, with an inclusive start and exclusive end. They are not UTF-8 byte offsets or JavaScript UTF-16 indices. A chapter's fingerprint hashes its UTF-8 text. The complete normalized-source fingerprint hashes chapter texts in stored order joined by exactly three newline characters (`\n\n\n`).
 
@@ -51,12 +67,14 @@ The book's canonical source and direct download address are public metadata. The
 
 - `retrievedAt` is the pipeline's reported acquisition time. `checkedAt` and `recordedAt` use the application host's clock. These are operator-controlled timestamps, not independently attested times.
 - Selection method, model (if any), and reason are recorded metadata. They are not a signed audit of a remote model call. Assistant screening does not establish a human review signature.
+- `selectionRecordedAt` records when the pipeline wrote the selection notes, using its own clock; it is not independently authenticated decision time. `selection-comparison` marks an alternative compared during a new selection. Older `retrospective-comparison` entries remain in append-only history but are not displayed as forward selection evidence. Both types validate alternative text against the preserved source.
 - A container restart reruns source verification and imports the same shipped corpus. When passage status and receipt facts are unchanged, it retains the existing receipt and publication time instead of inventing a new publication event.
 - A changed source acquisition record, selection explanation, or publication state produces a new receipt linked to the prior one. Existing book/edition identities remain bound to the pipeline's identity rules; attribution corrections need a deliberate migration rather than relabeling preserved records. Ordinary source/receipt updates, deletes, and truncation are rejected by database triggers.
 - Retirement and omitted-passage archival hide passages while retaining source snapshots and receipts. Those legacy archival operations do not yet produce public signed or hash-linked retirement events. The public endpoints serve only currently published passages.
 - No uploader wallet, human reviewer signature, or external identity has been recorded. The public proof contains source, selection, and publication metadata rather than application actor identities or credentials.
 
-AI context is a separately labeled interpretation. It is excluded from quote
+AI context is hidden in the feed until the reader clicks or keyboard-activates
+the quotation. It is a separately labeled interpretation. It is excluded from quote
 receipts and proof files, and changing an explanation does not change the
 quotation's verification history.
 
@@ -77,7 +95,13 @@ The deterministic format, implemented in `packages/anchoring/proofs.mjs`, is:
 1. Order receipts by their positive `BIGINT` sequence using integer comparison, never lexical sorting or floating-point conversion. A manifest lists each decimal sequence and receipt fingerprint, in that order.
 2. For each receipt, hash the exact UTF-8 bytes of `receiptJson`. Hash its 32 fingerprint bytes with a leading byte `0x00` to produce the Merkle leaf.
 3. Hash `0x01 || left32 || right32` for each parent. If a level has an odd last node, duplicate that node. A one-receipt tree has that single leaf as its root. Each inclusion proof specifies its zero-based leaf index, total leaf count, and ordered sibling hashes/directions.
-4. Encode exactly 92 bytes: ASCII `GDSANCH1` (8 bytes), batch UUID (16 bytes), receipt count (unsigned 32-bit big endian), root (32 bytes), previous root (32 bytes; all zero for the first batch). Submit these bytes as `system.remarkWithEvent`. The explicit count prevents ambiguity from odd-node duplication.
+4. The legacy format is exactly 92 bytes: ASCII `GDSANCH1` (8 bytes), batch UUID (16 bytes), receipt count (unsigned 32-bit big endian), root (32 bytes), previous root (32 bytes; all zero for the first batch). The readable-text format uses `GDSANCH2` with the same header fields, followed by a four-byte unsigned big-endian JSON byte length and the actual UTF-8 JSON rationale array. Both use `system.remarkWithEvent`. The explicit count prevents ambiguity from odd-node duplication.
+
+Each rationale entry has the fixed property order `receiptSha256`, `passageId`, `selection`; selection contains `reason` and, only when present in the exact receipt, `selectionRecordedAt`. Entries follow Merkle leaf order. The rationale is a concise public editorial explanation, not a hidden chain-of-thought transcript. The worker copies the recorded reason without truncation, rewriting, or invented timestamps. Separate AI context and longer comparison metadata remain in their existing locations.
+
+The version 2 parser rejects noncanonical JSON, malformed UTF-8, incorrect byte lengths, reordered receipt hashes, duplicate entries, extra fields and payloads exceeding 128 KiB. Web and independent proof checks compare each included rationale with the selection fields of the exact hash-checked receipt. The independent verifier also compares these bytes with the transaction on the named chain. Readable reasons are therefore available from the transaction itself, even if the website disappears; the hash alone does not reconstruct the rest of a receipt or the original source.
+
+The worker reduces a new batch to fit the configured payload and existing fee limits before persisting it. The limits remain 0.005 DOT per transaction, three prepared attempts per UTC day, a 2 DOT rolling annual allowance and a 1 DOT operating reserve. A backlog may require multiple runs. Existing finalized or pending version 1 batches keep their original bytes and recovery behavior; no older record is relabeled as containing rationale text.
 
 The manifest uses exact `JSON.stringify` property order: `schemaVersion`, `batchId`, `previousBatchId`, `previousRootSha256`, `receipts`; each receipt has `sequence`, `receiptSha256`. The chain envelope commits the count and Merkle root, not the manifest JSON serialization or database sequence numbers. The sequence list is ordering metadata; receipt bytes themselves are protected by the root.
 

@@ -1,7 +1,9 @@
 import { createHash } from "node:crypto";
-import { basename, resolve } from "node:path";
+import { readFile } from "node:fs/promises";
+import { basename, dirname, join, resolve } from "node:path";
 
 import { verifyCorpusSource } from "./verify-corpus-source.mjs";
+import { isApprovedEdition, isExcludedEdition } from "./publication-policy.mjs";
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -83,6 +85,55 @@ function dateTime(value, path) {
     fail(path, "must be an ISO-compatible date-time");
   }
   return result;
+}
+
+function timezoneDateTime(value, path) {
+  const result = string(value, path);
+  const timestamp = /^(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d{1,6})?(?:Z|[+-](?:[01]\d|2[0-3]):[0-5]\d)$/.exec(result);
+  if (!timestamp || !Number.isFinite(Date.parse(result)) ||
+      Number(timestamp[3]) > new Date(Date.UTC(Number(timestamp[1]), Number(timestamp[2]), 0)).getUTCDate()) {
+    fail(path, "must be a valid ISO date-time with a timezone");
+  }
+  return result;
+}
+
+function validateDecisionReview(value, path) {
+  const review = object(value, path);
+  const fields = ["reviewedAt", "reviewKind", "summary", "alternative", "whySelected", "whyAlternativeNotSelected", "limitation"];
+  if (Object.keys(review).some((key) => !fields.includes(key))) fail(path, "contains an unsupported field");
+  if (!["selection-comparison", "retrospective-comparison"].includes(review.reviewKind)) {
+    fail(`${path}.reviewKind`, "must be selection-comparison or retrospective-comparison");
+  }
+  const narrative = (value, field) => {
+    const result = string(value, `${path}.${field}`);
+    if (result !== result.trim() || Array.from(result).length > 3_000) {
+      fail(`${path}.${field}`, "must be trimmed and contain 1 to 3000 characters");
+    }
+    return result;
+  };
+  const alternative = object(review.alternative, `${path}.alternative`);
+  if (Object.keys(alternative).some((key) => !["chapterId", "startOffset", "endOffset", "text"].includes(key))) {
+    fail(`${path}.alternative`, "contains an unsupported field");
+  }
+  const startOffset = integer(alternative.startOffset, `${path}.alternative.startOffset`, 0);
+  const endOffset = integer(alternative.endOffset, `${path}.alternative.endOffset`, 1);
+  if (!Number.isSafeInteger(startOffset) || !Number.isSafeInteger(endOffset) || endOffset <= startOffset) {
+    fail(`${path}.alternative`, "must have a valid increasing range of safe integer offsets");
+  }
+  const text = string(alternative.text, `${path}.alternative.text`);
+  if (Array.from(text).length > 10_000) fail(`${path}.alternative.text`, "must contain at most 10000 characters");
+  return {
+    reviewedAt: timezoneDateTime(review.reviewedAt, `${path}.reviewedAt`),
+    reviewKind: review.reviewKind,
+    summary: narrative(review.summary, "summary"),
+    alternative: {
+      chapterId: uuid(alternative.chapterId, `${path}.alternative.chapterId`),
+      startOffset, endOffset, text,
+    },
+    whySelected: narrative(review.whySelected, "whySelected"),
+    whyAlternativeNotSelected: narrative(review.whyAlternativeNotSelected, "whyAlternativeNotSelected"),
+    limitation: narrative(review.limitation, "limitation"),
+  };
 }
 
 function validateAiContext(value, path) {
@@ -317,6 +368,12 @@ function validatePassage(value, path, book) {
       reason,
       themes,
       contentFlags,
+      ...(curation.selectionRecordedAt === undefined ? {} : {
+        selectionRecordedAt: timezoneDateTime(curation.selectionRecordedAt, `${curationPath}.selectionRecordedAt`),
+      }),
+      ...(curation.decisionReview === undefined ? {} : {
+        decisionReview: validateDecisionReview(curation.decisionReview, `${curationPath}.decisionReview`),
+      }),
     },
   };
 }
@@ -420,6 +477,25 @@ export function validateCorpusDocument(value, label = "corpus") {
     };
   }
 
+  for (const passage of passages) {
+    const alternative = passage.curation.decisionReview?.alternative;
+    if (!alternative) continue;
+    const path = `${label}.passages[${passages.indexOf(passage)}].curation.decisionReview.alternative`;
+    if (!verificationBundle) fail(path, "requires a preserved verificationBundle");
+    const chapter = verificationBundle.chapters.find((item) => item.id === alternative.chapterId);
+    if (!chapter || typeof chapter.text !== "string") fail(path, "must reference a preserved chapter in this edition");
+    const codePoints = Array.from(chapter.text);
+    if (alternative.endOffset > codePoints.length ||
+        codePoints.slice(alternative.startOffset, alternative.endOffset).join("") !== alternative.text) {
+      fail(path, "must match the exact preserved source slice at Unicode code-point offsets");
+    }
+    if (alternative.chapterId === passage.chapter.id &&
+        alternative.startOffset === passage.provenance.startOffset &&
+        alternative.endOffset === passage.provenance.endOffset) {
+      fail(path, "must compare a different source range from the selected passage");
+    }
+  }
+
   return {
     schemaVersion: "1.0",
     pipelineVersion,
@@ -463,6 +539,40 @@ export function resolveInputPath(path, environment = process.env, cwd = process.
   return resolve(environment.INIT_CWD ?? cwd, path);
 }
 
+export async function readCorpusPlan(path) {
+  const absolutePath = resolveInputPath(path);
+  let payload;
+  try {
+    payload = JSON.parse(await readFile(absolutePath, "utf8"));
+  } catch (error) {
+    throw new Error(`${absolutePath}: could not read valid JSON: ${error.message}`);
+  }
+  const plan = validateCorpusDocument(payload, absolutePath);
+  // Only deliberately named public sidecars are included, never arbitrary files
+  // mentioned by source text. Keep their original bytes reproducible as UTF-8.
+  const stem = basename(absolutePath, ".json");
+  for (const fileName of [`${stem}.md`, `${stem}-qc.md`]) {
+    let bytes;
+    try {
+      bytes = await readFile(join(dirname(absolutePath), "notes", fileName));
+    } catch (error) {
+      if (error.code === "ENOENT") continue;
+      throw error;
+    }
+    const text = bytes.toString("utf8");
+    if (!bytes.length || bytes.length > 100_000 || !Buffer.from(text, "utf8").equals(bytes)) {
+      fail(`notes/${fileName}`, "must contain valid UTF-8 text between 1 and 100000 bytes");
+    }
+    plan.editionReview = {
+      fileName, text,
+      sha256: createHash("sha256").update(bytes).digest("hex"),
+      statementType: "operator-assertion",
+    };
+    break;
+  }
+  return plan;
+}
+
 export function assertPublishableCorpusPlans(plans) {
   for (const plan of plans) {
     if (!plan.book.source.url) {
@@ -482,6 +592,12 @@ export function assertPublishableCorpusPlans(plans) {
         `--publish requires a verificationBundle with preserved original source for ${plan.book.title}; reprocess the book with the current pipeline`,
       );
     }
+    if (!isApprovedEdition(plan.book)) {
+      throw new CorpusValidationError(
+        `--publish requires a rights-approved edition with the exact reviewed source bytes for ${plan.book.title}; ` +
+          "a U.S. public-domain label alone does not satisfy the publication policy",
+      );
+    }
   }
 }
 
@@ -495,11 +611,51 @@ function sameReceiptFacts(previous, next) {
   return JSON.stringify(facts(previous)) === JSON.stringify(facts(next));
 }
 
+// These are snapshots of the corpus's public curation fields, not a reconstruction
+// of a selector's private reasoning or a new claim about when selection happened.
+// Changing a snapshot appends a receipt; old receipt bytes remain untouched.
+export function buildSelectionRecord(plan, passage) {
+  return {
+    method: passage.curation.selector,
+    model: passage.curation.model,
+    reason: passage.curation.reason,
+    pipelineVersion: plan.pipelineVersion,
+    recordingMethod: "curation-metadata-snapshot-v1",
+    recordingNote: passage.curation.selectionRecordedAt
+      ? "selectionRecordedAt is when the notes were written or exported, according to the curator or pipeline clock. The notes were copied into this receipt at import. Neither date independently proves when the choice happened; the blockchain timestamp is separate."
+      : "This record copies the selection metadata available in the corpus at import time. It does not claim that selection or review happened at the receipt's recordedAt time.",
+    score: passage.curation.score,
+    qualityScore: passage.qualityScore,
+    scoreMeaning: "Saved editorial ranking signals, not probabilities that the quotation or its interpretation is true. They do not measure how much a reader will learn.",
+    rank: passage.curation.rank,
+    rankMeaning: "The saved rank in this edition's selection metadata. It may be retained from an earlier selection; it is not a personal recommendation or a ranking of every candidate in the book.",
+    themes: [...passage.curation.themes],
+    contentFlags: [...passage.curation.contentFlags],
+    wordCount: passage.wordCount,
+    limitations: [
+      "The recorded reason and labels describe editorial judgments. Preserving them does not prove that a choice was wise, unbiased, or faithful to the author's full meaning.",
+      "The method label is a pipeline field. It is not independent evidence of who made the final choice; the recorded reason may describe later assistant selection or screening.",
+      passage.curation.selectionRecordedAt
+        ? "The local recording time is an assertion. This record preserves only the reasons and comparisons supplied with it, not a complete candidate list or model conversation."
+        : "This record does not preserve the original selection time, a complete candidate list, historical rejection decisions, or a complete model conversation.",
+      "An empty content-flags list means no flags were recorded; it is not a guarantee that a passage is suitable for every reader.",
+    ],
+    ...(passage.curation.selectionRecordedAt ? { selectionRecordedAt: passage.curation.selectionRecordedAt } : {}),
+    ...(passage.curation.decisionReview ? { decisionReview: passage.curation.decisionReview } : {}),
+    ...(plan.editionReview ? { editionReview: plan.editionReview } : {}),
+  };
+}
+
 export async function importCorpusPlans(
   sql,
   plans,
   { publish, replaceEditions = false },
 ) {
+  for (const plan of plans) {
+    if (isExcludedEdition(plan.book.editionId)) {
+      throw new CorpusValidationError(`Edition ${plan.book.editionId} was retired after rights review and cannot be reimported`);
+    }
+  }
   if (publish) assertPublishableCorpusPlans(plans);
   // Verify every source before opening the transaction, including candidate imports.
   for (const plan of plans) await verifyCorpusSource(plan);
@@ -523,6 +679,17 @@ export async function importCorpusPlans(
   await sql.begin(async (transaction) => {
     for (const plan of plans) {
       const { book } = plan;
+      // Retirement and import take the same lock, including for editions that
+      // do not exist yet. A stale batch cannot revive a retired source.
+      await transaction`SELECT pg_advisory_xact_lock(hashtext(${book.editionId}))`;
+      const retired = await transaction`
+        SELECT edition_id FROM edition_retirements WHERE edition_id = ${book.editionId}::uuid
+        UNION ALL
+        SELECT id FROM editions WHERE id = ${book.editionId}::uuid AND metadata ->> 'retired' = 'true'
+      `;
+      if (retired.length) {
+        throw new CorpusValidationError(`Edition ${book.editionId} is retired and cannot be reimported`);
+      }
       const author = book.authors.join(", ");
       await transaction`
         INSERT INTO books (
@@ -590,14 +757,13 @@ export async function importCorpusPlans(
           rights_basis = EXCLUDED.rights_basis,
           rights_jurisdiction = EXCLUDED.rights_jurisdiction,
           retrieved_at = EXCLUDED.retrieved_at,
-          metadata = EXCLUDED.metadata
+          metadata = editions.metadata || EXCLUDED.metadata
       `;
       totals.editions += 1;
 
       if (plan.verificationBundle) {
         const bundle = plan.verificationBundle;
-        // Serializes publication and the receipt chain for this edition.
-        await transaction`SELECT pg_advisory_xact_lock(hashtext(${book.editionId}))`;
+        // The edition lock above also serializes its immutable receipt chain.
         await transaction`
           INSERT INTO edition_sources (
             edition_id, source_sha256, normalized_sha256, normalization_version,
@@ -733,10 +899,7 @@ export async function importCorpusPlans(
               startSentenceId: passage.provenance.startSentenceId,
               endSentenceId: passage.provenance.endSentenceId,
             },
-            selection: {
-              method: passage.curation.selector, model: passage.curation.model,
-              reason: passage.curation.reason, pipelineVersion: plan.pipelineVersion,
-            },
+            selection: buildSelectionRecord(plan, passage),
             verification: {
               method: "reproduced-normalization-and-exact-source-slice",
               normalizationVersion: "1", checkedAt: importedAt,

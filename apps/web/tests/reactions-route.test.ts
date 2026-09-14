@@ -24,11 +24,11 @@ afterEach(() => { vi.unstubAllEnvs(); });
 describe("production reactions", () => {
   it("rejects demo mutations before minting an actor or growing the in-memory map", async () => {
     vi.stubEnv("NODE_ENV", "production");
-    const context = { params: Promise.resolve({ passageId: "demo-pride-prejudice-01" }) };
-    const put = await PUT(new NextRequest("https://goodoomscroller.com/api/reactions/demo-pride-prejudice-01", {
+    const context = { params: Promise.resolve({ passageId: "demo-autobiography-of-charles-darwin-01" }) };
+    const put = await PUT(new NextRequest("https://goodoomscroller.com/api/reactions/demo-autobiography-of-charles-darwin-01", {
       method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ value: 1 }),
     }), context);
-    const remove = await DELETE(new NextRequest("https://goodoomscroller.com/api/reactions/demo-pride-prejudice-01", { method: "DELETE" }), context);
+    const remove = await DELETE(new NextRequest("https://goodoomscroller.com/api/reactions/demo-autobiography-of-charles-darwin-01", { method: "DELETE" }), context);
     expect(put.status).toBe(404);
     expect(remove.status).toBe(404);
     expect(mocked.actorIdentity).not.toHaveBeenCalled();

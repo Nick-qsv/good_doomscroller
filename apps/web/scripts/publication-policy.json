@@ -1,0 +1,264 @@
+{
+  "version": "2026-09-13",
+  "screen": "Historical edition published by 1930; copyright-relevant modern contributors died by 1925; unresolved edition rights excluded. Conservative publication decision, not worldwide clearance.",
+  "approvedEditions": [
+    {
+      "slug": "autobiography-of-charles-darwin",
+      "bookId": "8214c5c8-3e5e-5bb6-b3ae-312f1aa36580",
+      "editionId": "9640f338-8d93-5501-bbef-6f9a00e9e556",
+      "sourceSha256": "7e2937e414d27ec2ee9bced09e1f9066191732aeaa15cc44ad9d85d687d8d00b",
+      "normalizedSha256": "5e2b15a644810926406f3c7b9a5f8554bc7a59f66e0ca6af1f505d2a4237c411",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/2010"
+    },
+    {
+      "slug": "chemical-history-of-a-candle",
+      "bookId": "697838b9-47a5-576b-b1a4-351c0a63a06c",
+      "editionId": "413ea5f8-2d09-52ef-8022-cbdd2f5d8771",
+      "sourceSha256": "4803964d793299a40ece442cadcd2ca3e4b6411c428acd8590efe6fd93dd4ee8",
+      "normalizedSha256": "4b266296b51351fd4468d6ff43091124068b3a7d888fd3c9d9a22dbb9b865be8",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/14474"
+    },
+    {
+      "slug": "frankenstein-1818",
+      "bookId": "613d1470-50ac-53dd-8336-970d85984c93",
+      "editionId": "9ebbdb49-4fd3-5c9b-bfd1-7cd30f57fcc8",
+      "sourceSha256": "7675ae250ac9c81d962e46af0573281d6a282ef0120b0db945b33eef726b16c9",
+      "normalizedSha256": "acbf47d7143d901cb5c33622d4707b906df5c35013b3990c2759d8cfbc52b12c",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/41445"
+    },
+    {
+      "slug": "incidents-in-the-life-of-a-slave-girl",
+      "bookId": "3605d690-69c1-5d13-a4db-a4b5fd19d521",
+      "editionId": "69d368ad-18ae-51f8-9104-63a8bb344817",
+      "sourceSha256": "a8ea7fd9177aebd3b6534d9e67f78973e01686e073f156214e54884e1b6e328a",
+      "normalizedSha256": "3918bf0455a17df53bd889d7e993e7b0463126bbbe91e02a944bd681e4ce54f3",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/11030"
+    },
+    {
+      "slug": "letters-of-charles-dickens-volume-1",
+      "bookId": "945bc52a-8ff7-5ca9-90d5-8a5421dd3db8",
+      "editionId": "8ceba576-e5ca-5b5d-918f-f1e9a0c96674",
+      "sourceSha256": "1907061a30e3bff28ac16e60462b5a51f61aad090a923c09318dc57f336ea124",
+      "normalizedSha256": "384003c0e7b28c89dbd126ca7444f60c02447ec3037c5dca8d73d60ca971f2e0",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/25852"
+    },
+    {
+      "slug": "life-of-mozart",
+      "bookId": "e9d1a22f-4b6e-5380-95ab-b0e6187e4cbc",
+      "editionId": "01d63e58-5084-5fa8-8e5a-a959afeed945",
+      "sourceSha256": "b1f5f93230c59aab23d58222ce662251cb540920fb7f240a66785c4443c355ec",
+      "normalizedSha256": "0460e6f12926f1c9b241300d19a471486a9252759d4ebde672504e7a222b1c78",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/67828"
+    },
+    {
+      "slug": "narrative-of-frederick-douglass",
+      "bookId": "98de50e0-1b47-53fd-aefc-7e206863896c",
+      "editionId": "24c25efc-2c72-53f0-a44b-24830541c051",
+      "sourceSha256": "234c15348a66919bad1d534cdd48ee8ddf91f50115a706cbefaa8edd049672fd",
+      "normalizedSha256": "7658032a8d295d4858582a406988a961922157bdda3bfcfdd340b5c536ee176f",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/23"
+    },
+    {
+      "slug": "tao-teh-king-james-legge",
+      "bookId": "aa58c08a-d832-5adf-9623-5a7b55c8b0d2",
+      "editionId": "ce36643f-a2fe-5032-9582-083581b9a0a9",
+      "sourceSha256": "041568f8dfef3ac6c2deb7699756f9d26d6aa8669647f4ce611b0ed4a95b0db6",
+      "normalizedSha256": "01331f52e804d3fa40477e37a4ea813b3e8bb94f0549b75d3158b67889a32fcf",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/216"
+    },
+    {
+      "slug": "common-sense-1776",
+      "bookId": "21b8c81a-5344-50d1-9ef7-8c866c874bd8",
+      "editionId": "c29a4a85-d9bc-5b03-b944-a8138d38ae62",
+      "sourceSha256": "9c467182c78bd246ab05ce5bef11c32cb748ebaa5622dedc4bd4c02a8a0fff90",
+      "normalizedSha256": "2be0a3f316e0d2accaa60fdecaac2145aba07f9a96b95c73b7fed9d343d02525",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/147"
+    },
+    {
+      "slug": "theory-of-moral-sentiments-1777",
+      "bookId": "313393d5-3113-52e2-887b-26bb871d0297",
+      "editionId": "719e37d2-7aa2-5d90-a1df-517d2e88ecbf",
+      "sourceSha256": "5d46a4d5434adff0d949ef6a71168082526dce726c0be50b0149ccf31016c28f",
+      "normalizedSha256": "b31740ce71e8118459242db6b24741760db65da1e81192e1d96da72bd5ff8d0b",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/67363"
+    },
+    {
+      "slug": "interesting-narrative-equiano-1789",
+      "bookId": "2c4b79aa-ee6c-5652-b647-d1335cd3f8aa",
+      "editionId": "f153534c-5cc9-56d0-a10b-59a9cd03ce4f",
+      "sourceSha256": "1b1ea052d47e5177c5b8a75b06cea7d2ef4295e6856d695293dddc9a9ce60e05",
+      "normalizedSha256": "d43472c4b18c0b5bb661c15f97003f0f32f469f7aa7494b6f78886ff51bdc2c7",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/15399"
+    },
+    {
+      "slug": "serious-proposal-ladies-1697",
+      "bookId": "43ebbdc6-f31f-5ed4-969d-547243ed3034",
+      "editionId": "08ae9ada-5f7b-5f2a-9c98-fc178d26d6e7",
+      "sourceSha256": "657cde76d7f1a38bc34da76a95f96067dd9a0884ea24a5592876c30223af75b6",
+      "normalizedSha256": "7e4afc621ab40aaf08e990fdac1f50f298579a74d88b10ecbc36a99ed287c070",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/54984"
+    },
+    {
+      "slug": "blazing-world-1668",
+      "bookId": "de78b3a6-f333-5400-9569-289c1dbc0444",
+      "editionId": "3503983f-44a3-5844-aae7-340441c67a9e",
+      "sourceSha256": "e612d49329304423f453db636db31369a51240a45d4e82bd5d6e3588208219fb",
+      "normalizedSha256": "5e31961bd5d14009cf3ce9379dcd952f0a9130f67bc8b1617eeb0237973c80b4",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/51783"
+    },
+    {
+      "slug": "connexion-physical-sciences-1858",
+      "bookId": "cfe2202c-4303-5826-8824-908291deae22",
+      "editionId": "ea5265f9-086d-5e65-9e4d-8209348b119e",
+      "sourceSha256": "ba5c406376024fe1907efbc95b7bc53e2866c591c6773378ca5ad942e3e37c1a",
+      "normalizedSha256": "8f976854371839e905699ebdb0920d3694bd873c73a6440a9e5671d92b7f5568",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/52869"
+    }
+  ],
+  "excludedEditions": [
+    {
+      "slug": "a-vindication-of-the-rights-of-woman",
+      "bookId": "a4de98d6-39fc-5c07-a09d-2717a3108053",
+      "editionId": "da162526-0ca3-55b1-8c0d-1067af201722",
+      "sourceSha256": "7d79652f43541759d8ff0ce467372fa4a534d3f9dc32013e01ca99ea04b286a8",
+      "normalizedSha256": "10064ac5d6f757c71ceacf5b241d2ae98df87526a57975b6ae9ce6d62a96f470",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/3420"
+    },
+    {
+      "slug": "autobiography-of-andrew-carnegie",
+      "bookId": "17a1c7a2-2e13-575f-a905-f4d999211def",
+      "editionId": "7053ff47-d3fd-5972-84de-daa8b57eedee",
+      "sourceSha256": "fcf750f88f5837d18fb45071c81375e3cb1472965d6ff75db1bc483bfbfe1ee6",
+      "normalizedSha256": "f5f62bd6bf36c8c75e8ad47964081f4b6d0522e579aed5d57ec5c3918c173ff2",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/17976"
+    },
+    {
+      "slug": "autobiography-of-benjamin-franklin",
+      "bookId": "31b5f9a4-b0db-5326-aa27-6a951a8f65e9",
+      "editionId": "f318d01c-8fb9-5aa8-9ed6-60a72b2432aa",
+      "sourceSha256": "32b5b6ba76ad51ec1f5630836a5da2f733e893d885772f846bd62f2111ec6eae",
+      "normalizedSha256": "03db687ba700c4a0eb4420661a16186eeb215a6a3eea9f307518fd65916aba03",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/148"
+    },
+    {
+      "slug": "autobiography-of-goethe",
+      "bookId": "473dfec2-5230-5f2c-b5cd-6d39d47e4817",
+      "editionId": "3e5605e5-f215-5762-bd74-82a1d49e9d44",
+      "sourceSha256": "8c6453cdf239233bed05e0fbe4881c7fb863e47369684100beae3cb592d72ce5",
+      "normalizedSha256": "4d54acae4d6a787b87eac0c83137bc4d6a7354a19feead2a504ba604f9f58bd3",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/52654"
+    },
+    {
+      "slug": "essays-emerson",
+      "bookId": "25c20403-9c7b-5d86-a0b8-f449be183239",
+      "editionId": "0d66f70e-69c0-5482-8a9b-1fe2c3d11e66",
+      "sourceSha256": "07277c11b8105c8e0beadc001a83ffc4e745ae15cf386bfdd297b52c8758029b",
+      "normalizedSha256": "b96f40101b3ad1a87b6704d4852a0b2a5f851b3df69fe3c42987040ed541cd6f",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/16643"
+    },
+    {
+      "slug": "meditations-george-long",
+      "bookId": "cd39efc4-83bb-5a13-a109-1f6e48447cb7",
+      "editionId": "c05018bd-4099-5055-aa66-74e10a80e2f7",
+      "sourceSha256": "6584df7e90d6035eece30d8028527290bf2508076963ee0376cb41db9cf88d5b",
+      "normalizedSha256": "f8306e7a2b0c31fda0fcf4a3e4ceeaa23ecf48227100d0034b042bedd87ba5fe",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/15877"
+    },
+    {
+      "slug": "papers-and-writings-of-abraham-lincoln",
+      "bookId": "6867a297-8025-54e8-add7-36a3f89898f1",
+      "editionId": "2c017832-2a4e-5575-81f0-41b9cbd92725",
+      "sourceSha256": "6f5e9a5416d597e92c08fc6b73cd3305ea74f023b6624c25c4f171e96adcdefe",
+      "normalizedSha256": "000b02ec82263dae37f27331b4eb0eef5034ef49f84fc035ea3151541955ad59",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/3253"
+    },
+    {
+      "slug": "philosophy-of-friedrich-nietzsche",
+      "bookId": "d259cf67-bebb-5537-a4fd-0eed8cf44fdf",
+      "editionId": "dbccbdb0-f3a4-5b05-b08d-98910240fc36",
+      "sourceSha256": "421703bdb8ecd6219c8c4fd498ee7f1e1e411978c1b1521ec1ee67a2a2ebc93e",
+      "normalizedSha256": "a768c06928a883f6d8bbea6202520dd3747ecd7aa486ade3a2e08c78b44b7bb1",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/49316"
+    },
+    {
+      "slug": "pride-and-prejudice",
+      "bookId": "546629d1-c4ba-52e3-90ce-4131cd750bff",
+      "editionId": "042f4bb2-6e83-5f6c-b927-bf2a6e8b81f6",
+      "sourceSha256": "3f6bb9d6f78e0293b56acd4714dd68cb7d6d1d293402031ce9d5a216bcaf9d75",
+      "normalizedSha256": "ba93ca2be1d530719c8670bd9deab899d8c72df50fb6af25c1f7eb26ad2ee0c1",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/1342"
+    },
+    {
+      "slug": "problems-of-philosophy",
+      "bookId": "38e06cbf-f169-5aa1-aea5-256aee1aa099",
+      "editionId": "23dbd08c-77cb-505d-a72f-3ce9f7daaa70",
+      "sourceSha256": "2505ea57849c64abe7962ffe56972174c9160606348e08cb7876d46b2c5b2d96",
+      "normalizedSha256": "a00ab94f092c3dc5edaf78de76d08e67e743c1271928bdb8bcb35a53d59e36e2",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/5827"
+    },
+    {
+      "slug": "sadhana-the-realisation-of-life",
+      "bookId": "b2020547-fc9a-575b-9a4e-7b30496dd8f7",
+      "editionId": "61530079-f533-548d-847b-80b6a5f97720",
+      "sourceSha256": "09453e7dfd87e1b2da0d5e4ce96c1227e945072073dbc181c9ff51ba188936db",
+      "normalizedSha256": "750864fb18800357b019c352196a43df8e51c91260c1d327124c9226eb2bc2f1",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/6842"
+    },
+    {
+      "slug": "story-of-my-life-helen-keller",
+      "bookId": "36cfe988-fad0-5f9e-b801-8e84cbffff34",
+      "editionId": "06a5e1eb-f237-599e-bb95-47116acffeb6",
+      "sourceSha256": "b323e81058c4e3b1ec136c6789a1490fc6ca37946ce0e12389f9bc14b829ee9f",
+      "normalizedSha256": "613562f61fe1a54117915303aad197701e2ae565933fcd6395d2ef7b2d0d78b1",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/2397"
+    },
+    {
+      "slug": "talks-to-teachers-william-james",
+      "bookId": "b8804870-9974-5136-a3bd-5dbd01b5f685",
+      "editionId": "7a5910cf-2706-54f3-b0d5-4c8d8d316e30",
+      "sourceSha256": "028b3ffd748162cfa99782479263668784e2a8f0805fb1f55175fe23a897d824",
+      "normalizedSha256": "9daec7cd9a3f5be4201c78d0848cb46bdb14b377e0a4d307858e754c9deee04a",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/16287"
+    },
+    {
+      "slug": "the-prophet",
+      "bookId": "ce67836d-de8a-5f0e-9d08-cc8f8d26a578",
+      "editionId": "96ef1d3d-b815-5b6d-bb6b-0754ffdd0335",
+      "sourceSha256": "55a7072e3c4f2924a010820fd45aa204d29915fb07cd3b917e3ab9adb63c336f",
+      "normalizedSha256": "3fc5ef544935c2f1a9f62c0648c1ff9e095280fc1345afc4ecee14e3396231a6",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/58585"
+    },
+    {
+      "slug": "the-souls-of-black-folk",
+      "bookId": "d92fc76a-dda4-5c33-9bc4-1682dd87c952",
+      "editionId": "50ad801b-11ac-571f-997a-b7c77d3cce14",
+      "sourceSha256": "9662e4d417a0f967342590e3f0e008a47adab50d89dba2a967d8cbe998297b7d",
+      "normalizedSha256": "b90daec3179cc4859c3159631f7aea09daafa20fb24e156237d31ab1b67d5743",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/408"
+    },
+    {
+      "slug": "theodore-roosevelt-autobiography",
+      "bookId": "741d260b-c1ae-59a3-9296-472c82d4c0b8",
+      "editionId": "1fdc5d65-50f5-53cb-af46-e4e94588548f",
+      "sourceSha256": "da221f1d1d8fd22ff141ec74392de434e11ae1d494bed07e2cdb0af86a9c90cd",
+      "normalizedSha256": "39a659740b5045a025bd02367e9501cdf3bd9b900b490c0eb027d24d98d1714e",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/3335"
+    },
+    {
+      "slug": "twenty-years-at-hull-house",
+      "bookId": "a8eaca7a-3b69-5088-a57b-a9cc91c42b8d",
+      "editionId": "b1438c2f-d196-5eb2-ac4f-f57f79f45764",
+      "sourceSha256": "ffb8902e5a170d0e753095256b62c37ebdf1804c03166ff3d69c188bf8867b2a",
+      "normalizedSha256": "fbca76626cc5e989e3d2d80d292abe35eb26a131ef1c566aebacbf89e1e3bb43",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/1325"
+    },
+    {
+      "slug": "wonderful-adventures-of-mrs-seacole",
+      "bookId": "e1b7a489-5a99-57ae-9ad6-fae1cbbb27c9",
+      "editionId": "326dd4f7-addf-5dc7-80cc-535ba250012f",
+      "sourceSha256": "7437bafb87659547d2d0b17429a091574fc28c517735007482f765622d2ed0e2",
+      "normalizedSha256": "c41fa88b58e7cb7fd850798cb8afc9a4b5d52a0b3e5333a722af529175ed2c64",
+      "sourceUrl": "https://www.gutenberg.org/ebooks/23031"
+    }
+  ]
+}

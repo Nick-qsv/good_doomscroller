@@ -1,0 +1,558 @@
+{
+  "schemaVersion": "1.0",
+  "approvalId": "rationales-2026-09-13",
+  "selectionArtifactSha256": "16a2b051c5b0a79ebd6ff9b5fb43281a325823310a0c63542036b20809d0cd2f",
+  "sourceInventorySha256": "53dcc9271d4069dd34e6fabca42f6cd8fd52d5616ce244aedbfadcb1a16c3ef7",
+  "batchId": "a30f74cd-47e3-46d4-981e-abdfc5cce76a",
+  "previousBatchId": "6d808e76-0e95-46c9-9783-70abab3509c0",
+  "previousRootSha256": "2726865995d50fb3e196e19c84938db8b7c36e830c365dbdac9d00a8e0b3bf7a",
+  "genesisHash": "0x68d56f15f85d3136970ec16946040bc1752654e906147f7e43e9d539d7c3de2f",
+  "signerAddress": "12wmbcz2PqfsLdJHhpn12bbkR1Az1ydkEsoJDxkSjCm8Ue59",
+  "maxFeePlanck": "12800000000",
+  "maxPayloadBytes": 131072,
+  "receipts": [
+    {
+      "sequence": "598",
+      "receiptSha256": "96011b732dd7b287b3e5f4cb317ee05a7931a4dd5917c6388cb7a588c9635e0b",
+      "passageId": "bb98838a-bd88-5134-9603-3d697b4e1f13",
+      "selection": {
+        "reason": "Public editorial rationale: Preserves his acknowledgment that humane conduct was learned from his sisters. Printed location: Early childhood, example of his sisters. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.886055Z"
+      }
+    },
+    {
+      "sequence": "599",
+      "receiptSha256": "73863e20bbe9b74d6005051fedc18fc216a9a8a7db15764f6f81b02914fa88da",
+      "passageId": "b1648089-255f-51bd-afc9-906532ae3779",
+      "selection": {
+        "reason": "Public editorial rationale: Pairs his account of curiosity with the concrete example of geometrical proofs. Printed location: School years, pleasure in understanding. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.886055Z"
+      }
+    },
+    {
+      "sequence": "600",
+      "receiptSha256": "3f737f7d24805f39630374bbde8b24147b5985d0521503aaf21f3eb9a047ffef",
+      "passageId": "4367a250-6b24-5639-9396-c1e6ae55671e",
+      "selection": {
+        "reason": "Public editorial rationale: Connects a named book to observation and note-taking in two complete sentences. Printed location: School years, reading and bird observation. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.886055Z"
+      }
+    },
+    {
+      "sequence": "601",
+      "receiptSha256": "f0198598bcc3de7bddd0d98d1301cc4a03b19306c0a01408a851e6c2f92c442d",
+      "passageId": "d13b1697-af8e-5dd5-b958-23264d765979",
+      "selection": {
+        "reason": "Public editorial rationale: Includes both the repeated condensation and the reason it helped his book. Printed location: My Several Publications, composition of the Origin. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.886055Z"
+      }
+    },
+    {
+      "sequence": "602",
+      "receiptSha256": "f81ed926bb9f075c96464e617b20f893cc95aad6f10dce91aa3b7d00465a26dd",
+      "passageId": "75e2ebed-1872-5497-a933-29fcc250a482",
+      "selection": {
+        "reason": "Public editorial rationale: A complete practical rule for recording facts that challenge a favored conclusion. Printed location: My Several Publications, recording contrary evidence. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.886055Z"
+      }
+    },
+    {
+      "sequence": "603",
+      "receiptSha256": "d7d8833eebf87c1a0450df18728985ac28ef76b6323959e1ac4f3335cf5285e6",
+      "passageId": "a5c1cd56-3004-5c0a-99d4-5e3cdc21ab2d",
+      "selection": {
+        "reason": "Public editorial rationale: Keeps the full distinction between imperfect outcomes and effort within his control. Printed location: My Several Publications, response to criticism. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.886055Z"
+      }
+    },
+    {
+      "sequence": "604",
+      "receiptSha256": "be590ee95f19ff88d37bc10a0900f5c57b5fa134b0ed39399435e2eecb4a6b1d",
+      "passageId": "0e02dd44-bd90-5c00-8380-b8d6790663ab",
+      "selection": {
+        "reason": "Public editorial rationale: Preserves the requirement that an unverified hypothesis must stimulate observations to be useful. Printed location: My Several Publications, the Pangenesis hypothesis. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.886055Z"
+      }
+    },
+    {
+      "sequence": "605",
+      "receiptSha256": "18d299cd6f4cc9adbef0e59153e763f833ac1064cd0727a039573526a7f8f956",
+      "passageId": "762cdfd6-100a-5450-81f3-822eefb7e103",
+      "selection": {
+        "reason": "Public editorial rationale: States the value of returning to one’s work after a long interval. Printed location: My Several Publications, Insectivorous Plants. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.886055Z"
+      }
+    },
+    {
+      "sequence": "606",
+      "receiptSha256": "dc309931fd8420fd41dfefbaa2ad9ef8dd55f213870f611468eb67b7045e78e2",
+      "passageId": "4b6b3a12-afb2-525c-b6ba-3f0f46785480",
+      "selection": {
+        "reason": "Public editorial rationale: Retains the connection between revising sentences and finding errors in evidence or reasoning. Printed location: Written May 1st, 1881, difficulty of clear expression. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.886055Z"
+      }
+    },
+    {
+      "sequence": "607",
+      "receiptSha256": "1f1e149fe660f2cd2f132cada115e8a4dca9841f2fba5480072373cb77abfb7a",
+      "passageId": "2e67620e-ae48-5978-bce1-8d677deaec81",
+      "selection": {
+        "reason": "Public editorial rationale: Both sentences explain his practice of quick drafting followed by deliberate correction. Printed location: Written May 1st, 1881, drafting practice. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.886055Z"
+      }
+    },
+    {
+      "sequence": "608",
+      "receiptSha256": "2707cbf34fcecfc41a716a731d923a160597407d3460f9926ab7cb6e4d5ca56a",
+      "passageId": "22706006-cad1-5164-91e4-4e2d1045b5b6",
+      "selection": {
+        "reason": "Public editorial rationale: Shows the actual expansion from a brief outline to a fuller arrangement. Printed location: Written May 1st, 1881, organizing a book. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.886055Z"
+      }
+    },
+    {
+      "sequence": "609",
+      "receiptSha256": "d95d071720fc3bc4bba00a4eb6aa85ad5c211d75ff75654313ff8aacedf85cb1",
+      "passageId": "6b548e14-0790-51ce-8ab2-3df0a36f88c3",
+      "selection": {
+        "reason": "Public editorial rationale: Keeps observation, sustained work, and love of science together in his own self-assessment. Printed location: Written May 1st, 1881, habits of observation. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.886055Z"
+      }
+    },
+    {
+      "sequence": "610",
+      "receiptSha256": "b8cd1da0a8a55183b6b0eecef07ce44a1c7a5c8e978a69827726e6094b0ffde8",
+      "passageId": "d7cc7814-2466-5719-86c2-81c6d737c825",
+      "selection": {
+        "reason": "Public editorial rationale: A concise first-person statement of the aim behind his collecting of facts. Printed location: Written May 1st, 1881, desire to explain. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.886055Z"
+      }
+    },
+    {
+      "sequence": "611",
+      "receiptSha256": "5cd625c18259c44b143b349e1cf9a098c30046a3ecbe64bd5c914211c9e320fe",
+      "passageId": "974ccc3c-77c1-52fc-b4e6-5b4396ba5af6",
+      "selection": {
+        "reason": "Public editorial rationale: Includes his record of changing early hypotheses, supporting the stated commitment to revision. Printed location: Written May 1st, 1881, revising hypotheses. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.886055Z"
+      }
+    },
+    {
+      "sequence": "612",
+      "receiptSha256": "61ac942fee1051047854814220eb056e2a5420a11b7ee4bc559c7569fd144033",
+      "passageId": "69a0e3f6-8d44-5edf-86dd-f19c2e1cbc26",
+      "selection": {
+        "reason": "Public editorial rationale: Preserves both the value of skepticism and its potential to discourage useful investigation. Printed location: Written May 1st, 1881, limits of skepticism. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.886055Z"
+      }
+    },
+    {
+      "sequence": "613",
+      "receiptSha256": "9e525a8249c1c37c3aa9592ea184355fc20e9992a9d088d889fc09c562e810fb",
+      "passageId": "c4ce4a18-7c87-5cb6-a47f-699ba1485e35",
+      "selection": {
+        "reason": "A clear invitation to investigate ordinary objects as a route into science. Evidence: exact 30-word source span at Lecture I, opening, checked with surrounding text during assistant editorial review. Score is a deterministic heuristic baseline.",
+        "selectionRecordedAt": "2026-09-13T17:31:28.151458Z"
+      }
+    },
+    {
+      "sequence": "614",
+      "receiptSha256": "e4a61d686c6b9d78432ae4bacf60a69ad2ce9e9fa1568dfe1dc55f5e3d3e79ae",
+      "passageId": "81f2bfa7-f275-58b5-ad12-ed02a31900b4",
+      "selection": {
+        "reason": "A complete explanation of an everyday feature of a burning candle. Evidence: exact 78-word source span at Lecture I, the cup of melted fuel, checked with surrounding text during assistant editorial review. Score is a deterministic heuristic baseline.",
+        "selectionRecordedAt": "2026-09-13T17:31:28.151458Z"
+      }
+    },
+    {
+      "sequence": "615",
+      "receiptSha256": "b90e81f61aab517232ed886c9197b1a5f479e1ba19bfb8c57c1803cf1bdb557a",
+      "passageId": "66566c23-291d-502a-9593-937a80a09b6e",
+      "selection": {
+        "reason": "Connects a concrete design problem with a concise distinction between appearance and function. Evidence: exact 43-word source span at Lecture I, function and beauty, checked with surrounding text during assistant editorial review. Score is a deterministic heuristic baseline.",
+        "selectionRecordedAt": "2026-09-13T17:31:28.151458Z"
+      }
+    },
+    {
+      "sequence": "616",
+      "receiptSha256": "5fcc8817dbc24977041b4fc65a1631483a13f74709686184dee6025e86653e08",
+      "passageId": "99c27076-144f-5f27-82f7-ee112187bb87",
+      "selection": {
+        "reason": "Preserves the complete invitation to ask what caused an unexpected observation. Evidence: exact 76-word source span at Lecture I, learning from an unexpected result, checked with surrounding text during assistant editorial review. Score is a deterministic heuristic baseline.",
+        "selectionRecordedAt": "2026-09-13T17:31:28.151458Z"
+      }
+    },
+    {
+      "sequence": "617",
+      "receiptSha256": "2fd1ea9ec716bdeccf1fca57065a8fe15d125120a8d90c12c3d00127a863457a",
+      "passageId": "868e7b0b-6339-5feb-89f4-67264c4baa73",
+      "selection": {
+        "reason": "A compact description of how the wick supplies fuel to combustion. Evidence: exact 37-word source span at Lecture I, the wick and capillary attraction, checked with surrounding text during assistant editorial review. Score is a deterministic heuristic baseline.",
+        "selectionRecordedAt": "2026-09-13T17:31:28.151458Z"
+      }
+    },
+    {
+      "sequence": "618",
+      "receiptSha256": "eb20ce0afb2a727f4712a079a26e4147f0e860b3e4e53fc7afabbed248107a60",
+      "passageId": "70141aff-4325-5e1c-acbf-bba3396a3300",
+      "selection": {
+        "reason": "Makes a basic distinction between a light source and an illuminated object. Evidence: exact 46-word source span at Lecture I, the diamond and the flame, checked with surrounding text during assistant editorial review. Score is a deterministic heuristic baseline.",
+        "selectionRecordedAt": "2026-09-13T17:31:28.151458Z"
+      }
+    },
+    {
+      "sequence": "619",
+      "receiptSha256": "414458363cb4d036dc78a346e81826c46b9d3c7d5e39134597f47c8512f9dd88",
+      "passageId": "d78525ae-e4a0-5459-8413-efe4709b2fcd",
+      "selection": {
+        "reason": "A complete introduction to the distinction between physical state and chemical identity. Evidence: exact 95-word source span at Lecture III, water in different states, checked with surrounding text during assistant editorial review. Score is a deterministic heuristic baseline.",
+        "selectionRecordedAt": "2026-09-13T17:31:28.151458Z"
+      }
+    },
+    {
+      "sequence": "620",
+      "receiptSha256": "a66c6372dae233ecccc25d10cb8cbe6ec943c75c4cb0bfd89ef1d1c19c563578",
+      "passageId": "1d67c412-6230-50c8-bb2e-03e2c4cfb770",
+      "selection": {
+        "reason": "A concise statement connecting laboratory observations with a familiar natural substance. Evidence: exact 17-word source span at Lecture III, water from different sources, checked with surrounding text during assistant editorial review. Score is a deterministic heuristic baseline.",
+        "selectionRecordedAt": "2026-09-13T17:31:28.151458Z"
+      }
+    },
+    {
+      "sequence": "621",
+      "receiptSha256": "9e177000a6e28d80f30cd2111755d1a960bf552975978942ae4bba6c474080f9",
+      "passageId": "c1e9c860-5875-5d68-b07e-df4a573a0db5",
+      "selection": {
+        "reason": "Records a simple quantitative observation at the center of the lecture’s account of water. Evidence: exact 35-word source span at Lecture IV, separating water, checked with surrounding text during assistant editorial review. Score is a deterministic heuristic baseline.",
+        "selectionRecordedAt": "2026-09-13T17:31:28.151458Z"
+      }
+    },
+    {
+      "sequence": "622",
+      "receiptSha256": "be9351b78f0461b9a0dab442d8756667f36cb873761c7eb1f5ee684b8fa7a456",
+      "passageId": "1d0a8077-abc4-56ef-bfc7-62c37c970123",
+      "selection": {
+        "reason": "A tangible comparison that distinguishes the properties of two gases. Evidence: exact 31-word source span at Lecture IV, comparing hydrogen and oxygen, checked with surrounding text during assistant editorial review. Score is a deterministic heuristic baseline.",
+        "selectionRecordedAt": "2026-09-13T17:31:28.151458Z"
+      }
+    },
+    {
+      "sequence": "623",
+      "receiptSha256": "832d116ae8de45b5e35fb1ebb6dd5433092fb21adabaf137956a0dee851acc74",
+      "passageId": "aea0623c-a620-5005-a451-7c81d75d9000",
+      "selection": {
+        "reason": "A complete thought experiment tying atmospheric composition to a familiar fire. Evidence: exact 96-word source span at Lecture V, why air is not pure oxygen, checked with surrounding text during assistant editorial review. Score is a deterministic heuristic baseline.",
+        "selectionRecordedAt": "2026-09-13T17:31:28.151458Z"
+      }
+    },
+    {
+      "sequence": "624",
+      "receiptSha256": "d9bcb8d927a049f6ea1152dd5c39d48921dfac418ab3e809360ea035f2fa95ca",
+      "passageId": "1028907f-adce-5356-b389-ddddd2c0ca71",
+      "selection": {
+        "reason": "A short example of testing a claim about composition by separating a compound. Evidence: exact 70-word source span at Lecture VI, separating carbonic acid, checked with surrounding text during assistant editorial review. Score is a deterministic heuristic baseline.",
+        "selectionRecordedAt": "2026-09-13T17:31:28.151458Z"
+      }
+    },
+    {
+      "sequence": "625",
+      "receiptSha256": "b3559322210310741e6c3ae941813fd345cca56f228f4f3a67a395d9981172fe",
+      "passageId": "4b1957e3-b314-51db-be8c-3e079574d342",
+      "selection": {
+        "reason": "Connects the book’s familiar example with a broader question about living systems. Evidence: exact 64-word source span at Lecture VI, respiration and combustion, checked with surrounding text during assistant editorial review. Score is a deterministic heuristic baseline.",
+        "selectionRecordedAt": "2026-09-13T17:31:28.151458Z"
+      }
+    },
+    {
+      "sequence": "626",
+      "receiptSha256": "db413876a7cf955c80f095e4b8ff343bde6e9ea25b5e36857670a140f250bd89",
+      "passageId": "a0b4f916-1f2d-5d35-ab33-221632373c07",
+      "selection": {
+        "reason": "A complete reflection grounded in the preceding account of carbon moving between living things and air. Evidence: exact 83-word source span at Lecture VI, animals and plants, checked with surrounding text during assistant editorial review. Score is a deterministic heuristic baseline.",
+        "selectionRecordedAt": "2026-09-13T17:31:28.151458Z"
+      }
+    },
+    {
+      "sequence": "627",
+      "receiptSha256": "09c8c62b4734e8b6cd293a1617794b6d9758e88b1b13f7f24701ca108c1d1e01",
+      "passageId": "4052e1b9-5fe2-52ea-b9fd-c4aa8e38d9e1",
+      "selection": {
+        "reason": "Preserves the lecture’s full closing image of contributing light through useful action. Evidence: exact 85-word source span at Lecture VI, closing wish, checked with surrounding text during assistant editorial review. Score is a deterministic heuristic baseline.",
+        "selectionRecordedAt": "2026-09-13T17:31:28.151458Z"
+      }
+    },
+    {
+      "sequence": "628",
+      "receiptSha256": "3871646469694d51e4b2f0f0ed0b187d70430e3d37236c1c39fb8d95eebc8709",
+      "passageId": "bfbd4ed1-192a-528f-8886-05a9baa111c4",
+      "selection": {
+        "reason": "Public editorial rationale: Keeps the legal deprivation and the example of her grandmother’s unsecured savings together. Printed location: I, Childhood. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:51.739344Z"
+      }
+    },
+    {
+      "sequence": "629",
+      "receiptSha256": "bbd7c9fdfcd971922466b2397aa3581b72ac10dc37014367ae89b287d570c898",
+      "passageId": "f702af40-372f-5dd1-804e-eb5efde56a09",
+      "selection": {
+        "reason": "Public editorial rationale: Includes the inheritance decision before the contrast with the religious precepts she was taught. Printed location: I, Childhood. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:51.739344Z"
+      }
+    },
+    {
+      "sequence": "630",
+      "receiptSha256": "3b124c597e73991ca0cd209c03397499253cc4936983a2ba67b0e50de0e5310e",
+      "passageId": "79886602-63a7-5c00-8fa8-8213e3578140",
+      "selection": {
+        "reason": "Public editorial rationale: Preserves the family separation behind the concluding comparison with traded goods. Printed location: I, Childhood. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:51.739344Z"
+      }
+    },
+    {
+      "sequence": "631",
+      "receiptSha256": "4e6b57fa6aa4cf4f9661f353a329fd75fb4ede8d992d3f62d7f012b76b557e59",
+      "passageId": "3c97c066-f866-5d8e-b3da-f7deb49d09ce",
+      "selection": {
+        "reason": "Public editorial rationale: Introduces the learner, his purpose, and his request in a complete narrative unit. Printed location: XIII, The Church and Slavery. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:51.739344Z"
+      }
+    },
+    {
+      "sequence": "632",
+      "receiptSha256": "15bcaf3b379e076bf50f3f45e3d89a3fb0281a53fad9808e2434e72bee90b940",
+      "passageId": "97795271-a46b-508a-9c62-7705d45ed043",
+      "selection": {
+        "reason": "Public editorial rationale: Keeps the hope for her children’s freedom and the obstacles to her plans together. Printed location: XV, Continued Persecutions. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:51.739344Z"
+      }
+    },
+    {
+      "sequence": "633",
+      "receiptSha256": "c17450a4f66e7250b4a9aec056180074eb90beecb47adbdd908bbb8487c0c9bb",
+      "passageId": "99fcea1f-bb54-50e5-8dea-5dd8e29d670c",
+      "selection": {
+        "reason": "Public editorial rationale: Both sentences state why escape alone could not satisfy her desire for freedom. Printed location: XVI, Scenes at the Plantation. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:51.739344Z"
+      }
+    },
+    {
+      "sequence": "634",
+      "receiptSha256": "4964a2673a97745f7d734f12a4c356b281797361369d152bb592f88d2e6ced63",
+      "passageId": "1390ae6b-f0c8-5c9e-93d8-eb8125974889",
+      "selection": {
+        "reason": "Public editorial rationale: A complete question and answer explains deception in the conditions of enslavement. Printed location: XVIII, Months of Peril. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:51.739344Z"
+      }
+    },
+    {
+      "sequence": "635",
+      "receiptSha256": "dea35875b8e55190ed736c022af080ed54edd3a2ab5fa1ca5d3cadb458aa18c1",
+      "passageId": "e45ece3f-8925-5fdc-af5e-d3c48eab444b",
+      "selection": {
+        "reason": "Public editorial rationale: A short complete reflection links ordinary air and sunlight to their prolonged deprivation. Printed location: XXX, Northward Bound. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:51.739344Z"
+      }
+    },
+    {
+      "sequence": "636",
+      "receiptSha256": "03237508867a346f3d99d3a9ba01a072405b23a14b3d0b29009bec42f395fae5",
+      "passageId": "e224db97-0fee-5644-a7e9-10b1df0ef324",
+      "selection": {
+        "reason": "Public editorial rationale: Keeps the welcome and the painful contrast with her own separated children. Printed location: XXXI, Incidents in Philadelphia. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:51.739344Z"
+      }
+    },
+    {
+      "sequence": "637",
+      "receiptSha256": "9334e2524e3f135cc3505ff6228dec3fa4a4b8647c0775b34029838499c7809a",
+      "passageId": "ed95e6ad-ed17-5026-a2b3-89801fec44f0",
+      "selection": {
+        "reason": "Public editorial rationale: Explains how the manner of asking questions can restore a sense of human regard. Printed location: XXXI, Incidents in Philadelphia. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:51.739344Z"
+      }
+    },
+    {
+      "sequence": "638",
+      "receiptSha256": "ba7fa6a6a2124fb4aa8e4c91a179c9f2609cc0502ccac6f31c4f4921508a4b39",
+      "passageId": "706c0c3f-c6ae-51fe-8adb-4caf6f1385e6",
+      "selection": {
+        "reason": "Public editorial rationale: Keeps equal treatment and her own emotional response together without claiming all England was free of prejudice. Printed location: XXXVII, A Visit to England. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:51.739344Z"
+      }
+    },
+    {
+      "sequence": "639",
+      "receiptSha256": "1549b4b7c86ec6ffaf2907d7ea700e952c40c057caf4a8474db75edba27bd61e",
+      "passageId": "70d0abe7-a0cd-594f-96b6-c50d5918b0c3",
+      "selection": {
+        "reason": "Public editorial rationale: Connects her children’s education with her refusal to regard herself as property. Printed location: XXXVIII, Renewed Invitations to Go South. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:51.739344Z"
+      }
+    },
+    {
+      "sequence": "640",
+      "receiptSha256": "a955cde32cadeb5bc6dd864e17c25b6dbf2d589932c14d5210e8780e5e3b4ce3",
+      "passageId": "6576a1ed-316f-5a19-ac99-c6c54b04642a",
+      "selection": {
+        "reason": "Public editorial rationale: A full sentence states the contradiction between a free city and its residents’ enforced fear. Printed location: XL, The Fugitive Slave Law. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:51.739344Z"
+      }
+    },
+    {
+      "sequence": "641",
+      "receiptSha256": "9e0091d5e4dd4ed4d51baf6d6536aeef106d77934a4a4ef5189670693ce48a1c",
+      "passageId": "a74a6229-d6e2-5f24-a348-4ad6c9ff89db",
+      "selection": {
+        "reason": "Public editorial rationale: Preserves her objection to purchase alongside the tangible relief from persecution. Printed location: XLI, Free at Last. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:51.739344Z"
+      }
+    },
+    {
+      "sequence": "642",
+      "receiptSha256": "3d8cd105b8f5e3cb28a12ab87d241ab68bee22562a1dbf4ad51486689b221864",
+      "passageId": "75348d3c-861e-5cd9-abbb-6868308c23b8",
+      "selection": {
+        "reason": "Public editorial rationale: Includes her qualification that northern freedom still fell short of her ideal. Printed location: XLI, Free at Last. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:51.739344Z"
+      }
+    },
+    {
+      "sequence": "703",
+      "receiptSha256": "00d086271f31c26e8d850d70d6fcdd4a1cf18428c756e81468ffd681b6eeff13",
+      "passageId": "e177f680-1357-5d5f-b9c2-941651ff047e",
+      "selection": {
+        "reason": "Public editorial rationale: The paired opening claims state the distinction between names and the enduring Tao. Printed location: Chapter 1, section 1. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.993285Z"
+      }
+    },
+    {
+      "sequence": "704",
+      "receiptSha256": "f02c441366328d4fe79826f0c4c4a305f17b687b03b39f92feffb9f1b3c09242",
+      "passageId": "5af3ce76-cfb7-53c2-8668-2b3b6603faf7",
+      "selection": {
+        "reason": "Public editorial rationale: Keeps the water comparison and its explicit connection to the Tao. Printed location: Chapter 8, section 1. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.993285Z"
+      }
+    },
+    {
+      "sequence": "705",
+      "receiptSha256": "3e77367d5548b1d135846d11f9fe91eeace2c343d21c768bade3da999aae72a0",
+      "passageId": "70b87a8b-77a3-5d90-a291-aa56bab0dc32",
+      "selection": {
+        "reason": "Public editorial rationale: Two concrete images express the limits of excess and repeated interference. Printed location: Chapter 9, section 1. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.993285Z"
+      }
+    },
+    {
+      "sequence": "706",
+      "receiptSha256": "8992695fdfa606bf7e4d1ba44e859b91102163974dd8b9b43b0ef8238b65ae5c",
+      "passageId": "83ab5c5b-b610-5f96-b6f4-69748afa1205",
+      "selection": {
+        "reason": "Public editorial rationale: Includes the named subject and the complete account of nurturing without claiming possession. Printed location: Chapter 10, section 3. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.993285Z"
+      }
+    },
+    {
+      "sequence": "707",
+      "receiptSha256": "7054cacf687e49119e0811bbc757006e5d351e6cc5ad72f6d8ba5b973ad300f2",
+      "passageId": "67429df4-0564-5f70-88bc-5f81ed0bfc7e",
+      "selection": {
+        "reason": "Public editorial rationale: Three complete examples explain how empty space contributes to use. Printed location: Chapter 11. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.993285Z"
+      }
+    },
+    {
+      "sequence": "708",
+      "receiptSha256": "288862768e16f81fc2a09970d6cc74f685e5ce10e1e3155297d4be3c9b442a1d",
+      "passageId": "868a614d-9681-54c7-8555-39c5a83b4209",
+      "selection": {
+        "reason": "Public editorial rationale: Retains both question-and-answer pairs so the balance of stillness and movement is not lost. Printed location: Chapter 15, section 3. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.993285Z"
+      }
+    },
+    {
+      "sequence": "709",
+      "receiptSha256": "b34de6cd94ea516ad8d222f8a16b8fb9fa97eb228a47fbb76293d4da400ff199",
+      "passageId": "f03b6f8f-87ca-5a40-a320-3772fe0d9897",
+      "selection": {
+        "reason": "Public editorial rationale: Keeps the sage’s humility and the consequences attributed to it in one continuous passage. Printed location: Chapter 22, section 2. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.993285Z"
+      }
+    },
+    {
+      "sequence": "710",
+      "receiptSha256": "c37a922d073f17e62a1314cb862f0f4fc90cb78402bc748e63a812c1de39d96c",
+      "passageId": "1dd47d17-6420-5c6a-8ed6-1465e07f1a0a",
+      "selection": {
+        "reason": "Public editorial rationale: Includes both the physical imbalance and the social comparison it introduces. Printed location: Chapter 24. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.993285Z"
+      }
+    },
+    {
+      "sequence": "711",
+      "receiptSha256": "5c5364e8a4c8b04cab18f7ca122bcbcead04e4be8841957a4fbddb7ade452943",
+      "passageId": "35436f25-bde1-5545-9499-f61cd895da94",
+      "selection": {
+        "reason": "Public editorial rationale: Three parallel comparisons connect self-knowledge, self-command, and contentment. Printed location: Chapter 33, section 1. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.993285Z"
+      }
+    },
+    {
+      "sequence": "712",
+      "receiptSha256": "45148b69f13d40c425c577c5ab7dacc534efeb30153f5e47c6866716ca6b1631",
+      "passageId": "e9f0c064-ae65-5938-b18d-a2bcbfd1cbfd",
+      "selection": {
+        "reason": "Public editorial rationale: Retains the concluding statement about sufficiency after the warning against acquisitiveness. Printed location: Chapter 46, section 2. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.993285Z"
+      }
+    },
+    {
+      "sequence": "713",
+      "receiptSha256": "1ddaeaf5f0a4ab4090c52058f1eafde2aa4e4a5bdd2fbffea09f33d70da265e6",
+      "passageId": "2ac50502-0467-5c25-9af3-edc502894608",
+      "selection": {
+        "reason": "Public editorial rationale: Keeps both parallel statements of responding with goodness and sincerity. Printed location: Chapter 49, section 2. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.993285Z"
+      }
+    },
+    {
+      "sequence": "714",
+      "receiptSha256": "1d800ad7d289b1035dd4702dd65804173d1de369527de3b90addb2744406b975",
+      "passageId": "0f45556f-c724-56b9-81ea-ecfc426737a1",
+      "selection": {
+        "reason": "Public editorial rationale: A complete contrast links attention to small things with the protection of tenderness. Printed location: Chapter 52, section 4. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.993285Z"
+      }
+    },
+    {
+      "sequence": "715",
+      "receiptSha256": "54f118b902f64f51e7e54fbbbaf2c318e9c03328e43d3a4c2d54b11de3a2f735",
+      "passageId": "26cdc4e8-6dc3-5df7-8f6f-849548067672",
+      "selection": {
+        "reason": "Public editorial rationale: Includes the practical answer to easy promises and underestimated difficulties. Printed location: Chapter 63, section 3. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.993285Z"
+      }
+    },
+    {
+      "sequence": "716",
+      "receiptSha256": "b0c663fc15bd643cfbe610cfd5247ef730f2c817af4dbb673bf1ce867b3b66cf",
+      "passageId": "3e209cdd-bd11-59e8-87c2-b015418ec892",
+      "selection": {
+        "reason": "Public editorial rationale: Preserves all three source images of large results beginning on a small scale. Printed location: Chapter 64, section 2. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.993285Z"
+      }
+    },
+    {
+      "sequence": "717",
+      "receiptSha256": "695ab5c3f7a23bd73d2573c3a10626155dedce0f3bed11766722ca93336f095a",
+      "passageId": "e4c6cd1c-59e3-59d7-be9b-abb6d309d096",
+      "selection": {
+        "reason": "Public editorial rationale: One complete sentence states the contrast between recognizing and concealing ignorance. Printed location: Chapter 71, section 1. Assistant editorial selection and context review; no human review or external selector call is claimed. Score is the deterministic heuristic baseline, not a quality probability.",
+        "selectionRecordedAt": "2026-09-13T17:31:50.993285Z"
+      }
+    }
+  ],
+  "envelopeHex": "0x474453414e434832a30f74cd47e346d4981eabdfc5cce76a0000003c59c0ee6e8442340e9432b62b7981f77b369458571be798fb892e636aab0ff2d72726865995d50fb3e196e19c84938db8b7c36e830c365dbdac9d00a8e0b3bf7a00007d615b7b2272656365697074536861323536223a2239363031316237333264643762323837623365356634636233313765653035613739333161346464353931376336333838636237613538386339363335653062222c22706173736167654964223a2262623938383338612d626438382d353133342d393630332d336436393762346531663133222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20507265736572766573206869732061636b6e6f776c6564676d656e7420746861742068756d616e6520636f6e6475637420776173206c6561726e65642066726f6d2068697320736973746572732e205072696e746564206c6f636174696f6e3a204561726c79206368696c64686f6f642c206578616d706c65206f662068697320736973746572732e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3838363035355a227d7d2c7b2272656365697074536861323536223a2237333836336532306262653962373464363030353035316665646331386663323136613961386137646231353736346636663831623032393134666138386461222c22706173736167654964223a2262313634383038392d323535662d353162642d616663392d393036353332616533373739222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20506169727320686973206163636f756e74206f6620637572696f7369747920776974682074686520636f6e6372657465206578616d706c65206f662067656f6d6574726963616c2070726f6f66732e205072696e746564206c6f636174696f6e3a205363686f6f6c2079656172732c20706c65617375726520696e20756e6465727374616e64696e672e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3838363035355a227d7d2c7b2272656365697074536861323536223a2233663733376637643234383035663339363330333734626264653862323431343762353938356430353231353033616166323166336562396130343766666566222c22706173736167654964223a2234333637613235302d366232342d353633392d393339362d633165366165353536373165222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20436f6e6e656374732061206e616d656420626f6f6b20746f206f62736572766174696f6e20616e64206e6f74652d74616b696e6720696e2074776f20636f6d706c6574652073656e74656e6365732e205072696e746564206c6f636174696f6e3a205363686f6f6c2079656172732c2072656164696e6720616e642062697264206f62736572766174696f6e2e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3838363035355a227d7d2c7b2272656365697074536861323536223a2266303139383539386263633364653762646464306439386431333031636334613033623139333036633061303134303861383531653663326639326334343264222c22706173736167654964223a2264313362313639372d616638652d356464352d623935382d323332363464373635393739222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20496e636c7564657320626f74682074686520726570656174656420636f6e64656e736174696f6e20616e642074686520726561736f6e2069742068656c7065642068697320626f6f6b2e205072696e746564206c6f636174696f6e3a204d79205365766572616c205075626c69636174696f6e732c20636f6d706f736974696f6e206f6620746865204f726967696e2e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3838363035355a227d7d2c7b2272656365697074536861323536223a2266383165643932366262396630373563393634363465363137623230663839336363393561616436663130646365393161613362376430303436356132366464222c22706173736167654964223a2237356532656265642d313837322d353439372d613933332d323966636332353061343832222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a204120636f6d706c6574652070726163746963616c2072756c6520666f72207265636f7264696e672066616374732074686174206368616c6c656e67652061206661766f72656420636f6e636c7573696f6e2e205072696e746564206c6f636174696f6e3a204d79205365766572616c205075626c69636174696f6e732c207265636f7264696e6720636f6e74726172792065766964656e63652e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3838363035355a227d7d2c7b2272656365697074536861323536223a2264376438383333656562663837633161303435306466313837323839383561633238656637366236333233393539653161633466333333356366353238356536222c22706173736167654964223a2261356331636435362d333030342d356330612d393964342d356533636463323161623264222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a204b65657073207468652066756c6c2064697374696e6374696f6e206265747765656e20696d70657266656374206f7574636f6d657320616e64206566666f72742077697468696e2068697320636f6e74726f6c2e205072696e746564206c6f636174696f6e3a204d79205365766572616c205075626c69636174696f6e732c20726573706f6e736520746f2063726974696369736d2e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3838363035355a227d7d2c7b2272656365697074536861323536223a2262653539306565393566313966663838643337626331306130393030663563353762356661313334623065643339333939343335653265656362346136623164222c22706173736167654964223a2230653032646434342d626439302d356330302d383338302d623864363739303636336162222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a205072657365727665732074686520726571756972656d656e74207468617420616e20756e7665726966696564206879706f746865736973206d757374207374696d756c617465206f62736572766174696f6e7320746f2062652075736566756c2e205072696e746564206c6f636174696f6e3a204d79205365766572616c205075626c69636174696f6e732c207468652050616e67656e65736973206879706f7468657369732e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3838363035355a227d7d2c7b2272656365697074536861323536223a2231386432393963643666346363396164626566306535393135336537363366383333616331303634636430373237613033393537333532366137663866393536222c22706173736167654964223a2237363263646664362d313030612d353435302d383166332d383232656566623765313033222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20537461746573207468652076616c7565206f662072657475726e696e6720746f206f6e65e280997320776f726b2061667465722061206c6f6e6720696e74657276616c2e205072696e746564206c6f636174696f6e3a204d79205365766572616c205075626c69636174696f6e732c20496e7365637469766f726f757320506c616e74732e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3838363035355a227d7d2c7b2272656365697074536861323536223a2264633330393933316664383432306664343164666566626161326164396566386464353566323133383730663631313436386562363762373034356537386532222c22706173736167654964223a2234623662336131322d616662322d353235632d623662612d336630663436373835343830222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a2052657461696e732074686520636f6e6e656374696f6e206265747765656e207265766973696e672073656e74656e63657320616e642066696e64696e67206572726f727320696e2065766964656e6365206f7220726561736f6e696e672e205072696e746564206c6f636174696f6e3a205772697474656e204d6179203173742c20313838312c20646966666963756c7479206f6620636c6561722065787072657373696f6e2e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3838363035355a227d7d2c7b2272656365697074536861323536223a2231663165313439666536363066326364326631333263616461313135653861346463613938343166326662613534383030373233373363623737616266623761222c22706173736167654964223a2232653637363230652d616534382d353937382d626365312d386436373764656165633831222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20426f74682073656e74656e636573206578706c61696e20686973207072616374696365206f6620717569636b206472616674696e6720666f6c6c6f7765642062792064656c6962657261746520636f7272656374696f6e2e205072696e746564206c6f636174696f6e3a205772697474656e204d6179203173742c20313838312c206472616674696e672070726163746963652e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3838363035355a227d7d2c7b2272656365697074536861323536223a2232373037636266333466636563666334316137313661373331643932336131363035393734303764333436306639393236616237636236653464356361353661222c22706173736167654964223a2232323730363030362d636164312d353136342d393165342d346532643130343562356236222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a2053686f7773207468652061637475616c20657870616e73696f6e2066726f6d2061206272696566206f75746c696e6520746f20612066756c6c657220617272616e67656d656e742e205072696e746564206c6f636174696f6e3a205772697474656e204d6179203173742c20313838312c206f7267616e697a696e67206120626f6f6b2e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3838363035355a227d7d2c7b2272656365697074536861323536223a2264393564303731373230666333626334626261303061346562366161383561643563323131643735666637353635343331336666386161636564663835636231222c22706173736167654964223a2236623534386531342d303739302d353163652d386162322d336466306133366638386333222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a204b65657073206f62736572766174696f6e2c207375737461696e656420776f726b2c20616e64206c6f7665206f6620736369656e636520746f67657468657220696e20686973206f776e2073656c662d6173736573736d656e742e205072696e746564206c6f636174696f6e3a205772697474656e204d6179203173742c20313838312c20686162697473206f66206f62736572766174696f6e2e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3838363035355a227d7d2c7b2272656365697074536861323536223a2262386364316461306138613535313833623662306565636566303763653434613163376135633865393738613639383237373236653630393462306666646538222c22706173736167654964223a2264376363373831342d323436362d353731392d383663322d383163366437333763383235222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a204120636f6e636973652066697273742d706572736f6e2073746174656d656e74206f66207468652061696d20626568696e642068697320636f6c6c656374696e67206f662066616374732e205072696e746564206c6f636174696f6e3a205772697474656e204d6179203173742c20313838312c2064657369726520746f206578706c61696e2e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3838363035355a227d7d2c7b2272656365697074536861323536223a2235636436323563313832353963343462313433623334396531636639613039386333303034366133656362653634626435633931343231316339653332306665222c22706173736167654964223a2239373463636333632d373763312d353266632d623465362d356234333936626135616636222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20496e636c7564657320686973207265636f7264206f66206368616e67696e67206561726c79206879706f7468657365732c20737570706f7274696e67207468652073746174656420636f6d6d69746d656e7420746f207265766973696f6e2e205072696e746564206c6f636174696f6e3a205772697474656e204d6179203173742c20313838312c207265766973696e67206879706f7468657365732e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3838363035355a227d7d2c7b2272656365697074536861323536223a2236316163393432666565313035313034373835343831343232306562303536653261353432306131316237656534626335353963373536396664313434303333222c22706173736167654964223a2236396130653366362d386434342d356564662d383664642d663139633265316362633236222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a2050726573657276657320626f7468207468652076616c7565206f6620736b657074696369736d20616e642069747320706f74656e7469616c20746f20646973636f75726167652075736566756c20696e7665737469676174696f6e2e205072696e746564206c6f636174696f6e3a205772697474656e204d6179203173742c20313838312c206c696d697473206f6620736b657074696369736d2e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3838363035355a227d7d2c7b2272656365697074536861323536223a2239653532356138323439633163333763336161393539326561313834333535666332306539393932613964303838643838396663303963353632653831306662222c22706173736167654964223a2263346365346131382d376338372d356362362d613437662d363939626131343835653335222c2273656c656374696f6e223a7b22726561736f6e223a224120636c65617220696e7669746174696f6e20746f20696e766573746967617465206f7264696e617279206f626a65637473206173206120726f75746520696e746f20736369656e63652e2045766964656e63653a2065786163742033302d776f726420736f75726365207370616e206174204c65637475726520492c206f70656e696e672c20636865636b6564207769746820737572726f756e64696e67207465787420647572696e6720617373697374616e7420656469746f7269616c207265766965772e2053636f726520697320612064657465726d696e69737469632068657572697374696320626173656c696e652e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a32382e3135313435385a227d7d2c7b2272656365697074536861323536223a2265346136316436383663366239643738343332616534626163663630613639616432636539653966613135363864666531646335356635653364336537396165222c22706173736167654964223a2238316632626661372d663237352d353862352d616431322d656430326133313930306234222c2273656c656374696f6e223a7b22726561736f6e223a224120636f6d706c657465206578706c616e6174696f6e206f6620616e2065766572796461792066656174757265206f662061206275726e696e672063616e646c652e2045766964656e63653a2065786163742037382d776f726420736f75726365207370616e206174204c65637475726520492c2074686520637570206f66206d656c746564206675656c2c20636865636b6564207769746820737572726f756e64696e67207465787420647572696e6720617373697374616e7420656469746f7269616c207265766965772e2053636f726520697320612064657465726d696e69737469632068657572697374696320626173656c696e652e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a32382e3135313435385a227d7d2c7b2272656365697074536861323536223a2262393065383166363161616235313732333265643838366339313937623161356634373965316261313962666238633537633138303363663162646235353761222c22706173736167654964223a2236363536366332332d323931642d353032612d393539332d393337613830613039623665222c2273656c656374696f6e223a7b22726561736f6e223a22436f6e6e65637473206120636f6e63726574652064657369676e2070726f626c656d2077697468206120636f6e636973652064697374696e6374696f6e206265747765656e20617070656172616e636520616e642066756e6374696f6e2e2045766964656e63653a2065786163742034332d776f726420736f75726365207370616e206174204c65637475726520492c2066756e6374696f6e20616e64206265617574792c20636865636b6564207769746820737572726f756e64696e67207465787420647572696e6720617373697374616e7420656469746f7269616c207265766965772e2053636f726520697320612064657465726d696e69737469632068657572697374696320626173656c696e652e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a32382e3135313435385a227d7d2c7b2272656365697074536861323536223a2235666363383831376462633234393737303431623466633635613136333134383361313366373437303936383631383464656536303235653836363533653038222c22706173736167654964223a2239396332373037362d313434662d356632372d383266372d656531313231383762623837222c2273656c656374696f6e223a7b22726561736f6e223a225072657365727665732074686520636f6d706c65746520696e7669746174696f6e20746f2061736b20776861742063617573656420616e20756e6578706563746564206f62736572766174696f6e2e2045766964656e63653a2065786163742037362d776f726420736f75726365207370616e206174204c65637475726520492c206c6561726e696e672066726f6d20616e20756e657870656374656420726573756c742c20636865636b6564207769746820737572726f756e64696e67207465787420647572696e6720617373697374616e7420656469746f7269616c207265766965772e2053636f726520697320612064657465726d696e69737469632068657572697374696320626173656c696e652e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a32382e3135313435385a227d7d2c7b2272656365697074536861323536223a2232666431656139656337313662646563636631666361353730363561386665313564313235313230613864393063313263336430303132376138363334353761222c22706173736167654964223a2238363865376230622d363333392d356665622d383966342d363732363463346261613733222c2273656c656374696f6e223a7b22726561736f6e223a224120636f6d70616374206465736372697074696f6e206f6620686f7720746865207769636b20737570706c696573206675656c20746f20636f6d62757374696f6e2e2045766964656e63653a2065786163742033372d776f726420736f75726365207370616e206174204c65637475726520492c20746865207769636b20616e6420636170696c6c6172792061747472616374696f6e2c20636865636b6564207769746820737572726f756e64696e67207465787420647572696e6720617373697374616e7420656469746f7269616c207265766965772e2053636f726520697320612064657465726d696e69737469632068657572697374696320626173656c696e652e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a32382e3135313435385a227d7d2c7b2272656365697074536861323536223a2265623230636530616662326137323766343731326130373961323665343134376630653836306233653465353366633761666162626564323438313037613630222c22706173736167654964223a2237303134316166662d343332352d356531632d616362662d626261333339366133333030222c2273656c656374696f6e223a7b22726561736f6e223a224d616b657320612062617369632064697374696e6374696f6e206265747765656e2061206c6967687420736f7572636520616e6420616e20696c6c756d696e61746564206f626a6563742e2045766964656e63653a2065786163742034362d776f726420736f75726365207370616e206174204c65637475726520492c20746865206469616d6f6e6420616e642074686520666c616d652c20636865636b6564207769746820737572726f756e64696e67207465787420647572696e6720617373697374616e7420656469746f7269616c207265766965772e2053636f726520697320612064657465726d696e69737469632068657572697374696320626173656c696e652e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a32382e3135313435385a227d7d2c7b2272656365697074536861323536223a2234313434353833363363623464303336646337386133343665383138323663343662396433633764356533393133343539376634376338353132663964643838222c22706173736167654964223a2264373835323561652d653461302d353435392d383431332d656665343730396232666364222c2273656c656374696f6e223a7b22726561736f6e223a224120636f6d706c65746520696e74726f64756374696f6e20746f207468652064697374696e6374696f6e206265747765656e20706879736963616c20737461746520616e64206368656d6963616c206964656e746974792e2045766964656e63653a2065786163742039352d776f726420736f75726365207370616e206174204c656374757265204949492c20776174657220696e20646966666572656e74207374617465732c20636865636b6564207769746820737572726f756e64696e67207465787420647572696e6720617373697374616e7420656469746f7269616c207265766965772e2053636f726520697320612064657465726d696e69737469632068657572697374696320626173656c696e652e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a32382e3135313435385a227d7d2c7b2272656365697074536861323536223a2261363663363337326461653233336563636363323564313063623863626536656339343363373563346362306266643839656631643163313963353633353738222c22706173736167654964223a2231643637633431322d363233302d353063382d626232652d303365326334636662373730222c2273656c656374696f6e223a7b22726561736f6e223a224120636f6e636973652073746174656d656e7420636f6e6e656374696e67206c61626f7261746f7279206f62736572766174696f6e73207769746820612066616d696c696172206e61747572616c207375627374616e63652e2045766964656e63653a2065786163742031372d776f726420736f75726365207370616e206174204c656374757265204949492c2077617465722066726f6d20646966666572656e7420736f75726365732c20636865636b6564207769746820737572726f756e64696e67207465787420647572696e6720617373697374616e7420656469746f7269616c207265766965772e2053636f726520697320612064657465726d696e69737469632068657572697374696320626173656c696e652e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a32382e3135313435385a227d7d2c7b2272656365697074536861323536223a2239653137373030306136653238643830663330636432313131373535643161393630626635353239373539373839343261653462626136633437343038306639222c22706173736167654964223a2263316539633836302d353837352d356436382d623037652d646634613537336130646235222c2273656c656374696f6e223a7b22726561736f6e223a225265636f72647320612073696d706c65207175616e7469746174697665206f62736572766174696f6e206174207468652063656e746572206f6620746865206c656374757265e2809973206163636f756e74206f662077617465722e2045766964656e63653a2065786163742033352d776f726420736f75726365207370616e206174204c6563747572652049562c2073657061726174696e672077617465722c20636865636b6564207769746820737572726f756e64696e67207465787420647572696e6720617373697374616e7420656469746f7269616c207265766965772e2053636f726520697320612064657465726d696e69737469632068657572697374696320626173656c696e652e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a32382e3135313435385a227d7d2c7b2272656365697074536861323536223a2262653933353162373866303436316239613064616234343264383735363636376633366362383733373631633765623166356565363834623866613761343536222c22706173736167654964223a2231643061383037372d616263342d353665662d626663372d363263333763393730313233222c2273656c656374696f6e223a7b22726561736f6e223a22412074616e6769626c6520636f6d70617269736f6e20746861742064697374696e67756973686573207468652070726f70657274696573206f662074776f2067617365732e2045766964656e63653a2065786163742033312d776f726420736f75726365207370616e206174204c6563747572652049562c20636f6d706172696e6720687964726f67656e20616e64206f787967656e2c20636865636b6564207769746820737572726f756e64696e67207465787420647572696e6720617373697374616e7420656469746f7269616c207265766965772e2053636f726520697320612064657465726d696e69737469632068657572697374696320626173656c696e652e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a32382e3135313435385a227d7d2c7b2272656365697074536861323536223a2238333264313136616538646534356235653335666231656262366464353433333039326662323161646162616631333739353661306465653835316163633734222c22706173736167654964223a2261656130363233632d613632302d353030352d613435312d376338316437356439303030222c2273656c656374696f6e223a7b22726561736f6e223a224120636f6d706c6574652074686f75676874206578706572696d656e74207479696e672061746d6f7370686572696320636f6d706f736974696f6e20746f20612066616d696c69617220666972652e2045766964656e63653a2065786163742039362d776f726420736f75726365207370616e206174204c65637475726520562c2077687920616972206973206e6f742070757265206f787967656e2c20636865636b6564207769746820737572726f756e64696e67207465787420647572696e6720617373697374616e7420656469746f7269616c207265766965772e2053636f726520697320612064657465726d696e69737469632068657572697374696320626173656c696e652e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a32382e3135313435385a227d7d2c7b2272656365697074536861323536223a2264396263623864393237613034396636656131313532646435633339643438393231646661633431386162336538303933363065613033356632666139356361222c22706173736167654964223a2231303238393037662d616463652d353335362d623338392d646464646432633063613731222c2273656c656374696f6e223a7b22726561736f6e223a22412073686f7274206578616d706c65206f662074657374696e67206120636c61696d2061626f757420636f6d706f736974696f6e2062792073657061726174696e67206120636f6d706f756e642e2045766964656e63653a2065786163742037302d776f726420736f75726365207370616e206174204c6563747572652056492c2073657061726174696e6720636172626f6e696320616369642c20636865636b6564207769746820737572726f756e64696e67207465787420647572696e6720617373697374616e7420656469746f7269616c207265766965772e2053636f726520697320612064657465726d696e69737469632068657572697374696320626173656c696e652e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a32382e3135313435385a227d7d2c7b2272656365697074536861323536223a2262333535393332323231303331303734316536633361653934313831336664333435636361353666323238663466336136376133393564393938313137326665222c22706173736167654964223a2234623139353765332d623331342d353164622d626538632d336530373935373464333432222c2273656c656374696f6e223a7b22726561736f6e223a22436f6e6e656374732074686520626f6f6be28099732066616d696c696172206578616d706c65207769746820612062726f61646572207175657374696f6e2061626f7574206c6976696e672073797374656d732e2045766964656e63653a2065786163742036342d776f726420736f75726365207370616e206174204c6563747572652056492c207265737069726174696f6e20616e6420636f6d62757374696f6e2c20636865636b6564207769746820737572726f756e64696e67207465787420647572696e6720617373697374616e7420656469746f7269616c207265766965772e2053636f726520697320612064657465726d696e69737469632068657572697374696320626173656c696e652e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a32382e3135313435385a227d7d2c7b2272656365697074536861323536223a2264623431333837366137636639353563383066303935653462386666333433626465366539656132356235653336383537363730613134306632353062643839222c22706173736167654964223a2261306234663931362d316632642d356433352d616233332d323231363332333733633037222c2273656c656374696f6e223a7b22726561736f6e223a224120636f6d706c657465207265666c656374696f6e2067726f756e64656420696e2074686520707265636564696e67206163636f756e74206f6620636172626f6e206d6f76696e67206265747765656e206c6976696e67207468696e677320616e64206169722e2045766964656e63653a2065786163742038332d776f726420736f75726365207370616e206174204c6563747572652056492c20616e696d616c7320616e6420706c616e74732c20636865636b6564207769746820737572726f756e64696e67207465787420647572696e6720617373697374616e7420656469746f7269616c207265766965772e2053636f726520697320612064657465726d696e69737469632068657572697374696320626173656c696e652e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a32382e3135313435385a227d7d2c7b2272656365697074536861323536223a2230396338633632623437333465386236636432393361313631373739346236643937353865383862316231336637663234373031636131303863316431653031222c22706173736167654964223a2234303532653162392d356665322d353265612d623966642d633461613865333864396531222c2273656c656374696f6e223a7b22726561736f6e223a2250726573657276657320746865206c656374757265e28099732066756c6c20636c6f73696e6720696d616765206f6620636f6e747269627574696e67206c69676874207468726f7567682075736566756c20616374696f6e2e2045766964656e63653a2065786163742038352d776f726420736f75726365207370616e206174204c6563747572652056492c20636c6f73696e6720776973682c20636865636b6564207769746820737572726f756e64696e67207465787420647572696e6720617373697374616e7420656469746f7269616c207265766965772e2053636f726520697320612064657465726d696e69737469632068657572697374696320626173656c696e652e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a32382e3135313435385a227d7d2c7b2272656365697074536861323536223a2233383731363436343639363934643531653462326630663065643062313837643730343330653364333732333663316333396662386439356565626338373039222c22706173736167654964223a2262666264346564312d313932612d353238662d383838362d303561396261613131316334222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a204b6565707320746865206c6567616c206465707269766174696f6e20616e6420746865206578616d706c65206f6620686572206772616e646d6f74686572e280997320756e7365637572656420736176696e677320746f6765746865722e205072696e746564206c6f636174696f6e3a20492c204368696c64686f6f642e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35312e3733393334345a227d7d2c7b2272656365697074536861323536223a2262626437633966646663643937313932323436366232333937616133353831623732616331306463333730313433363761653839623238376435373063383938222c22706173736167654964223a2266373032616634302d333732662d356464312d383034652d656235656664653536613039222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20496e636c756465732074686520696e6865726974616e6365206465636973696f6e206265666f72652074686520636f6e74726173742077697468207468652072656c6967696f75732070726563657074732073686520776173207461756768742e205072696e746564206c6f636174696f6e3a20492c204368696c64686f6f642e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35312e3733393334345a227d7d2c7b2272656365697074536861323536223a2233623132346335393765373339393163613063643230396330333339373439393235336363343933363938336132626136376230653530646530653533313065222c22706173736167654964223a2237393838363630322d363361372d356330302d386661382d383231336533353738313430222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20507265736572766573207468652066616d696c792073657061726174696f6e20626568696e642074686520636f6e636c7564696e6720636f6d70617269736f6e20776974682074726164656420676f6f64732e205072696e746564206c6f636174696f6e3a20492c204368696c64686f6f642e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35312e3733393334345a227d7d2c7b2272656365697074536861323536223a2234653662353766613661613463663466393636316633353361333239666437356662346564653864393932643366363264376630313262373662353537653539222c22706173736167654964223a2233633937633036362d663836362d356438652d623364612d663764656234396430396365222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20496e74726f647563657320746865206c6561726e65722c2068697320707572706f73652c20616e6420686973207265717565737420696e206120636f6d706c657465206e617272617469766520756e69742e205072696e746564206c6f636174696f6e3a20584949492c205468652043687572636820616e6420536c61766572792e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35312e3733393334345a227d7d2c7b2272656365697074536861323536223a2231356263616633623337396530373662663530663366343565336438396133666230323831613533666164393830386532343334653732626565393062393430222c22706173736167654964223a2239373739353237312d613436622d353038612d396336322d373730356434356564303433222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a204b656570732074686520686f706520666f7220686572206368696c6472656ee28099732066726565646f6d20616e6420746865206f62737461636c657320746f2068657220706c616e7320746f6765746865722e205072696e746564206c6f636174696f6e3a2058562c20436f6e74696e756564205065727365637574696f6e732e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35312e3733393334345a227d7d2c7b2272656365697074536861323536223a2263313734353061346636366537323530623461396165633035363138303037346562393062656563623437616462646439303862626238343837633063396262222c22706173736167654964223a2239396663656131662d626235342d353065352d386465612d356464386532396436373063222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20426f74682073656e74656e636573207374617465207768792065736361706520616c6f6e6520636f756c64206e6f742073617469736679206865722064657369726520666f722066726565646f6d2e205072696e746564206c6f636174696f6e3a205856492c205363656e65732061742074686520506c616e746174696f6e2e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35312e3733393334345a227d7d2c7b2272656365697074536861323536223a2234393634613236373361393737343566376437333466313261346333353662323831373937333631333639643135326262353932663838643265366365643633222c22706173736167654964223a2231333930616536622d663063382d356339652d393364382d656238313235393734383839222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a204120636f6d706c657465207175657374696f6e20616e6420616e73776572206578706c61696e7320646563657074696f6e20696e2074686520636f6e646974696f6e73206f6620656e736c6176656d656e742e205072696e746564206c6f636174696f6e3a2058564949492c204d6f6e746873206f6620506572696c2e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35312e3733393334345a227d7d2c7b2272656365697074536861323536223a2264656133353837356238653535313930656437333663303232616630383065643534656464336132616235666131636135643363616462343538616131386331222c22706173736167654964223a2265343565636533662d383932352d356664632d616635652d643363343865616234343462222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20412073686f727420636f6d706c657465207265666c656374696f6e206c696e6b73206f7264696e6172792061697220616e642073756e6c6967687420746f2074686569722070726f6c6f6e676564206465707269766174696f6e2e205072696e746564206c6f636174696f6e3a205858582c204e6f7274687761726420426f756e642e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35312e3733393334345a227d7d2c7b2272656365697074536861323536223a2230333233373530383836376133343666336439396433613962613031613037323430356232336131346233643062323930303962656334326633393566616535222c22706173736167654964223a2265323234646239372d306665652d353634342d613765392d313062316466306566333234222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a204b65657073207468652077656c636f6d6520616e6420746865207061696e66756c20636f6e7472617374207769746820686572206f776e20736570617261746564206368696c6472656e2e205072696e746564206c6f636174696f6e3a20585858492c20496e636964656e747320696e205068696c6164656c706869612e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35312e3733393334345a227d7d2c7b2272656365697074536861323536223a2239333334653235323465336631333563633335303566663632323864656333666134613462383634376330373735623334303239383338343939633738303961222c22706173736167654964223a2265643935653661642d656431372d353032362d613262332d383938303166656334346630222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a204578706c61696e7320686f7720746865206d616e6e6572206f662061736b696e67207175657374696f6e732063616e20726573746f726520612073656e7365206f662068756d616e207265676172642e205072696e746564206c6f636174696f6e3a20585858492c20496e636964656e747320696e205068696c6164656c706869612e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35312e3733393334345a227d7d2c7b2272656365697074536861323536223a2262613766613661366132313234666234616138653463393161313739633966323630396363303530326363616336663331633466343932313530386134623339222c22706173736167654964223a2237303663306333662d633661652d353166652d386164622d346361663666313338356536222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a204b6565707320657175616c2074726561746d656e7420616e6420686572206f776e20656d6f74696f6e616c20726573706f6e736520746f67657468657220776974686f757420636c61696d696e6720616c6c20456e676c616e64207761732066726565206f66207072656a75646963652e205072696e746564206c6f636174696f6e3a205858585649492c204120566973697420746f20456e676c616e642e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35312e3733393334345a227d7d2c7b2272656365697074536861323536223a2231353439623462376338366563366666616632393037643765613730306539353263343063303537636166346138343734646237356564626132376264363165222c22706173736167654964223a2237306430616265372d613063642d353934662d393662362d633530643539313862306333222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20436f6e6e6563747320686572206368696c6472656ee280997320656475636174696f6e207769746820686572207265667573616c20746f207265676172642068657273656c662061732070726f70657274792e205072696e746564206c6f636174696f6e3a20585858564949492c2052656e6577656420496e7669746174696f6e7320746f20476f20536f7574682e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35312e3733393334345a227d7d2c7b2272656365697074536861323536223a2261393535636465333263616465623562633664643836346531376332356236646266326435383939333263313464353231306538373830653565336234636533222c22706173736167654964223a2236353736613165642d333136662d356131392d616339392d633663353462303436343261222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20412066756c6c2073656e74656e6365207374617465732074686520636f6e74726164696374696f6e206265747765656e20612066726565206369747920616e6420697473207265736964656e7473e2809920656e666f7263656420666561722e205072696e746564206c6f636174696f6e3a20584c2c2054686520467567697469766520536c617665204c61772e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35312e3733393334345a227d7d2c7b2272656365697074536861323536223a2239653030393164356534646434656434643531626166366436353336616565663130366437373933346134613465663531383936373036393363653438613163222c22706173736167654964223a2261373461363232392d643665322d356632342d613334382d346164366339666638396462222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a2050726573657276657320686572206f626a656374696f6e20746f20707572636861736520616c6f6e6773696465207468652074616e6769626c652072656c6965662066726f6d207065727365637574696f6e2e205072696e746564206c6f636174696f6e3a20584c492c2046726565206174204c6173742e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35312e3733393334345a227d7d2c7b2272656365697074536861323536223a2233643863643130356238663565336362323861313261623837643234316162363862656532323536326131646266346164353134383636383962323231383634222c22706173736167654964223a2237353334386433632d383631652d356364392d616262622d363836383330386332336238222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20496e636c7564657320686572207175616c696669636174696f6e2074686174206e6f72746865726e2066726565646f6d207374696c6c2066656c6c2073686f7274206f662068657220696465616c2e205072696e746564206c6f636174696f6e3a20584c492c2046726565206174204c6173742e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35312e3733393334345a227d7d2c7b2272656365697074536861323536223a2230306430383632373166333163323665386438353064373064366663646434613163663138343238633735366538313436386666643638316236656566663133222c22706173736167654964223a2265313737663638302d313335372d356435662d623963322d393431363531666630343765222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a2054686520706169726564206f70656e696e6720636c61696d73207374617465207468652064697374696e6374696f6e206265747765656e206e616d657320616e642074686520656e647572696e672054616f2e205072696e746564206c6f636174696f6e3a204368617074657220312c2073656374696f6e20312e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3939333238355a227d7d2c7b2272656365697074536861323536223a2266303263343431333636333238643466653739383236663063346334613330356631376236383762303362333966393266656666623966316233633039323432222c22706173736167654964223a2235616633636537362d636662372d353363322d383636382d326233623636303366616637222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a204b656570732074686520776174657220636f6d70617269736f6e20616e6420697473206578706c6963697420636f6e6e656374696f6e20746f207468652054616f2e205072696e746564206c6f636174696f6e3a204368617074657220382c2073656374696f6e20312e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3939333238355a227d7d2c7b2272656365697074536861323536223a2233653737333637643535343862316431333538343664313166396665393165656163653263333433643231633736386261646533646139393961616537326130222c22706173736167654964223a2237306238376138622d373761332d356439302d613239312d616135366261623064633332222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a2054776f20636f6e637265746520696d61676573206578707265737320746865206c696d697473206f662065786365737320616e6420726570656174656420696e746572666572656e63652e205072696e746564206c6f636174696f6e3a204368617074657220392c2073656374696f6e20312e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3939333238355a227d7d2c7b2272656365697074536861323536223a2238393932363935666466613630366266376534643162613434653835396239313130323136333937346464386239623433623065663832333862363561653563222c22706173736167654964223a2238336162356335622d623631302d356639362d623666342d363937343861666131323035222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20496e636c7564657320746865206e616d6564207375626a65637420616e642074686520636f6d706c657465206163636f756e74206f66206e7572747572696e6720776974686f757420636c61696d696e6720706f7373657373696f6e2e205072696e746564206c6f636174696f6e3a20436861707465722031302c2073656374696f6e20332e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3939333238355a227d7d2c7b2272656365697074536861323536223a2237303534636163663638376534393131396530383131626263373537303036653564333531653663633561643732663664386261356239373361643330306632222c22706173736167654964223a2236373432396466342d303536342d356637302d383862632d356638316564306266633765222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20546872656520636f6d706c657465206578616d706c6573206578706c61696e20686f7720656d70747920737061636520636f6e747269627574657320746f207573652e205072696e746564206c6f636174696f6e3a20436861707465722031312e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3939333238355a227d7d2c7b2272656365697074536861323536223a2232383838363237363865313666383166633261303939373064366363373466363835653563653130653165333135353239376434626533633962343432613164222c22706173736167654964223a2238363861363134642d393638312d353463372d383535352d333963356138336234323039222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a2052657461696e7320626f7468207175657374696f6e2d616e642d616e7377657220706169727320736f207468652062616c616e6365206f66207374696c6c6e65737320616e64206d6f76656d656e74206973206e6f74206c6f73742e205072696e746564206c6f636174696f6e3a20436861707465722031352c2073656374696f6e20332e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3939333238355a227d7d2c7b2272656365697074536861323536223a2262333464653663643934656135313661643864323232663861313662386662396661393765623232386134376662623736323933643464613430306666313939222c22706173736167654964223a2266303362366638662d383763612d356134302d613332302d333737326665306439383937222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a204b65657073207468652073616765e28099732068756d696c69747920616e642074686520636f6e73657175656e636573206174747269627574656420746f20697420696e206f6e6520636f6e74696e756f757320706173736167652e205072696e746564206c6f636174696f6e3a20436861707465722032322c2073656374696f6e20322e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3939333238355a227d7d2c7b2272656365697074536861323536223a2263333761393232643037336631376536326131333134636238363266306634666339306362373834303262633734386536336138313263316465333964393663222c22706173736167654964223a2231646434376431372d363432302d356336612d386564362d313436356530376631613061222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20496e636c7564657320626f74682074686520706879736963616c20696d62616c616e636520616e642074686520736f6369616c20636f6d70617269736f6e20697420696e74726f64756365732e205072696e746564206c6f636174696f6e3a20436861707465722032342e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3939333238355a227d7d2c7b2272656365697074536861323536223a2235633533363465386134633862303463616231386637636131323262636263656164303465346265383834313935376134666264646237616465343532393433222c22706173736167654964223a2233353433366632352d626465312d353534352d393439392d663631636438393564613934222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20546872656520706172616c6c656c20636f6d70617269736f6e7320636f6e6e6563742073656c662d6b6e6f776c656467652c2073656c662d636f6d6d616e642c20616e6420636f6e74656e746d656e742e205072696e746564206c6f636174696f6e3a20436861707465722033332c2073656374696f6e20312e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3939333238355a227d7d2c7b2272656365697074536861323536223a2234353134386236396631336434306334323563353737633561623764616363353334656665623330313533663565343763363836363731366361366231363331222c22706173736167654964223a2265396630633036342d616536352d353933382d623138642d613262636266643163626664222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a2052657461696e732074686520636f6e636c7564696e672073746174656d656e742061626f75742073756666696369656e637920616674657220746865207761726e696e6720616761696e73742061637175697369746976656e6573732e205072696e746564206c6f636174696f6e3a20436861707465722034362c2073656374696f6e20322e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3939333238355a227d7d2c7b2272656365697074536861323536223a2231646461656166356630613461623430393063353230353866316561666465326161346534613562646432666266666561303966333364373064613236356536222c22706173736167654964223a2232616335303530322d303436372d356332352d396166332d656463353032383934363038222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a204b6565707320626f746820706172616c6c656c2073746174656d656e7473206f6620726573706f6e64696e67207769746820676f6f646e65737320616e642073696e6365726974792e205072696e746564206c6f636174696f6e3a20436861707465722034392c2073656374696f6e20322e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3939333238355a227d7d2c7b2272656365697074536861323536223a2231643830306164376432383962313033356464343730326464363538303431373364316465333639353237646533623930616464623237343434303662393735222c22706173736167654964223a2230663435353536662d633732342d353662392d383165612d656366633432363733376131222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a204120636f6d706c65746520636f6e7472617374206c696e6b7320617474656e74696f6e20746f20736d616c6c207468696e67732077697468207468652070726f74656374696f6e206f662074656e6465726e6573732e205072696e746564206c6f636174696f6e3a20436861707465722035322c2073656374696f6e20342e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3939333238355a227d7d2c7b2272656365697074536861323536223a2235346631313862393032663634663531653765353466626262616632633331386539633033333238653433643361346332643534623131646533613266373335222c22706173736167654964223a2232366364633465382d366463332d356466372d386636662d383439353438303637363732222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a20496e636c75646573207468652070726163746963616c20616e7377657220746f20656173792070726f6d6973657320616e6420756e646572657374696d6174656420646966666963756c746965732e205072696e746564206c6f636174696f6e3a20436861707465722036332c2073656374696f6e20332e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3939333238355a227d7d2c7b2272656365697074536861323536223a2262306336363366633135626436343363666265363130636664353234376566373330663263383137616634646262363733626631636538363762336236366366222c22706173736167654964223a2233653230396364642d626431312d353965382d383763322d623031353431386563383932222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a2050726573657276657320616c6c20746872656520736f7572636520696d61676573206f66206c6172676520726573756c747320626567696e6e696e67206f6e206120736d616c6c207363616c652e205072696e746564206c6f636174696f6e3a20436861707465722036342c2073656374696f6e20322e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3939333238355a227d7d2c7b2272656365697074536861323536223a2236393561623563336637613233626437336432353733633361313036323631353564656463653066336265643131373636373232636139333333366630393561222c22706173736167654964223a2265346336636431632d353965332d353964372d626539622d616262366433303964303936222c2273656c656374696f6e223a7b22726561736f6e223a225075626c696320656469746f7269616c20726174696f6e616c653a204f6e6520636f6d706c6574652073656e74656e6365207374617465732074686520636f6e7472617374206265747765656e207265636f676e697a696e6720616e6420636f6e6365616c696e672069676e6f72616e63652e205072696e746564206c6f636174696f6e3a20436861707465722037312c2073656374696f6e20312e20417373697374616e7420656469746f7269616c2073656c656374696f6e20616e6420636f6e74657874207265766965773b206e6f2068756d616e20726576696577206f722065787465726e616c2073656c6563746f722063616c6c20697320636c61696d65642e2053636f7265206973207468652064657465726d696e69737469632068657572697374696320626173656c696e652c206e6f742061207175616c6974792070726f626162696c6974792e222c2273656c656374696f6e5265636f726465644174223a22323032362d30392d31335431373a33313a35302e3939333238355a227d7d5d",
+  "envelopeSha256": "99ee840415bc12271c1817454225b21941fce4e055f2f4aab84601d8dbd638d8",
+  "payloadBytes": 32193
+}

@@ -1,0 +1,136 @@
+:root[data-reading-font="classic"] {
+  --reading-font-family: Georgia, "Times New Roman", serif;
+}
+
+:root[data-reading-font="book"] {
+  --reading-font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+}
+
+:root[data-reading-font="sans"] {
+  --reading-font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+:root[data-reading-font] .passage-card blockquote p {
+  font-family: var(--reading-font-family);
+  font-size: clamp(
+    calc(19px * var(--reading-scale, 1)),
+    calc(2.1vw * var(--reading-scale, 1)),
+    calc(22px * var(--reading-scale, 1))
+  );
+  overflow-wrap: anywhere;
+}
+
+:root[data-reading-font] .passage-card .ai-context-text {
+  font-family: var(--reading-font-family);
+  font-size: calc(16px * var(--reading-scale, 1));
+}
+
+.reading-settings {
+  min-width: 0;
+  margin: 0;
+  padding: 0 24px 16px;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.reading-settings legend {
+  margin-bottom: 8px;
+  padding: 0;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.reading-settings-controls,
+.reading-font-control,
+.reading-size-control {
+  display: flex;
+  align-items: center;
+}
+
+.reading-settings-controls {
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.reading-font-control {
+  gap: 8px;
+}
+
+.reading-font-control label {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.reading-font-control select,
+.reading-settings button {
+  min-height: 44px;
+  border: 1px solid var(--rule);
+  border-radius: 7px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+}
+
+.reading-font-control select {
+  min-width: 0;
+  max-width: 100%;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.reading-size-control {
+  gap: 4px;
+}
+
+.reading-size-control button {
+  width: 44px;
+  padding: 0;
+  font-size: 16px;
+}
+
+.reading-size-control output {
+  min-width: 40px;
+  color: var(--muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.reading-settings .reading-reset {
+  padding: 0 8px;
+  border-color: transparent;
+  background: transparent;
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.reading-settings button:not(:disabled) {
+  cursor: pointer;
+}
+
+.reading-settings button:disabled {
+  opacity: 0.45;
+}
+
+.reading-settings button:focus-visible,
+.reading-settings select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .reading-settings {
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .reading-font-control select {
+    font-size: 16px;
+  }
+
+  :root[data-reading-font] .passage-card blockquote p {
+    font-size: calc(19px * var(--reading-scale, 1));
+  }
+}

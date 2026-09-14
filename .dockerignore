@@ -1,4 +1,6 @@
 .git
+.local
+private
 .github
 .venv
 **/node_modules

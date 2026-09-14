@@ -1,16 +1,12 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { AnchorHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 import {
   AnalyticsClient,
-  analyticsOptedOut,
-  browserRequestsAnalyticsPrivacy,
-  setAnalyticsOptOut,
   subscribeAnalyticsActivity,
-  subscribeAnalyticsPreference,
   trackAnalytics,
   type AnalyticsEventName,
 } from "@/lib/analytics-client";
@@ -114,25 +110,4 @@ export function AnalyticsProofDetails({ passageId, children, className }: {
   return <details className={className} onToggle={(event) => {
     if (event.currentTarget.open) trackAnalytics("proof_expand", { passageId });
   }}>{children}</details>;
-}
-
-function preferenceSnapshot() {
-  return browserRequestsAnalyticsPrivacy() ? "browser" : analyticsOptedOut() ? "off" : "on";
-}
-
-export function AnalyticsPreference() {
-  const preference = useSyncExternalStore(subscribeAnalyticsPreference, preferenceSnapshot, () => "pending");
-  return (
-    <div className="analytics-preference">
-      <p role="status">
-        {preference === "browser" ? "Your browser’s privacy preference disables usage analytics." :
-          preference === "off" ? "Usage analytics are disabled in this browser." :
-          preference === "pending" ? "Checking your analytics preference…" : "Anonymous usage analytics are allowed in this browser."}
-      </p>
-      <button type="button" className="verification-download" disabled={preference === "pending" || preference === "browser"}
-        onClick={() => setAnalyticsOptOut(preference !== "off")}>
-        {preference === "off" ? "Enable usage analytics" : "Disable usage analytics"}
-      </button>
-    </div>
-  );
 }

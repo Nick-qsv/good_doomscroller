@@ -83,3 +83,4 @@ corpus/reviewed/
 
 # Local private working files
 /private/
+/.local/

@@ -1,14 +1,36 @@
+// @vitest-environment node
 import { createHash } from "node:crypto";
+import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import verifiedFeed from "./fixtures/verified-feed.json";
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+// This synthetic, author-written fixture is permitted only by this test module.
+// Production has no environment/CLI switch that relaxes the rights policy.
+vi.mock("../scripts/publication-policy.mjs", async (importOriginal) => {
+  const policy = await importOriginal();
+  return {
+    ...policy,
+    isApprovedEdition: (book) => policy.isApprovedEdition(book) || (
+      book.editionId === "14ad290d-6be0-510f-93b5-3092904ff8b9" &&
+      book.id === "c057f772-634e-5925-9d98-be82163588fd" &&
+      book.source.sha256 === "d6cf327c378777d07a2d6dc99b7a39ed7f2e5f7af1b1dac65b4cf1425fef20e9" &&
+      book.source.normalizedSha256 === "161e58d78ebb213adac076b876e559761031d4b689265934d42c802130645559" &&
+      book.source.url === "https://example.org/verification-test"
+    ),
+  };
+});
 
 import { databaseOptions } from "../scripts/database-config.mjs";
 import {
   assertPublishableCorpusPlans,
+  buildSelectionRecord,
   CorpusValidationError,
   importCorpusPlans,
   parseImportArguments,
+  readCorpusPlan,
   resolveInputPath,
   validateCorpusDocument,
 } from "../scripts/import-corpus-lib.mjs";
@@ -91,6 +113,22 @@ function verifiedFixture() {
   return value;
 }
 
+function decisionReviewFixture(input) {
+  const chapter = input.verificationBundle.chapters[0];
+  return {
+    reviewedAt: "2026-09-13T03:00:00Z",
+    reviewKind: "retrospective-comparison",
+    summary: "A current comparison of the published passage with another source excerpt.",
+    alternative: {
+      chapterId: chapter.id, startOffset: 0, endOffset: 40,
+      text: Array.from(chapter.text).slice(0, 40).join(""),
+    },
+    whySelected: "The selected passage states a complete idea more clearly on its own.",
+    whyAlternativeNotSelected: "The alternative depends more heavily on its surrounding text.",
+    limitation: "This is a retrospective editorial comparison, not a record of the original rejection.",
+  };
+}
+
 const aiContext = {
   text: "The passage connects careful observation with a more sympathetic reading of others.",
   generatedBy: "AI",
@@ -98,6 +136,68 @@ const aiContext = {
 };
 
 describe("corpus importer validation", () => {
+  it.each(["selection-comparison", "retrospective-comparison"])("preserves %s and checks its alternative against exact source text", (reviewKind) => {
+    const input = verifiedFixture();
+    input.passages[0].curation.decisionReview = decisionReviewFixture(input);
+    input.passages[0].curation.decisionReview.reviewKind = reviewKind;
+    const plan = validateCorpusDocument(input);
+    expect(buildSelectionRecord(plan, plan.passages[0]).decisionReview)
+      .toEqual(input.passages[0].curation.decisionReview);
+    input.passages[0].curation.decisionReview.alternative.text += " Invented.";
+    expect(() => validateCorpusDocument(input)).toThrow(/exact preserved source slice/);
+  });
+
+  it("preserves supplied note-recording times without adding one to historical selections", () => {
+    const input = verifiedFixture();
+    let plan = validateCorpusDocument(input);
+    expect(buildSelectionRecord(plan, plan.passages[0])).not.toHaveProperty("selectionRecordedAt");
+    input.passages[0].curation.selectionRecordedAt = "2026-09-13T04:00:00Z";
+    plan = validateCorpusDocument(input);
+    const selection = buildSelectionRecord(plan, plan.passages[0]);
+    expect(selection.selectionRecordedAt).toBe(input.passages[0].curation.selectionRecordedAt);
+    expect(selection.reason).toBe(input.passages[0].curation.reason);
+    expect(selection.recordingNote).toContain("when the notes were written or exported");
+    expect(selection.recordingNote).toContain("Neither date independently proves");
+  });
+
+  it.each([null, "2026-09-13", "2026-02-30T04:00:00Z", "2026-09-13T04:00:00"])("rejects invalid note-recording time %#", (value) => {
+    const input = verifiedFixture();
+    input.passages[0].curation.selectionRecordedAt = value;
+    expect(() => validateCorpusDocument(input)).toThrow(/selectionRecordedAt/);
+  });
+
+  it.each([
+    (review) => { review.reviewKind = "original-rejection"; },
+    (review) => { review.reviewedAt = "2026-09-13"; },
+    (review) => { review.reviewedAt = "2026-02-30T03:00:00Z"; },
+    (review) => { review.reviewedAt = "2026-09-13T03:00:00"; },
+    (review) => { review.limitation = " "; },
+    (review) => { review.summary = "x".repeat(3001); },
+    (review) => { review.humanApproved = true; },
+    (review) => { review.alternative.startOffset = -1; },
+    (review) => { review.alternative.endOffset = 0; },
+    (review) => { review.alternative.chapterId = "99999999-9999-5999-8999-999999999999"; },
+  ])("rejects malformed retrospective comparisons %#", (mutate) => {
+    const input = verifiedFixture();
+    const review = decisionReviewFixture(input);
+    mutate(review);
+    input.passages[0].curation.decisionReview = review;
+    expect(() => validateCorpusDocument(input)).toThrow(/decisionReview/);
+  });
+
+  it("requires preserved source evidence and a different range for comparisons", () => {
+    const input = verifiedFixture();
+    const passage = input.passages[0];
+    passage.curation.decisionReview = decisionReviewFixture(input);
+    passage.curation.decisionReview.alternative = {
+      chapterId: passage.chapter.id, startOffset: passage.provenance.startOffset,
+      endOffset: passage.provenance.endOffset, text: passage.text,
+    };
+    expect(() => validateCorpusDocument(input)).toThrow(/different source range/);
+    delete input.verificationBundle;
+    expect(() => validateCorpusDocument(input)).toThrow(/requires a preserved verificationBundle/);
+  });
+
   it("accepts optional AI context without changing quote text or provenance", () => {
     const input = fixture();
     expect(validateCorpusDocument(input).passages[0].aiContext).toBeUndefined();
@@ -218,6 +318,23 @@ describe("corpus importer validation", () => {
 });
 
 describe("corpus importer CLI", () => {
+  it("preserves only the matching public QC sidecar with its exact UTF-8 fingerprint", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "doomscroller-curation-"));
+    try {
+      await writeFile(join(directory, "book.json"), JSON.stringify(verifiedFixture()));
+      await mkdir(join(directory, "notes"));
+      const text = "# Earlier editorial notes\r\n\r\nAn assistant's judgments are assertions.\n";
+      await writeFile(join(directory, "notes/book-qc.md"), text);
+      const plan = await readCorpusPlan(join(directory, "book.json"));
+      expect(buildSelectionRecord(plan, plan.passages[0]).editionReview).toEqual({
+        fileName: "book-qc.md", text, statementType: "operator-assertion",
+        sha256: createHash("sha256").update(text, "utf8").digest("hex"),
+      });
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  });
+
   it("accepts multiple files and an explicit publish flag", () => {
     expect(parseImportArguments(["first.json", "--publish", "second.json"])).toEqual({
       publish: true,
@@ -247,6 +364,79 @@ describe("corpus importer CLI", () => {
 });
 
 describe("corpus importer writes", () => {
+  it("refuses a database retirement before changing a book or overwriting metadata", async () => {
+    const input = verifiedFixture();
+    const calls = [];
+    const transaction = (strings) => {
+      const text = strings.join("?");
+      calls.push(text);
+      return Promise.resolve(text.includes("FROM edition_retirements")
+        ? [{ edition_id: input.book.editionId }] : []);
+    };
+    const sql = { begin: async (callback) => callback(transaction) };
+    await expect(importCorpusPlans(sql, [validateCorpusDocument(input)], { publish: true }))
+      .rejects.toThrow(/is retired and cannot be reimported/);
+    expect(calls.some((text) => text.includes("INSERT INTO books"))).toBe(false);
+  });
+
+  it("appends one richer snapshot to a legacy receipt without rewriting its bytes", async () => {
+    const input = verifiedFixture();
+    const receipts = [];
+    const transaction = (strings, ...values) => {
+      const text = strings.join("?");
+      if (text.includes("SELECT source_sha256")) return Promise.resolve([{
+        source_sha256: input.book.source.sha256,
+        normalized_sha256: input.book.source.normalizedSha256,
+        normalization_version: "1",
+      }]);
+      if (text.includes("SELECT p.status")) return Promise.resolve(receipts.length ? [{
+        status: "published", receipt_json: receipts.at(-1).json,
+        receipt_sha256: receipts.at(-1).sha256,
+      }] : []);
+      if (text.includes("INSERT INTO passage_verification_receipts")) {
+        receipts.push({ json: values[2], sha256: values[3] });
+      }
+      return Promise.resolve([]);
+    };
+    transaction.json = (value) => value;
+    const sql = { begin: async (callback) => callback(transaction) };
+    await importCorpusPlans(sql, [validateCorpusDocument(input)], { publish: true });
+    const legacy = JSON.parse(receipts[0].json);
+    legacy.selection = {
+      method: legacy.selection.method, model: legacy.selection.model,
+      reason: legacy.selection.reason, pipelineVersion: legacy.selection.pipelineVersion,
+    };
+    const legacyJson = JSON.stringify(legacy);
+    receipts[0] = { json: legacyJson, sha256: createHash("sha256").update(legacyJson).digest("hex") };
+    const preserved = structuredClone(receipts[0]);
+    input.passages[0].curation.decisionReview = decisionReviewFixture(input);
+    input.passages[0].curation.decisionReview.reviewKind = "selection-comparison";
+    input.passages[0].curation.selectionRecordedAt = "2026-09-13T04:00:00Z";
+    await importCorpusPlans(sql, [validateCorpusDocument(input)], { publish: true });
+    await importCorpusPlans(sql, [validateCorpusDocument(input)], { publish: true });
+    expect(receipts).toHaveLength(2);
+    expect(receipts[0]).toEqual(preserved);
+    const current = JSON.parse(receipts[1].json);
+    expect(current.previousReceiptSha256).toBe(preserved.sha256);
+    expect(current.quote).toEqual(legacy.quote);
+    expect(current.selection).toMatchObject({
+      recordingMethod: "curation-metadata-snapshot-v1",
+      score: input.passages[0].curation.score,
+      qualityScore: input.passages[0].qualityScore,
+      rank: input.passages[0].curation.rank,
+      themes: input.passages[0].curation.themes,
+      contentFlags: input.passages[0].curation.contentFlags,
+      wordCount: input.passages[0].wordCount,
+      decisionReview: input.passages[0].curation.decisionReview,
+      selectionRecordedAt: input.passages[0].curation.selectionRecordedAt,
+    });
+    expect(current.selection.scoreMeaning).toContain("not probabilities");
+    input.passages[0].curation.score = 42;
+    await importCorpusPlans(sql, [validateCorpusDocument(input)], { publish: true });
+    expect(receipts).toHaveLength(3);
+    expect(JSON.parse(receipts[2].json).previousReceiptSha256).toBe(receipts[1].sha256);
+  });
+
   it("reuses unchanged publication receipts across startup imports and records changed selection facts", async () => {
     const input = verifiedFixture();
     const receipts = [];
@@ -324,7 +514,7 @@ describe("corpus importer writes", () => {
       passages: 1,
       archived: 0,
     });
-    expect(calls).toHaveLength(9);
+    expect(calls).toHaveLength(10);
     expect(calls.map((call) => call.text)).toEqual(
       expect.arrayContaining([
         expect.stringContaining("INSERT INTO books"),

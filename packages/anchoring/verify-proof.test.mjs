@@ -5,21 +5,22 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { buildEnvelope, createMerkleTree, POLKADOT_GENESIS_HASH, POLKADOT_SIGNER_ADDRESS, sha256 } from "./proofs.mjs";
+import { buildEnvelope, createMerkleTree, POLKADOT_GENESIS_HASH, POLKADOT_SIGNER_ADDRESS, sha256, receiptRationale, parseEnvelope } from "./proofs.mjs";
 import { validateProofBundle, verifyProofBundle } from "./verify-proof.mjs";
 
 const passageId = "a73cc6ee-f313-440b-a5f8-84ff7fd8db56";
 const batchId = "1436dc8e-3357-4a0d-8d5d-bfd38d7e5ea4";
 
-function fixture() {
-  const first = JSON.stringify({ schemaVersion: "1.0", passageId, previousReceiptSha256: null, recordedAt: "2026-01-01T00:00:00Z" });
-  const second = JSON.stringify({ schemaVersion: "1.0", passageId, previousReceiptSha256: sha256(first), recordedAt: "2026-01-02T00:00:00Z" });
+function fixture(version = 1) {
+  const first = JSON.stringify({ schemaVersion: "1.0", passageId, previousReceiptSha256: null, recordedAt: "2026-01-01T00:00:00Z", selection: { reason: "A clear account of curiosity and learning 🌟." } });
+  const second = JSON.stringify({ schemaVersion: "1.0", passageId, previousReceiptSha256: sha256(first), recordedAt: "2026-01-02T00:00:00Z", selection: { reason: "Learning through observation.", selectionRecordedAt: "2026-01-02T00:00:00Z" } });
   const history = [first, second].map((receiptJson) => ({ receiptJson, receiptSha256: sha256(receiptJson) }));
   const tree = createMerkleTree(history.map((entry, index) => ({ sequence: String(index + 1), receiptSha256: entry.receiptSha256 })));
   const batch = {
     batchId, previousBatchId: null, previousRootSha256: null, rootSha256: tree.rootSha256,
     receiptCount: 2, firstReceiptSequence: "1", lastReceiptSequence: "2",
-    envelopeHex: buildEnvelope({ batchId, receiptCount: 2, rootSha256: tree.rootSha256, previousRootSha256: null }),
+    envelopeHex: buildEnvelope({ batchId, receiptCount: 2, rootSha256: tree.rootSha256, previousRootSha256: null,
+      ...(version === 2 ? { rationaleEntries: history.map(receiptRationale) } : {}) }),
     genesisHash: POLKADOT_GENESIS_HASH, signerAddress: POLKADOT_SIGNER_ADDRESS,
     blockHash: "0x" + "a".repeat(64), blockNumber: "20577500", blockTimestamp: "2026-09-12T22:00:00Z",
     extrinsicHash: "0x" + "b".repeat(64), extrinsicIndex: 2, eventIndex: 4, finalizedHeadHash: "0x" + "c".repeat(64),
@@ -208,4 +209,40 @@ test("checks included predecessor identity, root and chronological order", async
     invalid.anchoring.batches[1].envelopeHex = buildEnvelope(invalid.anchoring.batches[1]);
     assert.throws(() => validateProofBundle(invalid), /Previous batch/);
   }
+});
+
+test("v2 independent chain verification checks the actual readable reason bytes against exact receipts", async () => {
+  const bundle = fixture(2);
+  const chain = chainFor(bundle);
+  assert.equal((await verifyProofBundle(bundle, { chain })).status, "verified");
+  const envelope = parseEnvelope(chain.calls[0].payloadHex);
+  assert.equal(envelope.version, 2);
+  assert.deepEqual(envelope.rationaleEntries, bundle.history.map(receiptRationale));
+  assert.equal(Object.hasOwn(envelope.rationaleEntries[0].selection, "selectionRecordedAt"), false);
+});
+
+test("valid v2 framing and Merkle hashes cannot conceal a substituted public rationale or invented timestamp", async () => {
+  for (const change of [
+    entry => { entry.selection.reason = "A different reason."; },
+    entry => { entry.selection.selectionRecordedAt = "1900-01-01T00:00:00Z"; },
+    entry => { entry.passageId = "a73cc6ee-f313-440b-a5f8-84ff7fd8db57"; },
+  ]) {
+    const bundle = fixture(2);
+    const batch = bundle.anchoring.batches[0];
+    const envelope = parseEnvelope(batch.envelopeHex);
+    change(envelope.rationaleEntries[0]);
+    batch.envelopeHex = buildEnvelope(envelope);
+    const chain = chainFor(bundle);
+    await assert.rejects(verifyProofBundle(bundle, { chain }), /rationale differs/);
+    assert.equal(chain.calls.length, 0);
+  }
+});
+
+test("a different actual on-chain rationale fails even when downloaded rationale and receipt match", async () => {
+  const bundle = fixture(2);
+  const envelope = parseEnvelope(bundle.anchoring.batches[0].envelopeHex);
+  envelope.rationaleEntries[0].selection.reason = "Different text actually submitted.";
+  const chain = chainFor(bundle, { payloadHex: buildEnvelope(envelope) });
+  await assert.rejects(verifyProofBundle(bundle, { chain }), /Live finalized-chain evidence/);
+  assert.equal(chain.calls.length, 1);
 });

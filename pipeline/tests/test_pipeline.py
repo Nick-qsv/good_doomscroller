@@ -5,6 +5,7 @@ import base64
 import json
 import zipfile
 from dataclasses import replace
+from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
 from uuid import UUID
@@ -396,7 +397,15 @@ def test_verification_bundle_reproduces_original_epub(minimal_epub: Path) -> Non
     document = normalize_source(source)
     candidates = generate_candidates(document)
     selections = HeuristicSelector().select(candidates, max_passages=3)
+    before_export = datetime.now(UTC)
     feed = export_feed(document, candidates, selections, source=source)
+    after_export = datetime.now(UTC)
+    recording_times = {passage["curation"]["selectionRecordedAt"] for passage in feed["passages"]}
+    assert len(recording_times) == 1
+    assert before_export <= datetime.fromisoformat(recording_times.pop()) <= after_export
+    assert [passage["curation"]["reason"] for passage in feed["passages"]] == [
+        selection.reason for selection in selections
+    ]
     verify_feed_bundle(feed)
     schema = json.loads((Path(__file__).parents[2] / "corpus/schemas/feed.schema.json").read_text())
     Draft202012Validator(schema, format_checker=FormatChecker()).validate(feed)
@@ -419,7 +428,48 @@ def test_verification_bundle_rejects_rewritten_quote_with_rehashed_text(minimal_
         verify_feed_bundle(feed)
 
 
-def test_downloaded_proof_is_verified_independently_and_rejects_changed_bytes() -> None:
+def _decision_review(feed: dict) -> dict:
+    chapter = feed["verificationBundle"]["chapters"][0]
+    return {
+        "reviewedAt": "2026-09-13T03:00:00Z",
+        "reviewKind": "retrospective-comparison",
+        "summary": "A current comparison of two excerpts from the same preserved edition.",
+        "alternative": {
+            "chapterId": chapter["id"], "startOffset": 0, "endOffset": 40,
+            "text": chapter["text"][:40],
+        },
+        "whySelected": "The selected passage presents its idea more clearly on its own.",
+        "whyAlternativeNotSelected": "This alternative depends more on its surrounding text.",
+        "limitation": "This is a retrospective comparison, not the original rejection log.",
+    }
+
+
+@pytest.mark.parametrize("review_kind", ["selection-comparison", "retrospective-comparison"])
+def test_bundle_checks_comparison_against_reproduced_source(review_kind: str) -> None:
+    fixture = Path(__file__).parents[2] / "apps/web/tests/fixtures/verified-feed.json"
+    feed = json.loads(fixture.read_text())
+    review = _decision_review(feed)
+    review["reviewKind"] = review_kind
+    feed["passages"][0]["curation"]["decisionReview"] = review
+    verify_feed_bundle(feed)
+    schema = json.loads((Path(__file__).parents[2] / "corpus/schemas/feed.schema.json").read_text())
+    Draft202012Validator(schema, format_checker=FormatChecker()).validate(feed)
+    review["alternative"]["text"] += " Invented words."
+    with pytest.raises(VerificationError, match="alternative differs from its source slice"):
+        verify_feed_bundle(feed)
+
+
+@pytest.mark.parametrize("timestamp", [None, "2026-09-13", "2026-02-30T04:00:00Z"])
+def test_bundle_rejects_invalid_note_recording_time(timestamp: str | None) -> None:
+    fixture = Path(__file__).parents[2] / "apps/web/tests/fixtures/verified-feed.json"
+    feed = json.loads(fixture.read_text())
+    feed["passages"][0]["curation"]["selectionRecordedAt"] = timestamp
+    with pytest.raises(VerificationError, match="Recording time"):
+        verify_feed_bundle(feed)
+
+
+@pytest.mark.parametrize("review_kind", ["selection-comparison", "retrospective-comparison"])
+def test_downloaded_proof_is_verified_independently_and_rejects_changed_bytes(review_kind: str) -> None:
     from good_doomscroller_pipeline.ids import sha256_text
 
     fixture = Path(__file__).parents[2] / "apps/web/tests/fixtures/verified-feed.json"
@@ -453,6 +503,23 @@ def test_downloaded_proof_is_verified_independently_and_rejects_changed_bytes() 
     verify_receipt_proof(proof, original)
     with pytest.raises(VerificationError, match="Original source file does not match"):
         verify_receipt_proof(proof, original + b" changed")
+
+    receipt["selection"] = {"decisionReview": _decision_review(feed)}
+    receipt["selection"]["decisionReview"]["reviewKind"] = review_kind
+    receipt["selection"]["selectionRecordedAt"] = "2026-09-13T04:00:00Z"
+
+    def update_receipt_bytes() -> None:
+        serialized = json.dumps(receipt, ensure_ascii=False, separators=(",", ":"))
+        proof["receiptJson"] = serialized
+        proof["receiptSha256"] = sha256_text(serialized)
+        proof["history"] = [{"receiptJson": serialized, "receiptSha256": sha256_text(serialized)}]
+
+    update_receipt_bytes()
+    verify_receipt_proof(proof, original)
+    receipt["selection"]["decisionReview"]["alternative"]["text"] += " Invented words."
+    update_receipt_bytes()
+    with pytest.raises(VerificationError, match="alternative differs from its source slice"):
+        verify_receipt_proof(proof, original)
     proof["receiptJson"] += " "
     with pytest.raises(VerificationError, match="recorded fingerprint"):
         verify_receipt_proof(proof, original)

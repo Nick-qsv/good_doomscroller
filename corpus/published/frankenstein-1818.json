@@ -1422,6 +1422,150 @@
         "generatedBy": "AI",
         "generatedAt": "2026-09-12T19:53:47.453785Z"
       }
+    },
+    {
+      "id": "9c05acfd-f5d4-5532-820c-8fbbd62673bf",
+      "bookId": "613d1470-50ac-53dd-8336-970d85984c93",
+      "editionId": "9ebbdb49-4fd3-5c9b-bfd1-7cd30f57fcc8",
+      "text": "My life had hitherto been remarkably secluded and domestic; and this had given me invincible repugnance to new countenances. I loved my brothers, Elizabeth, and Clerval; these were “old familiar faces;” but I believed myself totally unfitted for the company of strangers.",
+      "title": "Frankenstein; Or, The Modern Prometheus (1818)",
+      "authors": [
+        "Mary Wollstonecraft Shelley"
+      ],
+      "wordCount": 42,
+      "status": "candidate",
+      "qualityScore": 0.938571,
+      "chapter": {
+        "id": "3ac6f268-342b-522e-af5a-1975ed336636",
+        "ordinal": 10,
+        "title": "CHAPTER II.",
+        "locator": "OEBPS/6297285616467444633_41445-h-9.htm.xhtml"
+      },
+      "provenance": {
+        "sourceSha256": "7675ae250ac9c81d962e46af0573281d6a282ef0120b0db945b33eef726b16c9",
+        "chapterSha256": "8fa6fdaa7d674c6ade143b23cfb2dd5911dfaa69e22e8dfdadbc0da52739632a",
+        "startSentenceId": "sentence_7fc34787e3b794bedd7d",
+        "endSentenceId": "sentence_eb3092573fcbdd152b07",
+        "startSentenceOrdinal": 39,
+        "endSentenceOrdinal": 40,
+        "startOffset": 5175,
+        "endOffset": 5446,
+        "quoteSha256": "4bf9992ac8fce25410cc1045959bd76da40d5c4d5765e338be0c4b8625a1e10f"
+      },
+      "curation": {
+        "selector": "heuristic",
+        "model": null,
+        "score": 93.85714285714286,
+        "rank": 31,
+        "reason": "Assistant selected and screened on 2026-09-13 for a complete thought, correct speaker, surrounding context, and novelty against the 318-passage live baseline. Deterministic heuristic score is descriptive, not editorial approval. Printed location: Volume I, Chapter II. Existing review queue batch-001, row 46 (zero-based). No human editorial review or external model API call is claimed.",
+        "themes": [
+          "belonging",
+          "change"
+        ],
+        "contentFlags": [],
+        "selectionRecordedAt": "2026-09-13T09:01:56.387099Z"
+      },
+      "aiContext": {
+        "text": "Victor Frankenstein recalls leaving his family for university and fearing the company of strangers. His affection for familiar people makes independence feel threatening before his curiosity revives.",
+        "generatedBy": "AI",
+        "generatedAt": "2026-09-13T09:01:56.386093Z"
+      }
+    },
+    {
+      "id": "f3b7cf11-6db7-57c2-9019-8fdc834f2215",
+      "bookId": "613d1470-50ac-53dd-8336-970d85984c93",
+      "editionId": "9ebbdb49-4fd3-5c9b-bfd1-7cd30f57fcc8",
+      "text": "Was I then a monster, a blot upon the earth, from which all men fled, and whom all men disowned?\n\n“I cannot describe to you the agony that these reflections inflicted upon me; I tried to dispel them, but sorrow only increased with knowledge.",
+      "title": "Frankenstein; Or, The Modern Prometheus (1818)",
+      "authors": [
+        "Mary Wollstonecraft Shelley"
+      ],
+      "wordCount": 44,
+      "status": "candidate",
+      "qualityScore": 0.934273,
+      "chapter": {
+        "id": "92e86f57-44b7-5ca4-a533-605fe2b9cc6d",
+        "ordinal": 21,
+        "title": "CHAPTER V.",
+        "locator": "OEBPS/6297285616467444633_41445-h-20.htm.xhtml"
+      },
+      "provenance": {
+        "sourceSha256": "7675ae250ac9c81d962e46af0573281d6a282ef0120b0db945b33eef726b16c9",
+        "chapterSha256": "f7bcffb3276489da95d907f56157c3ef97e6a19eea4f510187e58e362c2f8b1c",
+        "startSentenceId": "sentence_9fa000dbfd27a8252b4c",
+        "endSentenceId": "sentence_84da58bfbf287fc9f814",
+        "startSentenceOrdinal": 62,
+        "endSentenceOrdinal": 63,
+        "startOffset": 9103,
+        "endOffset": 9344,
+        "quoteSha256": "ba4381c4551062696caca43313669c9fd4549a22dd356d3f7c569fbdeb4a423e"
+      },
+      "curation": {
+        "selector": "heuristic",
+        "model": null,
+        "score": 93.42727272727274,
+        "rank": 32,
+        "reason": "Assistant selected and screened on 2026-09-13 for a complete thought, correct speaker, surrounding context, and novelty against the 318-passage live baseline. Deterministic heuristic score is descriptive, not editorial approval. Printed location: Volume II, Chapter V. Existing review queue batch-001, row 53 (zero-based). No human editorial review or external model API call is claimed.",
+        "themes": [
+          "identity",
+          "exclusion"
+        ],
+        "contentFlags": [],
+        "selectionRecordedAt": "2026-09-13T09:01:56.387174Z"
+      },
+      "aiContext": {
+        "text": "The creature speaks after learning about human society and recognizing that he lacks its ordinary ties. His growing knowledge deepens his distress at being rejected; these are a fictional character’s reflections.",
+        "generatedBy": "AI",
+        "generatedAt": "2026-09-13T09:01:56.386093Z"
+      }
+    },
+    {
+      "id": "c40db82c-f63a-581b-b972-e27bdc0bdd60",
+      "bookId": "613d1470-50ac-53dd-8336-970d85984c93",
+      "editionId": "9ebbdb49-4fd3-5c9b-bfd1-7cd30f57fcc8",
+      "text": "My spirits were elevated by the enchanting appearance of nature; the past was blotted from my memory, the present was tranquil, and the future gilded by bright rays of hope, and anticipations of joy.”",
+      "title": "Frankenstein; Or, The Modern Prometheus (1818)",
+      "authors": [
+        "Mary Wollstonecraft Shelley"
+      ],
+      "wordCount": 34,
+      "status": "candidate",
+      "qualityScore": 0.860353,
+      "chapter": {
+        "id": "3a773c4c-8ef7-541e-8a01-d696330201a6",
+        "ordinal": 20,
+        "title": "CHAPTER IV.",
+        "locator": "OEBPS/6297285616467444633_41445-h-19.htm.xhtml"
+      },
+      "provenance": {
+        "sourceSha256": "7675ae250ac9c81d962e46af0573281d6a282ef0120b0db945b33eef726b16c9",
+        "chapterSha256": "60461265ff29b068d2bff99fd696af4da9fef6c2c015e1d442b4cde2db9e739e",
+        "startSentenceId": "sentence_52b1c5021ee2e0d5f73e",
+        "endSentenceId": "sentence_52b1c5021ee2e0d5f73e",
+        "startSentenceOrdinal": 90,
+        "endSentenceOrdinal": 90,
+        "startOffset": 11789,
+        "endOffset": 11989,
+        "quoteSha256": "ab1099a24187fe205a6b1c7e452c6530a6fc0e498abbcc9e77bf92b2c37e34bf"
+      },
+      "curation": {
+        "selector": "heuristic",
+        "model": null,
+        "score": 86.03529411764706,
+        "rank": 33,
+        "reason": "Assistant selected and screened on 2026-09-13 for a complete thought, correct speaker, surrounding context, and novelty against the 318-passage live baseline. Deterministic heuristic score is descriptive, not editorial approval. Printed location: Volume II, Chapter IV. Revised boundary after existing queue batch-001 row 59, which ends mid-exclamation; the complete later sentence stands alone. No human editorial review or external model API call is claimed.",
+        "themes": [
+          "nature",
+          "hope"
+        ],
+        "contentFlags": [],
+        "selectionRecordedAt": "2026-09-13T09:01:56.387247Z"
+      },
+      "aiContext": {
+        "text": "The creature describes spring while secretly observing the cottagers. The passage records a temporary moment of hope in his narrative, before the later disappointments of the story.",
+        "generatedBy": "AI",
+        "generatedAt": "2026-09-13T09:01:56.386093Z"
+      }
     }
   ],
   "verificationBundle": {

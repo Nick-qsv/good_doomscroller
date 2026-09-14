@@ -3,7 +3,7 @@ import { isDeepStrictEqual } from "node:util";
 import { pathToFileURL } from "node:url";
 import {
   buildEnvelope, POLKADOT_GENESIS_HASH, POLKADOT_SIGNER_ADDRESS,
-  sha256, verifyReceiptProof,
+  sha256, verifyReceiptProof, parseEnvelope, receiptRationale,
 } from "./proofs.mjs";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
@@ -28,7 +28,8 @@ function checkBatch(batch) {
   ensure(batch.previousBatchId !== batch.batchId, "A batch cannot precede itself");
   ensure(batch.previousRootSha256 === null || SHA256.test(batch.previousRootSha256), "Invalid previous batch root");
   ensure(batch.genesisHash === POLKADOT_GENESIS_HASH && batch.signerAddress === POLKADOT_SIGNER_ADDRESS, "Unexpected chain or signer");
-  ensure(buildEnvelope(batch) === batch.envelopeHex, "Batch envelope does not match its declared commitment");
+  const envelope = parseEnvelope(batch.envelopeHex);
+  ensure(buildEnvelope({ ...batch, rationaleEntries: envelope.rationaleEntries }) === batch.envelopeHex, "Batch envelope does not match its declared commitment");
   ensure(positiveSequence(batch.firstReceiptSequence) && positiveSequence(batch.lastReceiptSequence) &&
     BigInt(batch.firstReceiptSequence) <= BigInt(batch.lastReceiptSequence), "Invalid batch receipt range");
   ensure(CHAIN_HASH.test(batch.blockHash) && CHAIN_HASH.test(batch.extrinsicHash) && CHAIN_HASH.test(batch.finalizedHeadHash), "Invalid chain evidence hash");
@@ -86,6 +87,11 @@ export function validateProofBundle(bundle) {
     ensure(batch && entry.inclusionProof?.leafCount === batch.receiptCount &&
       BigInt(entry.sequence) >= BigInt(batch.firstReceiptSequence) && BigInt(entry.sequence) <= BigInt(batch.lastReceiptSequence) &&
       verifyReceiptProof(entry.receiptSha256, entry.inclusionProof, batch.rootSha256), "Receipt inclusion proof does not match its batch");
+    const envelope = parseEnvelope(batch.envelopeHex);
+    if (envelope.version === 2) {
+      ensure(isDeepStrictEqual(envelope.rationaleEntries[entry.inclusionProof.leafIndex], receiptRationale(bundle.history[index])),
+        "On-chain public rationale differs from the exact receipt selection");
+    }
     const leafKey = `${entry.batchId}:${entry.inclusionProof.leafIndex}`;
     ensure(!usedLeaves.has(leafKey), "Duplicate claimed leaf position");
     ensure(entry.inclusionProof.leafIndex > (priorBatchLeaf.get(entry.batchId) ?? -1), "Receipt sequence order contradicts its batch leaf order");

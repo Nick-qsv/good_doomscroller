@@ -13,8 +13,9 @@ import { resolveInputPath } from "./import-corpus-lib.mjs";
 
 const usage = `Usage: npm run corpus:retire -- <edition-uuid>.retired [...]
 
-Each marker must be an empty file named for an edition UUID. The edition record
-is retained for audit, while all of its passages are archived and unpublished.
+Each marker must be an empty file named for an edition UUID. A permanent
+retirement is recorded even if the edition has never been imported. Existing
+edition evidence is retained while all of its passages become unpublished.
 `;
 
 async function main() {

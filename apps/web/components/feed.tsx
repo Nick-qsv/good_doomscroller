@@ -13,21 +13,27 @@ import {
   ThumbsUp,
 } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 import { useAnalyticsExposure } from "@/components/analytics";
 import { trackAnalytics } from "@/lib/analytics-client";
 import { AiPassageContext } from "@/components/ai-passage-context";
+import { ReadingSettings } from "@/components/reading-settings";
+import { SourceLicenseNotice } from "@/components/source-license-notice";
 import { sourceSectionLabel } from "@/lib/source-section";
 import type {
   FeedPassage,
   FeedResponse,
+  LibraryResponse,
   ReactionResponse,
   ReactionValue,
 } from "@/lib/types";
 
 const PAGE_SIZE = 6;
 const numberFormatter = new Intl.NumberFormat("en", { notation: "compact" });
+
+type FeedSelection = { book: string; theme: string };
 
 function initials(name: string) {
   return name
@@ -54,6 +60,9 @@ export function PassageCard({
   onReact: (passage: FeedPassage, value: -1 | 1) => void;
 }) {
   const analyticsRef = useAnalyticsExposure<HTMLElement>("passage_view", passage.id, position);
+  const [contextExpanded, setContextExpanded] = useState(false);
+  const contextId = useId();
+  const contextHintId = `${contextId}-hint`;
   return (
     <article ref={analyticsRef} className="passage-card" aria-labelledby={`passage-${passage.feedToken}`}>
       <div className="avatar" aria-hidden="true">
@@ -86,10 +95,33 @@ export function PassageCard({
           <span className="opening-quote" aria-hidden="true">
             “
           </span>
-          <p>{passage.text}</p>
+          <p>
+            {passage.aiContext ? (
+              <button
+                type="button"
+                className="quote-context-toggle"
+                aria-expanded={contextExpanded}
+                aria-controls={contextId}
+                aria-describedby={contextHintId}
+                onClick={() => setContextExpanded((expanded) => !expanded)}
+              >
+                {passage.text}
+              </button>
+            ) : passage.text}
+          </p>
         </blockquote>
 
-        <AiPassageContext context={passage.aiContext} passageId={passage.id} />
+        {passage.aiContext ? (
+          <>
+            <p className="quote-context-hint" id={contextHintId}>
+              <Sparkles size={12} aria-hidden="true" />
+              {contextExpanded ? "Select quote to hide AI context" : "Select quote for AI context"}
+            </p>
+            <div id={contextId} hidden={!contextExpanded}>
+              {contextExpanded ? <AiPassageContext context={passage.aiContext} passageId={passage.id} /> : null}
+            </div>
+          </>
+        ) : null}
 
         <div className="passage-context">
           {passage.chapterTitle ? (
@@ -180,48 +212,155 @@ function applyOptimisticReaction(
 }
 
 export function Feed() {
+  const searchParams = useSearchParams();
+  const selection = {
+    book: searchParams.get("book") ?? "",
+    theme: searchParams.get("theme") ?? "",
+  };
+  const [library, setLibrary] = useState<LibraryResponse | null>(null);
+  const [libraryError, setLibraryError] = useState(false);
+  const [libraryAttempt, setLibraryAttempt] = useState(0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let active = true;
+    const timeout = window.setTimeout(() => controller.abort(), 15_000);
+    void (async () => {
+      try {
+        const response = await fetch("/api/library", { cache: "no-store", signal: controller.signal });
+        if (!response.ok) throw new Error("library request failed");
+        const catalog = (await response.json()) as LibraryResponse;
+        if (active) setLibrary(catalog);
+      } catch {
+        if (active) setLibraryError(true);
+      } finally {
+        window.clearTimeout(timeout);
+      }
+    })();
+    return () => {
+      active = false;
+      controller.abort();
+      window.clearTimeout(timeout);
+    };
+  }, [libraryAttempt]);
+
+  const selectFilters = (next: FeedSelection) => {
+    const url = new URL(window.location.href);
+    for (const name of ["book", "theme"] as const) {
+      if (next[name]) url.searchParams.set(name, next[name]);
+      else url.searchParams.delete(name);
+    }
+    window.history.pushState(null, "", `${url.pathname}${url.search}${url.hash}`);
+  };
+
+  return (
+    <SelectedFeed
+      // Remounting starts a fresh page UUID and isolates every selection's
+      // pagination, including browser back/forward and late network responses.
+      key={JSON.stringify(selection)}
+      selection={selection}
+      library={library}
+      libraryError={libraryError}
+      onSelect={selectFilters}
+      onRetryLibrary={() => {
+        setLibraryError(false);
+        setLibraryAttempt((current) => current + 1);
+      }}
+    />
+  );
+}
+
+function SelectedFeed({ selection, library, libraryError, onSelect, onRetryLibrary }: {
+  selection: FeedSelection;
+  library: LibraryResponse | null;
+  libraryError: boolean;
+  onSelect: (selection: FeedSelection) => void;
+  onRetryLibrary: () => void;
+}) {
   const [items, setItems] = useState<FeedPassage[]>([]);
-  const [cursor, setCursor] = useState<string | null>("0");
+  const [cursor, setCursor] = useState<string | null>("");
   const [mode, setMode] = useState<"database" | "demo" | null>(null);
+  const [revisited, setRevisited] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
   const [showTop, setShowTop] = useState(false);
+  const [totalMatching, setTotalMatching] = useState<number | null>(null);
   const loadingRef = useRef(false);
+  const activeRef = useRef(true);
+  const requestControllerRef = useRef<AbortController | null>(null);
+  const firstRequestRef = useRef<string | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const filtered = Boolean(selection.book || selection.theme);
+
+  useEffect(() => {
+    activeRef.current = true;
+    return () => {
+      activeRef.current = false;
+      requestControllerRef.current?.abort();
+    };
+  }, []);
 
   const loadMore = useCallback(async () => {
-    if (loadingRef.current || cursor === null) return;
+    if (!activeRef.current || loadingRef.current || cursor === null) return;
     loadingRef.current = true;
     setLoading(true);
     setError(null);
 
+    const controller = new AbortController();
+    requestControllerRef.current = controller;
+    const timeout = window.setTimeout(() => controller.abort(), 15_000);
     try {
+      // Keep the first request's ID through retries. A fresh visit gets a new ID;
+      // the server uses the reader cookie to continue with unseen passages.
+      const requestCursor = cursor || (firstRequestRef.current ??= crypto.randomUUID());
+      const params = new URLSearchParams({ cursor: requestCursor, limit: String(PAGE_SIZE) });
+      if (selection.book) params.set("book", selection.book);
+      if (selection.theme) params.set("theme", selection.theme);
       const response = await fetch(
-        `/api/feed?cursor=${encodeURIComponent(cursor)}&limit=${PAGE_SIZE}`,
-        { cache: "no-store" },
+        `/api/feed?${params}`,
+        { cache: "no-store", signal: controller.signal },
       );
       if (!response.ok) throw new Error("feed request failed");
 
       const feed = (await response.json()) as FeedResponse;
-      setItems((current) => [...current, ...feed.items]);
+      if (!activeRef.current) return;
+      if (feed.nextCursor === requestCursor || (feed.items.length === 0 && feed.nextCursor !== null)) {
+        throw new Error("feed did not advance");
+      }
+      setItems((current) => {
+        const loaded = new Set(current.map((item) => item.feedToken));
+        return [...current, ...feed.items.filter((item) => !loaded.has(item.feedToken))];
+      });
       setCursor(feed.nextCursor);
       setMode(feed.mode);
+      setTotalMatching(feed.totalMatching ?? null);
+      setRevisited((current) => current || Boolean(feed.revisited));
       trackAnalytics("feed_load", { value: feed.items.length });
       if (feed.nextCursor === null) trackAnalytics("feed_end");
     } catch {
+      if (!activeRef.current) return;
       trackAnalytics("feed_error");
       setError("The library door stuck. Give it another push.");
     } finally {
-      loadingRef.current = false;
-      setLoading(false);
+      window.clearTimeout(timeout);
+      if (activeRef.current) {
+        loadingRef.current = false;
+        setLoading(false);
+      }
     }
-  }, [cursor]);
+  }, [cursor, selection.book, selection.theme]);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel || cursor === null || error) return;
+    // The initial page must load even when IntersectionObserver is unavailable.
+    if (items.length === 0) {
+      const initialLoad = window.setTimeout(() => void loadMore(), 0);
+      return () => window.clearTimeout(initialLoad);
+    }
+    if (typeof IntersectionObserver === "undefined") return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -231,7 +370,7 @@ export function Feed() {
     );
     observer.observe(sentinel);
     return () => observer.disconnect();
-  }, [cursor, error, loadMore]);
+  }, [cursor, error, items.length, loadMore]);
 
   useEffect(() => {
     const onScroll = () => setShowTop(window.scrollY > 900);
@@ -348,6 +487,10 @@ export function Feed() {
             <ShieldCheck size={19} aria-hidden="true" />
             Privacy
           </Link>
+          <Link href="/how-it-works">
+            <FileSearch size={19} aria-hidden="true" />
+            How it works
+          </Link>
         </nav>
       </aside>
 
@@ -361,11 +504,73 @@ export function Feed() {
         </header>
 
         <section className="feed-intro" aria-labelledby="feed-heading">
-          <h1 id="feed-heading">The good feed.</h1>
+          <div>
+            <h1 id="feed-heading">The good feed.</h1>
+            <Link className="feed-method-link" href="/how-it-works">How we choose and check the quotes →</Link>
+          </div>
           <div className="edition-stamp" aria-label="Version one">
             <strong>V.1</strong>
           </div>
         </section>
+
+        <SourceLicenseNotice />
+
+        <section className="feed-filters" aria-label="Filter quotes">
+          <div className="feed-filter-fields">
+            <div className="feed-filter-field">
+              <label htmlFor="filter-book">Book</label>
+              <select
+                id="filter-book"
+                value={selection.book}
+                disabled={!library}
+                onChange={(event) => onSelect({ ...selection, book: event.target.value })}
+              >
+                <option value="">All books</option>
+                {selection.book && !library?.books.some((book) => book.id === selection.book) ? (
+                  <option value={selection.book}>Selected book unavailable</option>
+                ) : null}
+                {library?.books.map((book) => (
+                  <option key={book.id} value={book.id}>{book.title} · {book.author}</option>
+                ))}
+              </select>
+            </div>
+            <div className="feed-filter-field">
+              <label htmlFor="filter-theme">Theme</label>
+              <select
+                id="filter-theme"
+                value={selection.theme}
+                disabled={!library}
+                onChange={(event) => onSelect({ ...selection, theme: event.target.value })}
+              >
+                <option value="">All themes</option>
+                {selection.theme && !library?.themes.some((theme) => theme.name === selection.theme) ? (
+                  <option value={selection.theme}>{selection.theme}</option>
+                ) : null}
+                {library?.themes.map((theme) => (
+                  <option key={theme.name} value={theme.name}>{theme.name}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="feed-filter-summary">
+            <p aria-live="polite">
+              {totalMatching !== null
+                ? `${totalMatching.toLocaleString()} ${totalMatching === 1 ? "quote" : "quotes"}${filtered ? (totalMatching === 1 ? " matches your filters" : " match your filters") : " to explore"}`
+                : "Find your next good read."}
+            </p>
+            {filtered ? (
+              <button type="button" onClick={() => onSelect({ book: "", theme: "" })}>Reset filters</button>
+            ) : null}
+          </div>
+          {libraryError ? (
+            <p className="feed-filter-error" role="status">
+              Book and theme choices couldn’t load.{" "}
+              <button type="button" onClick={onRetryLibrary}>Retry filters</button>
+            </p>
+          ) : null}
+        </section>
+
+        <ReadingSettings />
 
         {mode === "demo" ? (
           <div className="demo-banner" role="status">
@@ -405,10 +610,22 @@ export function Feed() {
             </div>
           ) : null}
 
-          {!loading && !error && cursor === null ? (
+          {!loading && !error && cursor === null && items.length === 0 ? (
             <div className="end-note">
               <BookOpen size={21} aria-hidden="true" />
-              <p>End of shelf.</p>
+              <p>{filtered ? "No quotes match these filters. Try another book or theme, or reset your filters." : "No passages are available yet. Please check back soon."}</p>
+            </div>
+          ) : null}
+
+          {revisited ? (
+            <p className="feed-revisit-note" role="status">
+              {filtered ? "You’ve explored the quotes matching these filters. Keep scrolling to revisit them, or try a different selection." : "You’ve explored the current library. Keep scrolling to revisit earlier quotes."}
+            </p>
+          ) : null}
+
+          {!loading && !error && cursor !== null ? (
+            <div className="feed-more">
+              <button type="button" onClick={() => void loadMore()}>Load more quotes</button>
             </div>
           ) : null}
 
@@ -426,7 +643,9 @@ export function Feed() {
         <p className="source-note">
           <a href="https://www.gutenberg.org/">Project Gutenberg</a>
           {" · "}<Link href="/privacy">Privacy &amp; analytics</Link>
+          {" · "}<Link href="/terms">Terms</Link>
         </p>
+        <p className="source-note">Good Doomscroller is operated by 25D94 LLC.<br /><a href="mailto:contact@vrgammon.com">contact@vrgammon.com</a></p>
       </aside>
 
       <p className="save-notice" aria-live="polite">

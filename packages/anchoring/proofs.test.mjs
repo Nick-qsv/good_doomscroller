@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { buildEnvelope, buildManifest, createMerkleTree, sha256, verifyReceiptProof } from "./proofs.mjs";
+import { buildEnvelope, buildManifest, createMerkleTree, sha256, verifyReceiptProof,
+  receiptRationale, parseEnvelope, MAX_ANCHOR_PAYLOAD_BYTES } from "./proofs.mjs";
 
 const batchId = "01234567-89ab-cdef-0123-456789abcdef";
 const receipts = [
@@ -62,4 +63,68 @@ test("manifest serialization is deterministic and invalid/duplicate receipts are
   assert.throws(() => createMerkleTree([{ ...receipts[0], sequence: "9223372036854775808" }]));
   assert.throws(() => createMerkleTree([{ ...receipts[0], sequence: 1 }]));
   assert.throws(() => buildManifest({ ...input, previousRootSha256: "0".repeat(64) }));
+});
+
+const passageId = "a73cc6ee-f313-440b-a5f8-84ff7fd8db56";
+function rationaleFixture(count = 2, reason = "Learning through curiosity: café, 世界 and 🌟.") {
+  const exact = Array.from({ length: count }, (_, index) => {
+    const receiptJson = JSON.stringify({ schemaVersion: "1.0", passageId, index, recordedAt: "2026-09-13T00:00:00Z",
+      selection: { reason, ...(index ? { selectionRecordedAt: "2026-09-12T21:33:12.123456+00:00" } : {}), method: "manual" } });
+    return { sequence: String(index + 1), receiptJson, receiptSha256: sha256(receiptJson) };
+  });
+  const rationaleEntries = exact.map(receiptRationale);
+  const fields = { batchId, receiptCount: count, rootSha256: createMerkleTree(exact).rootSha256, previousRootSha256: null, rationaleEntries };
+  return { exact, fields, envelope: buildEnvelope(fields) };
+}
+function replaceRationaleJson(envelope, json) {
+  const bytes = Buffer.from(envelope.slice(2), "hex").subarray(0, 96);
+  const body = Buffer.isBuffer(json) ? json : Buffer.from(json, "utf8");
+  bytes.writeUInt32BE(body.length, 92);
+  return "0x" + Buffer.concat([bytes, body]).toString("hex");
+}
+
+test("v2 carries canonical UTF-8 public explanations bound to receipt leaf order without inventing dates", () => {
+  const { fields, envelope } = rationaleFixture();
+  const bytes = Buffer.from(envelope.slice(2), "hex");
+  assert.equal(bytes.subarray(0, 8).toString(), "GDSANCH2");
+  assert.equal(bytes.readUInt32BE(92), bytes.subarray(96).length);
+  assert.notEqual(bytes.readUInt32BE(92), bytes.subarray(96).toString().length);
+  assert.equal(bytes.subarray(96).toString(), JSON.stringify(fields.rationaleEntries));
+  assert.deepEqual(parseEnvelope(envelope), { version: 2, ...fields });
+  assert.deepEqual(Object.keys(fields.rationaleEntries[0].selection), ["reason"]);
+  assert.equal(fields.rationaleEntries[1].selection.selectionRecordedAt, "2026-09-12T21:33:12.123456+00:00");
+  assert.equal(parseEnvelope(buildEnvelope({ ...fields, rationaleEntries: undefined })).version, 1);
+  assert.throws(() => buildEnvelope({ ...fields, rationaleEntries: [...fields.rationaleEntries].reverse() }), /root mismatch/);
+  assert.throws(() => buildEnvelope({ ...fields, receiptCount: 3 }), /count/);
+});
+
+test("v2 parser rejects noncanonical JSON, extra keys, duplicate keys, malformed UTF-8 and incorrect lengths", () => {
+  const { fields, envelope } = rationaleFixture();
+  const json = JSON.stringify(fields.rationaleEntries);
+  const invalid = [
+    replaceRationaleJson(envelope, json + " "),
+    replaceRationaleJson(envelope, JSON.stringify(fields.rationaleEntries, null, 2)),
+    replaceRationaleJson(envelope, json.replace('"receiptSha256":', '"unknown":1,"receiptSha256":')),
+    replaceRationaleJson(envelope, json.replace('"passageId":', '"passageId":"discarded","passageId":')),
+    replaceRationaleJson(envelope, json.replace("café", "caf\\u00e9")),
+    replaceRationaleJson(envelope, Buffer.concat([Buffer.from(json), Buffer.from([0xc3, 0x28])])),
+    envelope + "00", envelope.slice(0, -2), envelope.toUpperCase(),
+  ];
+  for (const value of invalid) assert.throws(() => parseEnvelope(value));
+  const wrongLength = Buffer.from(envelope.slice(2), "hex"); wrongLength.writeUInt32BE(1, 92);
+  assert.throws(() => parseEnvelope("0x" + wrongLength.toString("hex")), /byte length/);
+  const wrongRoot = Buffer.from(envelope.slice(2), "hex"); wrongRoot[28] ^= 1;
+  assert.throws(() => parseEnvelope("0x" + wrongRoot.toString("hex")), /root mismatch/);
+});
+
+test("receipt rationale extraction rejects tampered exact bytes, absent reason, invalid Unicode and oversized payloads", () => {
+  const { exact } = rationaleFixture();
+  assert.throws(() => receiptRationale({ ...exact[0], receiptJson: exact[0].receiptJson + " " }), /fingerprint/);
+  for (const selection of [{}, { reason: "" }, { reason: "\ud800" }, { reason: "x".repeat(8193) },
+    { reason: "Reason", selectionRecordedAt: null }, { reason: "Reason", selectionRecordedAt: "yesterday" }]) {
+    const receiptJson = JSON.stringify({ schemaVersion: "1.0", passageId, selection });
+    assert.throws(() => receiptRationale({ receiptJson, receiptSha256: sha256(receiptJson) }));
+  }
+  assert.throws(() => rationaleFixture(20, "a".repeat(8192)), /128 KiB/);
+  assert.throws(() => parseEnvelope("0x" + "00".repeat(MAX_ANCHOR_PAYLOAD_BYTES + 1)), /excessive/);
 });

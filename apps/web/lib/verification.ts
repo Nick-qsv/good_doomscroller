@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { getDatabase, isDatabaseConfigured } from "@/lib/database";
 import { getPassageAnchoring } from "@/lib/anchoring";
 import { demoPassages } from "@/lib/demo-data";
+import { SOURCE_LICENSE_NOTICE, SOURCE_LICENSE_PATH, SOURCE_LICENSE_TEXT } from "@/lib/source-license";
 import type { AiContext, PassageVerification, VerificationReceipt } from "@/lib/types";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -36,8 +37,21 @@ export function verificationFromRow(row: VerificationRow): PassageVerification {
   const characters = Array.from(chapter?.text ?? "");
   const { startOffset, endOffset } = receipt.quote;
   const reconstructed = characters.slice(startOffset, endOffset).join("");
+  const alternative = receipt.selection.decisionReview?.alternative;
+  const alternativeChapter = alternative
+    ? row.normalized_chapters.find((item) => item.id === alternative.chapterId)
+    : undefined;
+  const alternativeCharacters = Array.from(alternativeChapter?.text ?? "");
+  const alternativeMatchesSource = !alternative || (
+    !!alternativeChapter && Number.isSafeInteger(alternative.startOffset) &&
+    Number.isSafeInteger(alternative.endOffset) && alternative.startOffset >= 0 &&
+    alternative.endOffset > alternative.startOffset && alternative.endOffset <= alternativeCharacters.length &&
+    alternativeCharacters.slice(alternative.startOffset, alternative.endOffset).join("") === alternative.text
+  );
+  const editionReview = receipt.selection.editionReview;
   if (
-    digest(row.receipt_json) !== row.receipt_sha256 ||
+    digest(row.receipt_json) !== row.receipt_sha256 || !alternativeMatchesSource ||
+    (editionReview && digest(editionReview.text) !== editionReview.sha256) ||
     receipt.schemaVersion !== "1.0" ||
     receipt.verification.method !== "reproduced-normalization-and-exact-source-slice" ||
     receipt.verification.normalizationVersion !== "1" ||
@@ -95,6 +109,7 @@ export async function getPassageVerification(passageId: string): Promise<Passage
       r.receipt_json, r.receipt_sha256, s.normalized_chapters,
       s.source_sha256, s.normalized_sha256
     FROM passages p
+    JOIN feed_passages public_passage ON public_passage.id = p.id
     JOIN books b ON b.id = p.book_id
     JOIN editions e ON e.id = p.edition_id
     JOIN chapters c ON c.id = p.chapter_id
@@ -127,12 +142,14 @@ export async function getVerificationDownload(passageId: string, kind: "proof" |
       e.metadata->>'sourceMediaType' AS source_media_type,
       b.language_code
     FROM edition_sources s JOIN passages p ON p.edition_id = s.edition_id
+    JOIN feed_passages public_passage ON public_passage.id = p.id
     JOIN editions e ON e.id = s.edition_id
     JOIN books b ON b.id = p.book_id
     WHERE p.id = ${passageId}::uuid AND p.status = 'published'
   `;
   const snapshot = snapshots[0];
-  if (!snapshot || digest(snapshot.original_bytes) !== result.receipt.source.sha256) {
+  if (!snapshot) return null; // Publication may have been retired between reads.
+  if (digest(snapshot.original_bytes) !== result.receipt.source.sha256) {
     throw new Error("Preserved source failed its integrity check");
   }
   if (kind === "source") return snapshot.original_bytes;
@@ -154,6 +171,11 @@ export async function getVerificationDownload(passageId: string, kind: "proof" |
   }
   return Buffer.from(JSON.stringify({
     schemaVersion: "1.0",
+    sourceLicense: {
+      notice: SOURCE_LICENSE_NOTICE,
+      url: new URL(SOURCE_LICENSE_PATH, process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").toString(),
+      fullText: SOURCE_LICENSE_TEXT,
+    },
     receipt: result.receipt,
     receiptJson: result.receiptJson,
     receiptSha256: result.receiptSha256,
@@ -171,6 +193,6 @@ export async function getVerificationDownload(passageId: string, kind: "proof" |
     sourceDownload: result.downloads?.source,
     history: history.map((entry) => ({ receiptJson: entry.receipt_json, receiptSha256: entry.receipt_sha256 })),
     anchoring: result.anchoring,
-    limits: "The receipt records automated verification and publication. It is not a human signature or proof of source authenticity. The separate anchoring section supplies a finalized inclusion proof or explicit pending status for each receipt; independently verify its chain evidence. Anchoring does not authenticate the receipt's earlier claimed dates or prove that every event was recorded.",
+    limits: "Source checks establish that the quotation and any comparison excerpt match the preserved normalized file. Selection notes, scores and editorial reviews are the site's recorded explanations, not proof of a model's internal reasoning, an authenticated AI call, or a human signature. Retrospective comparisons describe a later review, not the original decision. The separate anchoring section supplies a finalized inclusion proof or explicit pending status for each receipt; independently verify its chain evidence. A checked Polkadot stamp establishes that these record bytes existed by its block, not that their claims are true, their choices are good, their earlier dates are accurate, the source is authentic, or every decision was recorded.",
   }, null, 2), "utf8");
 }

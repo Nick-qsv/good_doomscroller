@@ -18,6 +18,21 @@ underlying work, translation, introduction, annotations, typography, and
 digital edition can have different rights. The pipeline preserves the supplied
 rights claim and source digest, but it cannot make that legal determination.
 
+Publication also requires the conservative review in [DATA_LICENSE.md](../DATA_LICENSE.md)
+and [the September 2026 edition audit](legal/copyright-review-2026-09-13.md).
+Review the entire preserved download, including introductions, translations,
+illustrations and other substantive contributors. An author's original text
+being public domain does not clear later material embedded in the same file.
+Unresolved editions remain outside `corpus/published`.
+
+The active edition ID, source URL, original SHA-256 and normalized SHA-256 must
+match `apps/web/scripts/publication-policy.json` and the database approval
+record. A `public-domain` label by itself cannot bypass this policy. Newly
+reviewed editions require a documented policy update and a new migration;
+do not edit an already-applied migration or remove a retirement marker to
+republish a rejected source. Preserve and display the source provider's
+required license notices before publication.
+
 ## 2. Set up the pipeline
 
 From the repository root:

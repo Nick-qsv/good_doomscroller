@@ -15,6 +15,8 @@ export type AnalyticsEvent = AnalyticsProperties & {
 };
 
 export const ANALYTICS_OPT_OUT_KEY = "good-doomscroller.analytics.disabled";
+export const ANALYTICS_CONSENT_KEY = "good-doomscroller.analytics.consent";
+export type AnalyticsConsent = "accepted" | "declined" | null;
 const SESSION_KEY = "good-doomscroller.analytics.session";
 const PREFERENCE_EVENT = "good-doomscroller-analytics-preference";
 const SESSION_TIMEOUT = 30 * 60_000;
@@ -25,16 +27,26 @@ const PASSAGE_ID = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const activitySubscribers = new Set<{ tick: (activeMs: number) => void; flush: () => void; reset: () => void }>();
 let activeClient: AnalyticsClient | undefined;
-let memoryOptOut = false;
+let memoryConsent: AnalyticsConsent = null;
+let memoryOnlyConsent = false;
 
 function activateClient(client: AnalyticsClient | undefined) { activeClient = client; }
 
 type Session = { id: string; lastActivity: number };
 
+export function getAnalyticsConsent(): AnalyticsConsent {
+  if (typeof window === "undefined") return null;
+  if (memoryOnlyConsent) return memoryConsent;
+  try {
+    const stored = localStorage.getItem(ANALYTICS_CONSENT_KEY);
+    memoryConsent = stored === "accepted" || stored === "declined" ? stored :
+      localStorage.getItem(ANALYTICS_OPT_OUT_KEY) === "true" ? "declined" : null;
+    return memoryConsent;
+  } catch { return memoryConsent; }
+}
+
 export function analyticsOptedOut(): boolean {
-  if (typeof window === "undefined") return false;
-  try { return localStorage.getItem(ANALYTICS_OPT_OUT_KEY) === "true"; }
-  catch { return memoryOptOut; }
+  return getAnalyticsConsent() !== "accepted";
 }
 
 export function browserRequestsAnalyticsPrivacy(): boolean {
@@ -45,18 +57,34 @@ export function browserRequestsAnalyticsPrivacy(): boolean {
     privacyNavigator.msDoNotTrack === "1";
 }
 
+export function setAnalyticsConsent(consent: Exclude<AnalyticsConsent, null>): void {
+  memoryConsent = consent;
+  try {
+    localStorage.setItem(ANALYTICS_CONSENT_KEY, consent);
+    memoryOnlyConsent = false;
+  } catch { memoryOnlyConsent = true; }
+  if (consent === "declined") activeClient?.clear();
+  if (typeof window !== "undefined") window.dispatchEvent(new Event(PREFERENCE_EVENT));
+}
+
 export function setAnalyticsOptOut(disabled: boolean): void {
-  memoryOptOut = disabled;
-  try { localStorage.setItem(ANALYTICS_OPT_OUT_KEY, String(disabled)); } catch { /* Private browsing may disallow storage. */ }
-  if (disabled) activeClient?.clear();
-  window.dispatchEvent(new Event(PREFERENCE_EVENT));
+  setAnalyticsConsent(disabled ? "declined" : "accepted");
 }
 
 export function subscribeAnalyticsPreference(callback: () => void): () => void {
-  window.addEventListener("storage", callback);
+  const onStorage = (event: StorageEvent) => {
+    try { if (event.storageArea && event.storageArea !== localStorage) return; }
+    catch { /* A storage event can still carry the choice when storage is blocked. */ }
+    if (event.key !== null && event.key !== ANALYTICS_CONSENT_KEY && event.key !== ANALYTICS_OPT_OUT_KEY) return;
+    memoryOnlyConsent = false;
+    memoryConsent = event.key === ANALYTICS_CONSENT_KEY && (event.newValue === "accepted" || event.newValue === "declined")
+      ? event.newValue : null;
+    callback();
+  };
+  window.addEventListener("storage", onStorage);
   window.addEventListener(PREFERENCE_EVENT, callback);
   return () => {
-    window.removeEventListener("storage", callback);
+    window.removeEventListener("storage", onStorage);
     window.removeEventListener(PREFERENCE_EVENT, callback);
   };
 }
@@ -103,11 +131,14 @@ export class AnalyticsClient {
   private sending = false;
   private sessionNeedsPageView = false;
   private entryReferrerPending = true;
+  private trackingAllowed = false;
+  private privacyRevision = 0;
+  private requests = new Set<AbortController>();
 
   constructor(private enabled: boolean) {}
 
   private allowed(): boolean {
-    return this.enabled && !analyticsOptedOut() && !browserRequestsAnalyticsPrivacy();
+    return this.enabled && getAnalyticsConsent() === "accepted" && !browserRequestsAnalyticsPrivacy();
   }
 
   private currentSession(now: number): string | undefined {
@@ -129,7 +160,11 @@ export class AnalyticsClient {
   }
 
   track(name: AnalyticsEventName, properties: AnalyticsProperties = {}): void {
-    if (!this.allowed() || !this.path || (properties.passageId !== undefined && !PASSAGE_ID.test(properties.passageId))) return;
+    if (!this.allowed()) {
+      if (this.trackingAllowed) this.clear();
+      return;
+    }
+    if (!this.path || (properties.passageId !== undefined && !PASSAGE_ID.test(properties.passageId))) return;
     try {
       const sessionId = this.currentSession(Date.now());
       if (!sessionId) return;
@@ -176,9 +211,17 @@ export class AnalyticsClient {
     if (document.visibilityState === "hidden") void this.flush(true);
   };
   private onPageHide = (): void => { this.flushActivity(); void this.flush(true); };
-  private onPrivacy = (): void => { if (!this.allowed()) this.clear(); };
+  private onPrivacy = (): void => {
+    if (!this.allowed()) { this.clear(); return; }
+    if (this.trackingAllowed) return;
+    // Start at the moment of acceptance, without counting earlier exposure or input.
+    this.clear();
+    this.trackingAllowed = true;
+    if (this.path) this.setPage(this.path);
+  };
 
   sample = (): void => {
+    if (this.allowed() !== this.trackingAllowed) this.onPrivacy();
     const now = Date.now();
     const elapsed = Math.max(0, Math.min(now - this.lastTick, 1000));
     this.lastTick = now;
@@ -207,12 +250,14 @@ export class AnalyticsClient {
     this.sending = true;
     // A bounded snapshot keeps slow/failing requests from retaining an endless backlog.
     const pending = this.queue.splice(0, keepalive ? BATCH_SIZE : MAX_QUEUE);
+    const privacyRevision = this.privacyRevision;
     try {
       for (let offset = 0; offset < pending.length; offset += BATCH_SIZE) {
-        if (!this.allowed()) break;
+        if (!this.allowed() || privacyRevision !== this.privacyRevision) break;
         const events = pending.slice(offset, offset + BATCH_SIZE);
         // sendBeacon always sends cookies. Keepalive fetch permits credential omission.
         const controller = new AbortController();
+        this.requests.add(controller);
         const timeout = setTimeout(() => controller.abort(), 5000);
         try {
           await fetch("/api/analytics", {
@@ -220,30 +265,39 @@ export class AnalyticsClient {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ events }),
           });
-        } finally { clearTimeout(timeout); }
+        } finally { clearTimeout(timeout); this.requests.delete(controller); }
       }
     } catch { /* Drop failed batches. Reading and navigation always take priority. */ }
     finally { this.sending = false; }
   }
 
   clear(): void {
+    this.privacyRevision += 1;
+    for (const request of this.requests) request.abort();
+    this.requests.clear();
     this.queue = [];
     this.engagement = 0;
     this.session = undefined;
+    this.lastPage = null;
+    this.sessionNeedsPageView = false;
+    this.trackingAllowed = false;
+    this.lastTick = Date.now();
+    this.lastInput = Date.now();
     for (const subscription of activitySubscribers) subscription.reset();
     try { sessionStorage.removeItem(SESSION_KEY); } catch { /* Optional storage. */ }
   }
 
   start(): () => void {
     activateClient(this);
+    this.trackingAllowed = this.allowed();
+    if (!this.trackingAllowed) this.clear();
     this.lastTick = Date.now();
     this.interval = setInterval(this.sample, 1000);
     this.flushInterval = setInterval(() => void this.flush(), 10_000);
     for (const event of ["pointerdown", "keydown", "scroll", "touchstart"] as const) window.addEventListener(event, this.onInput, { passive: true });
     document.addEventListener("visibilitychange", this.onVisibility);
     window.addEventListener("pagehide", this.onPageHide);
-    window.addEventListener("storage", this.onPrivacy);
-    window.addEventListener(PREFERENCE_EVENT, this.onPrivacy);
+    const unsubscribePreference = subscribeAnalyticsPreference(this.onPrivacy);
     return () => {
       this.flushActivity();
       void this.flush(true);
@@ -252,8 +306,7 @@ export class AnalyticsClient {
       for (const event of ["pointerdown", "keydown", "scroll", "touchstart"] as const) window.removeEventListener(event, this.onInput);
       document.removeEventListener("visibilitychange", this.onVisibility);
       window.removeEventListener("pagehide", this.onPageHide);
-      window.removeEventListener("storage", this.onPrivacy);
-      window.removeEventListener(PREFERENCE_EVENT, this.onPrivacy);
+      unsubscribePreference();
       if (activeClient === this) activateClient(undefined);
     };
   }

@@ -2,11 +2,13 @@ import { ApiPromise, WsProvider } from '@polkadot/api';
 import { Keyring } from '@polkadot/keyring';
 import { Metadata } from '@polkadot/types';
 import { blake2AsHex, blake2AsU8a, cryptoWaitReady, decodeAddress, signatureVerify } from '@polkadot/util-crypto';
+import { parseEnvelope } from './proofs.mjs';
+import { anchorPolicy } from './one-time-approval.mjs';
 
 export const HUB_GENESIS_HASH = '0x68d56f15f85d3136970ec16946040bc1752654e906147f7e43e9d539d7c3de2f';
 export const HUB_SIGNER_ADDRESS = '12wmbcz2PqfsLdJHhpn12bbkR1Az1ydkEsoJDxkSjCm8Ue59';
 export const HUB_RPC_ENDPOINTS = ['wss://polkadot-asset-hub-rpc.polkadot.io', 'wss://asset-hub-polkadot-rpc.n.dwellir.com'];
-export const ANCHOR_MAGIC = 'GDSANCH1';
+export const ANCHOR_MAGIC = 'GDSANCH2';
 
 // Runtime v2.5.0 explicitly freezes this v0 pipeline. Metadata v16 also advertises
 // a DIFFERENT v1 pipeline. api 16.5.6 otherwise flattens both pipelines together.
@@ -40,11 +42,19 @@ function timeout(promise, milliseconds, message) {
 function sleep(milliseconds) { return new Promise((resolve) => setTimeout(resolve, milliseconds)); }
 
 export function validateAnchorPayload(payload) {
-  const bytes = payload instanceof Uint8Array ? Buffer.from(payload) :
-    typeof payload === 'string' && /^0x(?:[0-9a-f]{2})+$/i.test(payload) ? Buffer.from(payload.slice(2), 'hex') : null;
-  ensure(bytes?.length === 92 && bytes.subarray(0, 8).toString('ascii') === ANCHOR_MAGIC, 'Only a 92-byte GDSANCH1 anchor commitment is permitted');
-  ensure(bytes.readUInt32BE(24) > 0, 'Empty anchors are not permitted');
-  return `0x${bytes.toString('hex')}`;
+  const hex = payload instanceof Uint8Array ? `0x${Buffer.from(payload).toString('hex')}` : payload;
+  parseEnvelope(hex);
+  return hex;
+}
+
+function payloadPolicy(payloadHex, config) {
+  const policy = anchorPolicy(payloadHex, config.oneTimeApproval);
+  if (policy.oneTimeApprovalId) {
+    ensure(hash(config.oneTimeApproval.genesisHash) === hash(config.genesisHash ?? HUB_GENESIS_HASH) &&
+      sameAccount(config.oneTimeApproval.signerAddress, config.signerAddress ?? HUB_SIGNER_ADDRESS),
+    'Anchor approval targets another chain or signer');
+  }
+  return policy;
 }
 
 export function encodeRuntimeValidation(signedHex, blockHash) {
@@ -76,11 +86,23 @@ export function validatePreparedRecord(prepared, config = {}) {
   ensure(hash(prepared.genesisHash) === hash(config.genesisHash ?? HUB_GENESIS_HASH), 'Prepared anchor targets another chain');
   ensure(sameAccount(prepared.signerAddress, config.signerAddress ?? HUB_SIGNER_ADDRESS), 'Prepared anchor has another signer');
   validateAnchorPayload(prepared.payloadHex);
+  const policy = payloadPolicy(prepared.payloadHex, config);
+  if (policy.oneTimeApprovalId) {
+    ensure(prepared.oneTimeApprovalId === policy.oneTimeApprovalId &&
+      prepared.oneTimeApprovalSha256 === policy.oneTimeApprovalSha256, 'Prepared anchor approval does not match trusted authorization');
+  } else {
+    ensure(!Object.hasOwn(prepared, 'oneTimeApprovalId') && !Object.hasOwn(prepared, 'oneTimeApprovalSha256'),
+      'Prepared anchor approval has no trusted authorization');
+  }
   hash(prepared.extrinsicHash); hash(prepared.checkpointHash);
-  ensure(/^0x(?:[0-9a-f]{2})+$/i.test(prepared.signedHex) && prepared.signedHex.length < 2048, 'Invalid signed anchor encoding');
+  ensure(/^0x(?:[0-9a-f]{2})+$/i.test(prepared.signedHex) &&
+    prepared.signedHex.length <= 2 + (policy.maxPayloadBytes + 1024) * 2, 'Invalid signed anchor encoding');
   ensure(blake2AsHex(prepared.signedHex) === prepared.extrinsicHash, 'Signed anchor hash mismatch');
-  planck(prepared.nonce, 'nonce'); planck(prepared.estimatedFeePlanck, 'fee');
-  ensure(planck(prepared.maxFeePlanck, 'maximum fee') > 0n && BigInt(prepared.maxFeePlanck) <= 50000000n, 'Prepared anchor fee limit exceeds policy');
+  planck(prepared.nonce, 'nonce');
+  const maximumFee = planck(prepared.maxFeePlanck, 'maximum fee');
+  const estimatedFee = planck(prepared.estimatedFeePlanck, 'fee');
+  ensure(maximumFee > 0n && maximumFee <= policy.maxFeePlanck, 'Prepared anchor fee limit exceeds policy');
+  ensure(estimatedFee > 0n && estimatedFee <= maximumFee, 'Prepared anchor estimated fee exceeds limit');
   ensure(planck(prepared.minBalancePlanck, 'minimum balance') >= 10000000000n, 'Prepared anchor reserve is below one DOT');
   integer(prepared.checkpointNumber, 'checkpoint'); integer(prepared.eraBirth, 'era birth'); integer(prepared.eraDeath, 'era death');
   ensure(prepared.eraBirth === prepared.checkpointNumber && prepared.eraDeath === prepared.eraBirth + 64, 'Invalid 64-block mortal anchor era');
@@ -113,14 +135,15 @@ export function inspectSignedAnchor(api, prepared) {
 
 export function inspectAnchorEvents(events, extrinsicIndex, signerAddress, payloadHex) {
   const matching = events.filter(({ phase }) => phase.isApplyExtrinsic && phase.asApplyExtrinsic.toNumber() === extrinsicIndex).map(({ event }) => event);
+  const fee = matching.find((event) => event.section === 'transactionPayment' && event.method === 'TransactionFeePaid');
+  if (fee) ensure(sameAccount(fee.data[0].toString(), signerAddress) && fee.data[2].toString() === '0', 'Unexpected fee payer or tip');
+  const fees = { actualFeePlanck: fee ? fee.data[1].toString() : null, feePaidPlanck: fee ? fee.data[1].toString() : null };
   const failed = matching.find((event) => event.section === 'system' && event.method === 'ExtrinsicFailed');
-  if (failed) return { status: 'failed', dispatchError: failed.data[0].toString() };
+  if (failed) return { status: 'failed', dispatchError: failed.data[0].toString(), ...fees };
   ensure(matching.some((event) => event.section === 'system' && event.method === 'ExtrinsicSuccess'), 'Finalized extrinsic has no ExtrinsicSuccess event');
   const remarked = matching.find((event) => event.section === 'system' && event.method === 'Remarked');
   ensure(remarked && sameAccount(remarked.data[0].toString(), signerAddress) && remarked.data[1].toHex() === blake2AsHex(payloadHex), 'Finalized Remarked sender/hash does not match commitment');
-  const fee = matching.find((event) => event.section === 'transactionPayment' && event.method === 'TransactionFeePaid');
-  if (fee) ensure(sameAccount(fee.data[0].toString(), signerAddress) && fee.data[2].toString() === '0', 'Unexpected fee payer or tip');
-  return { status: 'finalized', actualFeePlanck: fee ? fee.data[1].toString() : null, feePaidPlanck: fee ? fee.data[1].toString() : null,
+  return { status: 'finalized', ...fees,
     eventIndex: events.findIndex(({ event }) => event === remarked), remarkHash: blake2AsHex(payloadHex) };
 }
 
@@ -130,6 +153,7 @@ export async function createChainClient(config = {}, { ApiClass = ApiPromise, Pr
   ensure(genesisHash === HUB_GENESIS_HASH, 'This adapter permits Polkadot Hub mainnet only');
   const signerAddress = config.signerAddress ?? HUB_SIGNER_ADDRESS;
   decodeAddress(signerAddress);
+  const preparedPolicy = { genesisHash, signerAddress, oneTimeApproval: config.oneTimeApproval };
   const endpoints = config.rpcEndpoints ?? HUB_RPC_ENDPOINTS;
   ensure(Array.isArray(endpoints) && endpoints.length > 0 && endpoints.every((endpoint) => typeof endpoint === 'string' && endpoint.startsWith('wss://')), 'Secure WebSocket RPC endpoints are required');
   let api, provider, endpoint;
@@ -183,13 +207,8 @@ export async function createChainClient(config = {}, { ApiClass = ApiPromise, Pr
     return at;
   }
 
-  async function prepare({ payload, payloadHex, seedHex, maxFeePlanck = '50000000', minBalancePlanck = '10000000000', eraPeriod = 64 } = {}) {
-    const commitment = validateAnchorPayload(payload ?? payloadHex);
-    ensure(eraPeriod === 64, 'Only 64-block mortal transactions are permitted');
-    const maximumFee = planck(maxFeePlanck, 'maximum fee');
-    const minimumBalance = planck(minBalancePlanck, 'minimum balance');
-    ensure(maximumFee > 0n && maximumFee <= 50000000n, 'Maximum fee exceeds 0.005 DOT policy');
-    ensure(minimumBalance >= 10000000000n, 'Minimum balance must preserve at least one DOT');
+  async function quoteAnchor(payloadHex) {
+    const commitment = validateAnchorPayload(payloadHex);
     const state = await readState();
     ensure(state.nonce === state.nextNonce, 'Signer already has a pending nonce; recover before preparing another anchor');
     const at = await signingContext(state);
@@ -204,6 +223,24 @@ export async function createChainClient(config = {}, { ApiClass = ApiPromise, Pr
     const bytes = tx.toU8a();
     const quote = await at.call.transactionPaymentApi.queryInfo(bytes, bytes.length);
     const estimatedFee = BigInt(quote.partialFee.toString());
+    ensure(estimatedFee > 0n, 'Invalid estimated DOT fee');
+    return { commitment, state, options, tx, estimatedFee };
+  }
+
+  // No signer material or real signature is needed to select a fee-fitting batch.
+  async function estimateFee({ payloadHex }) {
+    return { estimatedFeePlanck: (await quoteAnchor(payloadHex)).estimatedFee.toString() };
+  }
+
+  async function prepare({ payload, payloadHex, seedHex, maxFeePlanck = '50000000', minBalancePlanck = '10000000000', eraPeriod = 64 } = {}) {
+    ensure(eraPeriod === 64, 'Only 64-block mortal transactions are permitted');
+    const validatedPayload = validateAnchorPayload(payload ?? payloadHex);
+    const policy = payloadPolicy(validatedPayload, preparedPolicy);
+    const maximumFee = planck(maxFeePlanck, 'maximum fee');
+    const minimumBalance = planck(minBalancePlanck, 'minimum balance');
+    ensure(maximumFee > 0n && maximumFee <= policy.maxFeePlanck, 'Maximum fee exceeds payload authorization policy');
+    ensure(minimumBalance >= 10000000000n, 'Minimum balance must preserve at least one DOT');
+    const { commitment, state, options, tx, estimatedFee } = await quoteAnchor(validatedPayload);
     ensure(estimatedFee > 0n && estimatedFee <= maximumFee, 'Estimated DOT fee exceeds configured maximum');
     const reserve = minimumBalance > BigInt(state.existentialDepositPlanck) ? minimumBalance : BigInt(state.existentialDepositPlanck);
     const available = BigInt(state.freePlanck) - BigInt(state.frozenPlanck);
@@ -228,15 +265,17 @@ export async function createChainClient(config = {}, { ApiClass = ApiPromise, Pr
       specVersion: state.specVersion, transactionVersion: state.transactionVersion,
       estimatedFeePlanck: estimatedFee.toString(), maxFeePlanck: maximumFee.toString(), minBalancePlanck: reserve.toString(),
       preparedAt: new Date().toISOString(),
+      ...(policy.oneTimeApprovalId ? { oneTimeApprovalId: policy.oneTimeApprovalId,
+        oneTimeApprovalSha256: policy.oneTimeApprovalSha256 } : {}),
     };
-    inspectSignedAnchor(api, validatePreparedRecord(prepared, { genesisHash, signerAddress }));
+    inspectSignedAnchor(api, validatePreparedRecord(prepared, preparedPolicy));
     // No real signed bytes leave this process until the caller saves prepared.
     // Local signature verification above is safe even for an abandoned dry run.
     return prepared;
   }
 
   async function validatePrepared(prepared) {
-    validatePreparedRecord(prepared, { genesisHash, signerAddress });
+    validatePreparedRecord(prepared, preparedPolicy);
     const state = await readState();
     await signingContext(state);
     inspectSignedAnchor(api, prepared);
@@ -254,7 +293,7 @@ export async function createChainClient(config = {}, { ApiClass = ApiPromise, Pr
     const bytes = Buffer.from(prepared.signedHex.slice(2), 'hex');
     const info = await at.call.transactionPaymentApi.queryInfo(bytes, bytes.length);
     const estimated = BigInt(info.partialFee.toString());
-    ensure(estimated <= planck(prepared.maxFeePlanck, 'maximum fee'), 'Current fee exceeds configured maximum');
+    ensure(estimated > 0n && estimated <= planck(prepared.maxFeePlanck, 'maximum fee'), 'Current fee exceeds configured maximum');
     ensure(BigInt(state.freePlanck) - BigInt(state.frozenPlanck) - planck(prepared.maxFeePlanck, 'maximum fee') >= planck(prepared.minBalancePlanck, 'minimum balance'), 'Insufficient DOT reserve before broadcast');
     return { valid: true, estimatedFeePlanck: estimated.toString(), finalizedBlockNumber: state.finalizedBlockNumber };
   }
@@ -287,7 +326,7 @@ export async function createChainClient(config = {}, { ApiClass = ApiPromise, Pr
   }
 
   async function recover(prepared) {
-    validatePreparedRecord(prepared, { genesisHash, signerAddress });
+    validatePreparedRecord(prepared, preparedPolicy);
     const checkpointAt = await api.at(prepared.checkpointHash);
     const checkpointMetadata = await metadataAt(prepared.checkpointHash, checkpointAt.registry);
     configureV0Registry(checkpointAt.registry, checkpointMetadata);
@@ -337,5 +376,5 @@ export async function createChainClient(config = {}, { ApiClass = ApiPromise, Pr
     return { status: 'pending', extrinsicHash: prepared.extrinsicHash, reason: 'Finalization wait timed out; recover this hash before creating another transaction' };
   }
 
-  return { readState, prepare, validatePrepared, recover, submitAndFinalize, verifyFinalizedCommitment, disconnect: () => api.disconnect() };
+  return { readState, estimateFee, prepare, validatePrepared, recover, submitAndFinalize, verifyFinalizedCommitment, disconnect: () => api.disconnect() };
 }

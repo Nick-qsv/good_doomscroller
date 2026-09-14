@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { readFile } from "node:fs/promises";
 import process from "node:process";
 
 import { createDatabaseClient } from "./database-config.mjs";
@@ -8,8 +7,7 @@ import {
   assertPublishableCorpusPlans,
   importCorpusPlans,
   parseImportArguments,
-  resolveInputPath,
-  validateCorpusDocument,
+  readCorpusPlan,
 } from "./import-corpus-lib.mjs";
 
 const usage = `Usage: npm run corpus:import -- [--publish] [--replace-editions] <feed.json> [feed.json ...]
@@ -17,18 +15,10 @@ const usage = `Usage: npm run corpus:import -- [--publish] [--replace-editions] 
 Imports verified pipeline feed JSON into PostgreSQL in one transaction.
 Without --publish, passages remain candidates and are hidden from the public feed.
 With --publish --replace-editions, passages omitted from each supplied edition are archived.
+Publication requires the exact edition and source hashes in publication-policy.json.
+Retired editions cannot be imported again, including as candidates.
+Matching notes/<feed>.md or notes/<feed>-qc.md files are preserved as public editorial assertions.
 `;
-
-async function readPlan(path) {
-  const absolutePath = resolveInputPath(path);
-  let payload;
-  try {
-    payload = JSON.parse(await readFile(absolutePath, "utf8"));
-  } catch (error) {
-    throw new Error(`${absolutePath}: could not read valid JSON: ${error.message}`);
-  }
-  return validateCorpusDocument(payload, absolutePath);
-}
 
 async function main() {
   const options = parseImportArguments(process.argv.slice(2));
@@ -39,7 +29,7 @@ async function main() {
 
   // Parse and verify every file before opening a database transaction. A broken
   // file therefore cannot leave an otherwise-valid batch partially imported.
-  const plans = await Promise.all(options.paths.map(readPlan));
+  const plans = await Promise.all(options.paths.map(readCorpusPlan));
   if (options.publish) assertPublishableCorpusPlans(plans);
   const sql = createDatabaseClient();
   try {

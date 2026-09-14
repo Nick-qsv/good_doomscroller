@@ -6,6 +6,7 @@ import hashlib
 import json
 from typing import Any
 
+from .decision_review import verify_decision_review, verify_recording_time
 from .export import normalized_document_to_dict
 from .ids import sha256_text
 from .models import Candidate, LoadedSource
@@ -100,5 +101,13 @@ def verify_receipt_proof(proof: dict[str, Any], original: bytes) -> None:
             start_offset=quote["startOffset"], end_offset=quote["endOffset"],
             text=quote["text"], text_sha256=quote["sha256"], word_count=len(quote["text"].split()),
         ))
+        if "decisionReview" in receipt.get("selection", {}):
+            verify_decision_review(
+                receipt["selection"]["decisionReview"], document,
+                selected_chapter_id=chapter.id,
+                selected_start=quote["startOffset"], selected_end=quote["endOffset"],
+            )
+        if "selectionRecordedAt" in receipt.get("selection", {}):
+            verify_recording_time(receipt["selection"]["selectionRecordedAt"])
     except (KeyError, TypeError, StopIteration) as exc:
         raise VerificationError("Malformed or incomplete public proof.") from exc

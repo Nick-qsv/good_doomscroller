@@ -7,6 +7,7 @@ import binascii
 import hashlib
 from typing import Any
 
+from .decision_review import verify_decision_review, verify_recording_time
 from .export import normalized_document_to_dict
 from .models import Candidate, LoadedSource
 from .normalize import normalize_source
@@ -91,5 +92,14 @@ def verify_feed_bundle(feed: dict[str, Any]) -> None:
                     word_count=passage["wordCount"],
                 ),
             )
+            if "decisionReview" in passage.get("curation", {}):
+                verify_decision_review(
+                    passage["curation"]["decisionReview"], document,
+                    selected_chapter_id=chapter.id,
+                    selected_start=provenance["startOffset"],
+                    selected_end=provenance["endOffset"],
+                )
+            if "selectionRecordedAt" in passage.get("curation", {}):
+                verify_recording_time(passage["curation"]["selectionRecordedAt"])
     except (KeyError, TypeError, binascii.Error) as exc:
         raise VerificationError("Malformed or incomplete verification bundle.") from exc

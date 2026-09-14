@@ -12,7 +12,16 @@ const sql = createDatabaseClient();
 try {
   // The legacy entry point supplies 0001; apply all ordered migrations beside it.
   const directory = migrationPath.endsWith(".sql") ? dirname(migrationPath) : migrationPath;
+  const [{ migrations_table: migrationsTable }] = await sql`
+    SELECT to_regclass('public.schema_migrations')::text AS migrations_table
+  `;
+  const applied = new Set(migrationsTable
+    ? (await sql`SELECT version FROM schema_migrations`).map((row) => row.version)
+    : []);
   for (const name of (await readdir(directory)).filter((value) => /^\d+.*\.sql$/.test(value)).sort()) {
+    // Reapplying 0001 would temporarily replace the rights-filtered public view
+    // with its historic unrestricted definition on a running deployment.
+    if (applied.has(name.slice(0, -4))) continue;
     const path = join(directory, name);
     await sql.unsafe(await readFile(path, "utf8"));
     process.stdout.write(`Applied ${path}\n`);

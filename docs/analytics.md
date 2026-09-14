@@ -4,7 +4,7 @@ The site collects optional first-party usage events in `analytics_events` to
 understand traffic, reading activity, feature use, and reported failures. The
 browser collector, event validation, storage schema, privacy controls, and
 retention command are part of this repository. Readers can review the site's
-privacy disclosures and opt out at `/privacy`.
+short privacy notice and change their cookie choice at `/privacy`.
 
 ## Event contract
 
@@ -63,9 +63,19 @@ not all visits to the site; automated traffic detection is imperfect.
 
 ## Privacy controls
 
-Visitors can opt out with the site's analytics preference control. Global Privacy
-Control and Do Not Track preferences are also respected. Opted-out visits and
-recognized bots are excluded.
+Visitors choose Accept or Decline in the cookie popup. Analytics are off until
+explicitly accepted, and the choice is saved in this browser's local storage.
+The popup stays dismissed after either choice; `/privacy` provides the same
+controls to change it later. Global Privacy Control and Do Not Track keep
+analytics off and suppress the popup. Declining clears the analytics session and
+queued events. Essential feed/reaction cookies and local reading preferences
+continue to work regardless of the analytics choice.
+
+The consent key is `good-doomscroller.analytics.consent`. Existing opt-outs are
+honored; the former default-on behavior does not count as consent. Visitors
+without a saved consent choice are asked before collection begins. Analytics
+session identifiers are created only after acceptance, and preference changes
+are synchronized across open tabs.
 
 Set `ANALYTICS_ENABLED=false` in the web runtime to stop accepting events.
 Building with the same setting also disables the browser collector in rendered

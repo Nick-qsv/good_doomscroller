@@ -1,20 +1,21 @@
 import { describe, expect, it } from "vitest";
 import { anchoringFromRows, type AnchorHistoryRow } from "@/lib/anchoring";
-import { buildEnvelope, buildManifest, createMerkleTree, POLKADOT_GENESIS_HASH, POLKADOT_SIGNER_ADDRESS, sha256 } from "../../../packages/anchoring/proofs.mjs";
+import { buildEnvelope, buildManifest, createMerkleTree, parseEnvelope, receiptRationale, POLKADOT_GENESIS_HASH, POLKADOT_SIGNER_ADDRESS, sha256 } from "../../../packages/anchoring/proofs.mjs";
 
 const passageId = "a73cc6ee-f313-440b-a5f8-84ff7fd8db56";
 const batchId = "1436dc8e-3357-4a0d-8d5d-bfd38d7e5ea4";
 
-function fixture(): AnchorHistoryRow[] {
-  const firstJson = JSON.stringify({ passageId, previousReceiptSha256: null });
-  const secondJson = JSON.stringify({ passageId, previousReceiptSha256: sha256(firstJson) });
+function fixture(withRationales = false): AnchorHistoryRow[] {
+  const firstJson = JSON.stringify({ schemaVersion: "1.0", passageId, previousReceiptSha256: null, selection: { reason: "A complete reflection on learning and curiosity." } });
+  const secondJson = JSON.stringify({ schemaVersion: "1.0", passageId, previousReceiptSha256: sha256(firstJson), selection: { reason: "A complete reflection on learning and curiosity.", selectionRecordedAt: "2026-09-13T10:00:00Z" } });
   const receipts = [{ sequence: "1", receiptSha256: sha256(firstJson) }, { sequence: "3", receiptSha256: sha256(secondJson) }];
   const tree = createMerkleTree(receipts);
   const batch = {
     batchId, previousBatchId: null, previousRootSha256: null,
     rootSha256: tree.rootSha256, receiptCount: 2, firstReceiptSequence: "1", lastReceiptSequence: "3",
     manifestJson: buildManifest({ batchId, previousBatchId: null, previousRootSha256: null, receipts }),
-    envelopeHex: buildEnvelope({ batchId, receiptCount: 2, rootSha256: tree.rootSha256, previousRootSha256: null }),
+    envelopeHex: buildEnvelope({ batchId, receiptCount: 2, rootSha256: tree.rootSha256, previousRootSha256: null,
+      rationaleEntries: withRationales ? [firstJson, secondJson].map((receiptJson, index) => receiptRationale({ receiptJson, receiptSha256: receipts[index].receiptSha256 })) : undefined }),
     genesisHash: POLKADOT_GENESIS_HASH, signerAddress: POLKADOT_SIGNER_ADDRESS,
     blockHash: "0x" + "a".repeat(64), blockNumber: "20577500", blockTimestamp: "2026-09-12T22:00:00Z",
     extrinsicHash: "0x" + "b".repeat(64), extrinsicIndex: 2, eventIndex: 4, finalizedHeadHash: "0x" + "c".repeat(64),
@@ -47,6 +48,28 @@ describe("public anchoring evidence", () => {
     expect(result.pendingReceipts).toBe(1);
     expect(result.history[0].status).toBe("pending");
     expect(result.history[1].status).toBe("finalized");
+  });
+
+  it("exposes exact rationale text only when the finalized envelope includes it", () => {
+    const rows = fixture(true);
+    const result = anchoringFromRows(rows, passageId, rows[1].receipt_sha256);
+    expect(result.onChainRationaleReceipts).toBe(2);
+    expect(result.batches[0].format).toBe("rationales");
+    expect(result.history[0].rationale).toEqual({ status: "on-chain", reason: "A complete reflection on learning and curiosity." });
+    expect(result.history[1].rationale?.selectionRecordedAt).toBe("2026-09-13T10:00:00Z");
+    const legacy = fixture();
+    const old = anchoringFromRows(legacy, passageId, legacy[1].receipt_sha256);
+    expect(old.onChainRationaleReceipts).toBe(0);
+    expect(old.history[0].rationale).toEqual({ status: "hash-only" });
+  });
+
+  it("rejects a rationale changed independently of its otherwise valid receipt hash", () => {
+    const rows = fixture(true);
+    const batch = rows[0].batch!;
+    const decoded = parseEnvelope(batch.envelopeHex);
+    decoded.rationaleEntries![0].selection.reason = "An invented explanation.";
+    batch.envelopeHex = buildEnvelope(decoded);
+    expect(() => anchoringFromRows(rows, passageId, rows[1].receipt_sha256)).toThrow("On-chain rationale does not match its receipt");
   });
 
   it("does not treat prepared or broadcast commitments as finalized evidence", () => {

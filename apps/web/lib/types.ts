@@ -26,6 +26,21 @@ export type FeedResponse = {
   items: FeedPassage[];
   nextCursor: string | null;
   mode: "database" | "demo";
+  revisited?: boolean;
+  totalMatching?: number;
+  totalPublished?: number;
+};
+
+export type FeedFilters = {
+  bookId?: string;
+  theme?: string;
+};
+
+export type LibraryResponse = {
+  books: Array<{ id: string; title: string; author: string; count: number }>;
+  themes: Array<{ name: string; count: number }>;
+  total: number;
+  mode: "database" | "demo";
 };
 
 export type ReactionResponse = {
@@ -52,7 +67,31 @@ export type VerificationReceipt = {
     text: string; sha256: string; startOffset: number; endOffset: number;
     offsetUnit: "unicode-code-points"; startSentenceId: string; endSentenceId: string;
   };
-  selection: { method: string; model: string | null; reason: string; pipelineVersion: string };
+  selection: {
+    method: string; model: string | null; reason: string; pipelineVersion: string;
+    recordingMethod?: "curation-metadata-snapshot-v1";
+    recordingNote?: string;
+    selectionRecordedAt?: string;
+    score?: number;
+    qualityScore?: number;
+    scoreMeaning?: string;
+    rank?: number;
+    rankMeaning?: string;
+    themes?: string[];
+    contentFlags?: string[];
+    wordCount?: number;
+    limitations?: string[];
+    decisionReview?: {
+      reviewedAt: string;
+      reviewKind: "selection-comparison" | "retrospective-comparison";
+      summary: string;
+      alternative: { chapterId: string; startOffset: number; endOffset: number; text: string };
+      whySelected: string;
+      whyAlternativeNotSelected: string;
+      limitation: string;
+    };
+    editionReview?: { fileName: string; text: string; sha256: string; statementType: "operator-assertion" };
+  };
   verification: {
     method: "reproduced-normalization-and-exact-source-slice";
     normalizationVersion: "1"; checkedAt: string;
@@ -81,6 +120,7 @@ export type ReceiptInclusionProof = {
 };
 
 export type FinalizedAnchorBatch = {
+  format?: "hash-only" | "rationales";
   batchId: string;
   previousBatchId: string | null;
   previousRootSha256: string | null;
@@ -106,6 +146,7 @@ export type PassageAnchoring = {
   totalReceipts: number;
   finalizedReceipts: number;
   pendingReceipts: number;
+  onChainRationaleReceipts?: number;
   verification: "local-integrity-checked-chain-evidence-recorded";
   history: Array<{
     sequence: string;
@@ -113,6 +154,11 @@ export type PassageAnchoring = {
     status: "finalized" | "pending";
     batchId?: string;
     inclusionProof?: ReceiptInclusionProof;
+    rationale?: {
+      status: "on-chain" | "hash-only" | "pending";
+      reason?: string;
+      selectionRecordedAt?: string;
+    };
   }>;
   batches: FinalizedAnchorBatch[];
   limits: string;

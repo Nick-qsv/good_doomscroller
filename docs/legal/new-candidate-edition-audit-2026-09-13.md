@@ -1,0 +1,9 @@
+# New candidate edition audit — 13 September 2026
+
+Approved for the publication package: eight passages each from Mary Astell’s *A Serious Proposal to the Ladies* (1697), Margaret Cavendish’s *The Blazing-World* (1668), and Mary Somerville’s *On the Connexion of the Physical Sciences* (ninth edition,1858). This adds24passages to the retained181, for14exact editions and205passages. Eighteen retired editions remain blocked. No new blockchain broadcast is authorized by this package.
+
+The [Astell/Cavendish review](astell-cavendish-edition-audit-2026-09-13.md) and [Somerville/Babbage review](somerville-babbage-edition-audit-2026-09-13.md) record the historical imprints, contributors and sources. Integration review independently read all24quotations, their surrounding text and separate AI contexts. Original-source reconstruction and JSON Schema checks passed. Source bytes, normalized text and complete edition identities are pinned by publication policy and migration0015. Gutenberg notices and the full original source are retained; no image binaries were added. These decisions apply the conservative United States screen and do not assert worldwide clearance.
+
+Babbage PG4238 remains held: its1832heading is contradicted by1833/1835material and a post-second-edition note, leaving the complete source’s exact printing unresolved. Boole PG15114 remains held: Gutenberg provides only PDF/TeX, the existing prose importer retains raw TeX commands, and the re-typeset title page omits an imprint/year. Neither held book is included in the allowlist or publication directory. The earlier Wealth of Nations, Walden and Vindication replacement sources remain held as well.
+
+The only alteration to curator bundle metadata during integration updates rights-audit citations to documentation included in this package. No quotation, AI interpretation, source byte, normalization hash, book ID or edition ID was changed.

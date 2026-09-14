@@ -1463,6 +1463,211 @@
         "generatedBy": "AI",
         "generatedAt": "2026-09-12T19:40:55.080706Z"
       }
+    },
+    {
+      "id": "ff132dbc-f6cd-5651-b1c2-c4c5869e480b",
+      "bookId": "98de50e0-1b47-53fd-aefc-7e206863896c",
+      "editionId": "24c25efc-2c72-53f0-a44b-24830541c051",
+      "text": "I held my Sabbath school at the house of a free colored man, whose name I deem it imprudent to mention; for should it be known, it might embarrass him greatly, though the crime of holding the school was committed ten years ago.",
+      "title": "Narrative of the Life of Frederick Douglass, an American Slave",
+      "authors": [
+        "Frederick Douglass"
+      ],
+      "wordCount": 43,
+      "status": "candidate",
+      "qualityScore": 0.9242,
+      "chapter": {
+        "id": "a99637a5-73a7-5db6-b239-896990ef9cc5",
+        "ordinal": 12,
+        "title": "CHAPTER X",
+        "locator": "text:block-12"
+      },
+      "provenance": {
+        "sourceSha256": "234c15348a66919bad1d534cdd48ee8ddf91f50115a706cbefaa8edd049672fd",
+        "chapterSha256": "c53840147e50d7e65731cf8e3ba1966cea8e9f69d295e3ce5f5060b09ef23658",
+        "startSentenceId": "sentence_2e7f6ba260b8cb52e7ec",
+        "endSentenceId": "sentence_2e7f6ba260b8cb52e7ec",
+        "startSentenceOrdinal": 385,
+        "endSentenceOrdinal": 385,
+        "startOffset": 38510,
+        "endOffset": 38737,
+        "quoteSha256": "1d5be8dbe1ca626aea11b0de864424afb972a8b66a7303b05b4c2dd1f730add3"
+      },
+      "curation": {
+        "selector": "heuristic",
+        "model": null,
+        "score": 92.42,
+        "rank": 31,
+        "reason": "Assistant selected a concrete example of protecting someone by withholding identifying details. Chapter X.",
+        "themes": [
+          "education",
+          "privacy"
+        ],
+        "contentFlags": [
+          "historical-racial-language"
+        ],
+        "selectionRecordedAt": "2026-09-13T01:58:20Z",
+        "decisionReview": {
+          "reviewedAt": "2026-09-13T01:58:20Z",
+          "reviewKind": "selection-comparison",
+          "summary": "Chosen for explaining a protective omission.",
+          "alternative": {
+            "chapterId": "a99637a5-73a7-5db6-b239-896990ef9cc5",
+            "startOffset": 38886,
+            "endOffset": 39100,
+            "text": "I look back to those Sundays with an amount of pleasure not to be expressed. They were great days to my soul. The work of instructing my dear fellow-slaves was the sweetest engagement with which I was ever blessed."
+          },
+          "whySelected": "Shows why a truthful historical account may withhold a name to protect someone.",
+          "whyAlternativeNotSelected": "Celebrates teaching, but explains less about the risks of sharing identifying details.",
+          "limitation": "This records the selection explanation; it does not prove the judgment is correct."
+        }
+      }
+    },
+    {
+      "id": "57bc8dc5-425f-5240-9fed-2423351e8f90",
+      "bookId": "98de50e0-1b47-53fd-aefc-7e206863896c",
+      "editionId": "24c25efc-2c72-53f0-a44b-24830541c051",
+      "text": "I was ready to saw wood, shovel coal, carry wood, sweep the chimney, or roll oil casks,—all of which I did for nearly three years in New Bedford, before I became known to the anti-slavery world.",
+      "title": "Narrative of the Life of Frederick Douglass, an American Slave",
+      "authors": [
+        "Frederick Douglass"
+      ],
+      "wordCount": 38,
+      "status": "candidate",
+      "qualityScore": 0.910316,
+      "chapter": {
+        "id": "7a0fdee4-26cb-5b30-a358-ee732734bdb0",
+        "ordinal": 13,
+        "title": "CHAPTER XI",
+        "locator": "text:block-13"
+      },
+      "provenance": {
+        "sourceSha256": "234c15348a66919bad1d534cdd48ee8ddf91f50115a706cbefaa8edd049672fd",
+        "chapterSha256": "e040b9ba876374cc3e44c4670bc0c3f5998bd0c36506617e3721b42483752044",
+        "startSentenceId": "sentence_cc5664c1346c4e717cd5",
+        "endSentenceId": "sentence_cc5664c1346c4e717cd5",
+        "startSentenceOrdinal": 207,
+        "endSentenceOrdinal": 207,
+        "startOffset": 26593,
+        "endOffset": 26787,
+        "quoteSha256": "596e45a20a7a9cb446b648cea28014c0fc4269bdcfa5d54878a1d31aba75a3be"
+      },
+      "curation": {
+        "selector": "heuristic",
+        "model": null,
+        "score": 91.03157894736842,
+        "rank": 32,
+        "reason": "Assistant selected and screened on 2026-09-13 for a complete thought, correct speaker, surrounding context, and novelty against the 318-passage live baseline. Deterministic heuristic score is descriptive, not editorial approval. Printed location: Chapter XI. Existing review queue batch-001, row 90 (zero-based). No human editorial review or external model API call is claimed.",
+        "themes": [
+          "work",
+          "freedom"
+        ],
+        "contentFlags": [],
+        "selectionRecordedAt": "2026-09-13T09:01:56.388946Z"
+      },
+      "aiContext": {
+        "text": "After escaping slavery, Douglass describes taking varied paid work in New Bedford. Nearby he explains that racial exclusion prevented him from immediately working in his skilled trade as a caulker.",
+        "generatedBy": "AI",
+        "generatedAt": "2026-09-13T09:01:56.386093Z"
+      }
+    },
+    {
+      "id": "8c04a9ff-d380-5d1c-9ff6-4f0868960496",
+      "bookId": "98de50e0-1b47-53fd-aefc-7e206863896c",
+      "editionId": "24c25efc-2c72-53f0-a44b-24830541c051",
+      "text": "I did not, when a slave, understand the deep meaning of those rude and apparently incoherent songs. I was myself within the circle; so that I neither saw nor heard as those without might see and hear.",
+      "title": "Narrative of the Life of Frederick Douglass, an American Slave",
+      "authors": [
+        "Frederick Douglass"
+      ],
+      "wordCount": 37,
+      "status": "candidate",
+      "qualityScore": 0.903176,
+      "chapter": {
+        "id": "35dd7881-6005-5d46-908b-964580aaa2e5",
+        "ordinal": 4,
+        "title": "CHAPTER II",
+        "locator": "text:block-4"
+      },
+      "provenance": {
+        "sourceSha256": "234c15348a66919bad1d534cdd48ee8ddf91f50115a706cbefaa8edd049672fd",
+        "chapterSha256": "99eb918db1d14fc77c3a22ebb1eea16a4b3e3a1307a61bc66354da5fd0121a5f",
+        "startSentenceId": "sentence_d28f0cc4db7de5c58cc2",
+        "endSentenceId": "sentence_541bc74a00e81f00e04e",
+        "startSentenceOrdinal": 80,
+        "endSentenceOrdinal": 81,
+        "startOffset": 9052,
+        "endOffset": 9252,
+        "quoteSha256": "128d27a400c59c99ef47ceed634d108804d389fb754d909b9a8c58d8d5cd181f"
+      },
+      "curation": {
+        "selector": "heuristic",
+        "model": null,
+        "score": 90.31756756756756,
+        "rank": 33,
+        "reason": "Assistant selected and screened on 2026-09-13 for a complete thought, correct speaker, surrounding context, and novelty against the 318-passage live baseline. Deterministic heuristic score is descriptive, not editorial approval. Printed location: Chapter II. Existing review queue batch-001, row 96 (zero-based). No human editorial review or external model API call is claimed.",
+        "themes": [
+          "memory",
+          "understanding"
+        ],
+        "contentFlags": [],
+        "selectionRecordedAt": "2026-09-13T09:01:56.389063Z"
+      },
+      "aiContext": {
+        "text": "Douglass reflects on the songs of enslaved people and on how his understanding changed after slavery. He rejects reading their singing as proof of happiness.",
+        "generatedBy": "AI",
+        "generatedAt": "2026-09-13T09:01:56.386093Z"
+      }
+    },
+    {
+      "id": "9367ce7f-7dc7-5974-8d54-4528d816c67a",
+      "bookId": "98de50e0-1b47-53fd-aefc-7e206863896c",
+      "editionId": "24c25efc-2c72-53f0-a44b-24830541c051",
+      "text": "I suffered much from hunger, but much more from cold. In hottest summer and coldest winter, I was kept almost naked—no shoes, no stockings, no jacket, no trousers, nothing on but a coarse tow linen shirt, reaching only to my knees.",
+      "title": "Narrative of the Life of Frederick Douglass, an American Slave",
+      "authors": [
+        "Frederick Douglass"
+      ],
+      "wordCount": 42,
+      "status": "candidate",
+      "qualityScore": 0.89,
+      "chapter": {
+        "id": "518cc343-ec2c-5ad0-947c-8d10b7533d13",
+        "ordinal": 7,
+        "title": "CHAPTER V",
+        "locator": "text:block-7"
+      },
+      "provenance": {
+        "sourceSha256": "234c15348a66919bad1d534cdd48ee8ddf91f50115a706cbefaa8edd049672fd",
+        "chapterSha256": "05c78a5415c4ae9a33f8013ec3e987d6d3298a882ae6851b2f6568c1601193f2",
+        "startSentenceId": "sentence_a7d4de1e619f11c091c0",
+        "endSentenceId": "sentence_4f15ed1951a8b8ebd348",
+        "startSentenceOrdinal": 9,
+        "endSentenceOrdinal": 10,
+        "startOffset": 876,
+        "endOffset": 1107,
+        "quoteSha256": "b3d5a1ccea26b74e0a484b1c6758583e2bc12be7ee5359026a16955b5dac0f5d"
+      },
+      "curation": {
+        "selector": "heuristic",
+        "model": null,
+        "score": 89.0,
+        "rank": 34,
+        "reason": "Assistant selected and screened on 2026-09-13 for a complete thought, correct speaker, surrounding context, and novelty against the 318-passage live baseline. Deterministic heuristic score is descriptive, not editorial approval. Printed location: Chapter V. Existing review queue batch-002, row 97 (zero-based). No human editorial review or external model API call is claimed.",
+        "themes": [
+          "dignity",
+          "injustice"
+        ],
+        "contentFlags": [
+          "distressing-content"
+        ],
+        "selectionRecordedAt": "2026-09-13T09:01:56.389130Z"
+      },
+      "aiContext": {
+        "text": "Douglass recalls the hunger, exposure, and inadequate clothing of his enslaved childhood. The surrounding passage describes how he tried to keep warm at night.",
+        "generatedBy": "AI",
+        "generatedAt": "2026-09-13T09:01:56.386093Z"
+      }
     }
   ],
   "verificationBundle": {

@@ -200,6 +200,34 @@
         "quoteSha256": { "$ref": "#/$defs/sha256" }
       }
     },
+    "decisionReview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewedAt", "reviewKind", "summary", "alternative", "whySelected", "whyAlternativeNotSelected", "limitation"],
+      "properties": {
+        "reviewedAt": { "$ref": "#/$defs/aiContext/properties/generatedAt" },
+        "reviewKind": { "enum": ["selection-comparison", "retrospective-comparison"] },
+        "summary": { "$ref": "#/$defs/decisionNarrative" },
+        "whySelected": { "$ref": "#/$defs/decisionNarrative" },
+        "whyAlternativeNotSelected": { "$ref": "#/$defs/decisionNarrative" },
+        "limitation": { "$ref": "#/$defs/decisionNarrative" },
+        "alternative": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["chapterId", "startOffset", "endOffset", "text"],
+          "properties": {
+            "chapterId": { "type": "string", "format": "uuid" },
+            "startOffset": { "type": "integer", "minimum": 0 },
+            "endOffset": { "type": "integer", "minimum": 1 },
+            "text": { "type": "string", "minLength": 1, "maxLength": 10000 }
+          }
+        }
+      }
+    },
+    "decisionNarrative": {
+      "type": "string", "minLength": 1, "maxLength": 3000,
+      "pattern": "^\\S(?:[\\s\\S]*\\S)?$"
+    },
     "curation": {
       "type": "object",
       "additionalProperties": false,
@@ -219,7 +247,9 @@
         "rank": { "type": "integer", "minimum": 1 },
         "reason": { "type": "string" },
         "themes": { "type": "array", "items": { "type": "string" } },
-        "contentFlags": { "type": "array", "items": { "type": "string" } }
+        "contentFlags": { "type": "array", "items": { "type": "string" } },
+        "decisionReview": { "$ref": "#/$defs/decisionReview" },
+        "selectionRecordedAt": { "$ref": "#/$defs/aiContext/properties/generatedAt" }
       }
     },
     "passage": {

@@ -1,5 +1,7 @@
 export const POLKADOT_GENESIS_HASH: string;
 export const POLKADOT_SIGNER_ADDRESS: string;
+export const MAX_ANCHOR_PAYLOAD_BYTES: number;
+export const MAX_RATIONALE_REASON_BYTES: number;
 export function sha256(value: string | Uint8Array): string;
 export type AnchorReceipt = { sequence: string; receiptSha256: string };
 export type MerkleSibling = { side: "left" | "right"; sha256: string };
@@ -7,5 +9,10 @@ export type ReceiptInclusionProof = { leafIndex: number; leafCount: number; sibl
 export function orderedReceipts(receipts: AnchorReceipt[]): AnchorReceipt[];
 export function createMerkleTree(receipts: AnchorReceipt[]): { rootSha256: string; receipts: AnchorReceipt[]; proofs: ReceiptInclusionProof[] };
 export function verifyReceiptProof(receiptSha256: string, proof: ReceiptInclusionProof, rootSha256: string): boolean;
-export function buildEnvelope(input: { batchId: string; receiptCount: number; rootSha256: string; previousRootSha256: string | null }): string;
+export type RationaleEntry = { receiptSha256: string; passageId: string; selection: { reason: string; selectionRecordedAt?: string } };
+export type AnchorEnvelope = { batchId: string; receiptCount: number; rootSha256: string; previousRootSha256: string | null; rationaleEntries?: RationaleEntry[] };
+export function receiptRationale(input: { receiptJson: string; receiptSha256: string }): RationaleEntry;
+export function canonicalRationaleJson(entries: RationaleEntry[]): string;
+export function buildEnvelope(input: AnchorEnvelope): string;
+export function parseEnvelope(envelopeHex: string): AnchorEnvelope & { version: 1 | 2 };
 export function buildManifest(input: { batchId: string; previousBatchId: string | null; previousRootSha256: string | null; receipts: AnchorReceipt[] }): string;

@@ -1,80 +1,44 @@
-# Published pilot library
+# Published library
 
-The pilot contains seven source editions and 210 passages, with 30 passages per
-book. Each JSON preserves the original downloaded file, the full normalized
-document, and the exact locations used for its quotations. Startup verifies
-every bundle before publishing it in one database transaction.
+The conservative rights review of 13 September 2026 retains **8 exact source editions and 157 passages**; the subsequent older-candidate review adds **3 editions and 24 passages**, and the following Astell/Cavendish/Somerville review adds **3 editions and 24 passages**. The science expansion adds **60 passages** to four already-approved exact editions, for **14 editions and 265 passages**. Eighteen other editions were removed from this packaged publication directory. Removal is an operational choice under the user's strict reuse policy, not a finding that those books are unlawful to use in the United States.
 
-| Book | Edition | Source | Bundle |
-| --- | --- | --- | --- |
-| Pride and Prejudice | Jane Austen | [Gutenberg 1342](https://www.gutenberg.org/ebooks/1342) | `pride-and-prejudice.json` |
-| Meditations | Marcus Aurelius, George Long translation | [Gutenberg 15877](https://www.gutenberg.org/ebooks/15877) | `meditations-george-long.json` |
-| Narrative of the Life of Frederick Douglass | 1845 narrative | [Gutenberg 23](https://www.gutenberg.org/ebooks/23) | `narrative-of-frederick-douglass.json` |
-| Frankenstein | Mary Shelley, 1818 edition | [Gutenberg 41445](https://www.gutenberg.org/ebooks/41445) | `frankenstein-1818.json` |
-| The Souls of Black Folk | W. E. B. Du Bois | [Gutenberg 408](https://www.gutenberg.org/ebooks/408) | `the-souls-of-black-folk.json` |
-| A Vindication of the Rights of Woman | Mary Wollstonecraft | [Gutenberg 3420](https://www.gutenberg.org/ebooks/3420) | `a-vindication-of-the-rights-of-woman.json` |
-| Essays | Ralph Waldo Emerson | [Gutenberg 16643](https://www.gutenberg.org/ebooks/16643) | `essays-emerson.json` |
+The [edition audit A](../../docs/legal/rights-audit-a-2026-09-13.md) and [edition audit B](../../docs/legal/rights-audit-b-2026-09-13.md) explain the evidence and exclusions. The [pinned publication policy](../../apps/web/scripts/publication-policy.json) fixes each permitted book ID, edition ID, source URL, original SHA-256 and normalized SHA-256. A new edition or changed source needs a new review; a U.S. public-domain label alone cannot authorize publication.
 
-The expanded selections were screened by the assistant and independently
-reviewed by a second assistant for attribution, surrounding context, complete
-thoughts, and overlap. Short, coherent observations take priority over arbitrary
-plot windows. Weaker ranges from the earlier 84-passage library were replaced,
-including all twelve original automatically selected Austen passages.
+| Book | Source | Passages |
+| --- | --- | --- |
+| The Autobiography of Charles Darwin | [Exact source](https://www.gutenberg.org/ebooks/2010) | 30 |
+| The Chemical History of a Candle | [Exact source](https://www.gutenberg.org/ebooks/14474) | 30 |
+| Frankenstein; Or, The Modern Prometheus (1818) | [Exact source](https://www.gutenberg.org/ebooks/41445) | 33 |
+| Incidents in the Life of a Slave Girl, Written by Herself | [Exact source](https://www.gutenberg.org/ebooks/11030) | 15 |
+| The Letters of Charles Dickens. Vol. 1, 1833-1856 | [Exact source](https://www.gutenberg.org/ebooks/25852) | 15 |
+| Life of Mozart | [Exact source](https://www.gutenberg.org/ebooks/67828) | 15 |
+| Narrative of the Life of Frederick Douglass, an American Slave | [Exact source](https://www.gutenberg.org/ebooks/23) | 34 |
+| The Tao Teh King, or the Tao and its Characteristics | [Exact source](https://www.gutenberg.org/ebooks/216) | 15 |
+| Common Sense (1776) | [Exact source](https://www.gutenberg.org/ebooks/147) | 8 |
+| The Theory of Moral Sentiments (1777) | [Exact source](https://www.gutenberg.org/ebooks/67363) | 8 |
+| The Interesting Narrative of the Life of Olaudah Equiano (1789) | [Exact source](https://www.gutenberg.org/ebooks/15399) | 8 |
+| A Serious Proposal to the Ladies (1697) | [Exact source](https://www.gutenberg.org/ebooks/54984) | 8 |
+| The Description of a New World, Called the Blazing-World (1668) | [Exact source](https://www.gutenberg.org/ebooks/51783) | 20 |
+| On the Connexion of the Physical Sciences (1858) | [Exact source](https://www.gutenberg.org/ebooks/52869) | 26 |
 
-Every passage has a brief, precomputed explanation labeled **AI context** with
-an explicit statement that it may be inaccurate and is not part of the original
-quotation. The explanations are checked against surrounding source text and
-kept outside exact-quotation proofs. They are interpretations, not source text.
+Each retained JSON preserves the original downloaded file, complete normalized text and exact quotation locations. Gutenberg notices remain attached. The separate AI interpretations may be inaccurate and are outside quotation verification. Existing edition notes document assistant selection; no human editorial signature is claimed.
 
-Selections exclude publisher notices, editorial introductions, and annotations.
-Curation reasons and [edition notes](notes/) record printed locations when
-needed. Original files and normalized documents are unchanged. No human
-editorial signature or blockchain anchor is claimed.
+The underlying books have strong historical public-domain evidence, but this is not universal clearance of copyright, moral rights, trademarks or every local law. Gutenberg's U.S. status and distribution license remain separately relevant.
 
-The catalogue records identify these editions as public domain in the USA.
-That is the jurisdiction recorded in each bundle; it is not a worldwide rights
-claim. Preserving an edition and checking its text does not independently
-authenticate its publisher or the truth of a quotation's claims.
+## Enforcement
 
-The text normalizer can group multiple printed chapters into one source
-section when headings are not recognized. The reader interface labels its
-generic fallback as a source section, and selection notes supply printed
-references. Full source sections are retained for reproducibility.
+- `--publish` refuses any edition/source tuple outside the reviewed policy.
+- Permanent UUID markers in `corpus/retired` prevent excluded editions from being imported again; markers work even before an edition exists on a fresh database.
+- Migration `0011_corpus_rights_policy.sql` archives unapproved existing passages, stores persistent approvals/retirements, and restricts the shared public feed view. Verification and original-source downloads require presence in that same view.
+- The removed files and their notes are preserved only in ignored local working storage, outside the Docker context and packaged corpus. Immutable database source/receipt evidence is retained privately for audit.
+- Demo data uses exact excerpts from the retained editions and is tested against their pinned provenance.
 
-To check every bundle locally:
+These repository changes take effect on a live installation only after the migration and updated application are deployed. Historical external copies or blockchain records are not erased by retiring a website edition.
+
+To verify every retained bundle:
 
 ```sh
 for feed in corpus/published/*.json; do
   PYTHONPATH=pipeline/src python3 -m good_doomscroller_pipeline verify "$feed"
 done
 ```
-
-## Preserved Austen source
-
-`pride-and-prejudice.json` contains the preserved source and 30 reviewed passages from Jane Austen's *Pride and Prejudice*. The original 12 automatic selections have been replaced; the archived source is unchanged.
-
-The original file came from [Project Gutenberg's direct UTF-8 download](https://www.gutenberg.org/cache/epub/1342/pg1342.txt). The [official catalogue record for ebook 1342](https://www.gutenberg.org/ebooks/1342) identifies Jane Austen as the author, lists the work as public domain in the USA, and reported a last update of September 1, 2026 when checked on September 10, 2026. The original file, including its Gutenberg notices, is preserved unchanged in the bundle and the database.
-
-| Artifact | Value |
-| --- | --- |
-| Original file | `pg1342.txt`, 772,386 bytes |
-| Reported retrieval time | `2026-09-10T22:21:01.314074Z` |
-| Original SHA-256 | `3f6bb9d6f78e0293b56acd4714dd68cb7d6d1d293402031ce9d5a216bcaf9d75` |
-| Normalized-source SHA-256 | `ba93ca2be1d530719c8670bd9deab899d8c72df50fb6af25c1f7eb26ad2ee0c1` |
-| Current bundle SHA-256 | `f2e4af341c131a8ba0f3c3600a8e69fbca52249457244919bf34630a0e512c75` |
-| Pipeline / normalization | `0.2.0` / `1` |
-| Current selection | 30 assistant-reviewed passages, 18–65 words |
-
-All 62 normalized source sections remain in the bundle, including the section
-preceding Chapter I and the end material. Selected passages come from the
-novel's body, not the Gutenberg introduction or license. Source section
-ordinals include the initial section, so an ordinal is not necessarily the
-novel's printed chapter number.
-
-To reproduce the offline source check from the repository root:
-
-```sh
-PYTHONPATH=pipeline/src python3 -m good_doomscroller_pipeline verify corpus/published/pride-and-prejudice.json
-```
-
-See [the verification procedure and trust limits](../../docs/verification.md) for checking a downloaded public receipt and original file independently. Keep new books as candidates until their source bundle, publication rights, selection quality, and public metadata have been evaluated for the intended launch.
