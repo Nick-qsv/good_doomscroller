@@ -42,3 +42,20 @@ downloads. The site offers these materials without charge. Any future paid
 distribution or change in source attribution requires reviewing the
 [Project Gutenberg license](https://www.gutenberg.org/policy/license.html)
 before release. This project is not affiliated with Project Gutenberg.
+
+## Author portrait assets
+
+Author profile images are independently licensed assets and are not covered by
+the software's MIT License or the corpus-metadata CC0 dedication. The web app's
+typed portrait manifest records each asset's creator, date, source page,
+original and derivative SHA-256 digests, retrieval date, and rights basis.
+
+Twelve portraits are local WebP derivatives of public-domain or CC0 source
+images documented on the site's `/source-license` page. The images for Mary
+Astell and Laozi are project-generated, interpretive illustrations because
+research did not establish an authentic likeness. They must remain labeled as
+interpretive and must not be represented as documentary or historical
+portraits. No separate reuse license is granted for those two images; any rights
+that may subsist are reserved. Replacing or adding an asset requires a new
+source and rights review, updated digests, and exact byline coverage in the
+portrait integrity tests.

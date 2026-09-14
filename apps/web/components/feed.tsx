@@ -19,6 +19,7 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useAnalyticsExposure } from "@/components/analytics";
 import { trackAnalytics } from "@/lib/analytics-client";
 import { AiPassageContext } from "@/components/ai-passage-context";
+import { AuthorAvatar } from "@/components/author-avatar";
 import { ReadingSettings } from "@/components/reading-settings";
 import { SourceLicenseNotice } from "@/components/source-license-notice";
 import { sourceSectionLabel } from "@/lib/source-section";
@@ -34,15 +35,6 @@ const PAGE_SIZE = 6;
 const numberFormatter = new Intl.NumberFormat("en", { notation: "compact" });
 
 type FeedSelection = { book: string; theme: string };
-
-function initials(name: string) {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("");
-}
 
 function count(value: number) {
   return numberFormatter.format(value);
@@ -65,9 +57,7 @@ export function PassageCard({
   const contextHintId = `${contextId}-hint`;
   return (
     <article ref={analyticsRef} className="passage-card" aria-labelledby={`passage-${passage.feedToken}`}>
-      <div className="avatar" aria-hidden="true">
-        {initials(passage.author)}
-      </div>
+      <AuthorAvatar author={passage.author} />
 
       <div className="passage-body">
         <header className="passage-byline">
